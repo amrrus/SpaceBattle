@@ -17,7 +17,7 @@ import com.mygdx.game.Constants;
  * says. You can make it jump by touching the screen. Don't let the player touch any spike or
  * you will lose.
  */
-public class PlayerEntity extends Actor {
+public class TopPlayerEntity extends Actor {
 
     /** The player texture. */
     private Texture texture;
@@ -56,7 +56,7 @@ public class PlayerEntity extends Actor {
     private boolean movingLeft = false;
     private boolean movingRight = false;
 
-    public PlayerEntity(World world, Texture texture, Vector2 position) {
+    public TopPlayerEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
         this.texture = texture;
 

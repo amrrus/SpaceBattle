@@ -19,7 +19,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public void create () {
 
 		try {
-			mSocket = IO.socket("http://217.216.84.31:3000/");
+			mSocket = IO.socket(Constants.SERVER_URL);
 		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}

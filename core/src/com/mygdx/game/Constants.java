@@ -24,6 +24,8 @@ public class Constants {
     public static final float PLAYER_SPEED = 0f;
 
     public static final int WIDTH_SCREEN=640;
-    public static final int HEIGTH_SCREEN=480;
+    public static final int HEIGHT_SCREEN =480;
+
+    public static final String SERVER_URL = "http://192.168.0.113:3003";
 }
 

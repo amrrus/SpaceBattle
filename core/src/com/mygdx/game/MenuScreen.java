@@ -35,7 +35,7 @@ public class MenuScreen extends BaseScreen {
         super(game);
 
         // Create a new stage, as usual.
-        stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGTH_SCREEN));
+        stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
         // Load the skin file. The skin file contains information about the skins. It can be
         // passed to any widget in Scene2D UI to set the style. It just works, amazing.
