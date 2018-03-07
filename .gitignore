@@ -103,7 +103,9 @@ nb-configuration.xml
 gradle-app.setting
 /build/
 /android/build/
-/core/build/
+/core/build/classes
+/core/build/dependency-cache
+/core/build/tmp
 /desktop/build/
 /html/build/
 /ios/build/
