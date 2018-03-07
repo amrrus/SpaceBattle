@@ -6,5 +6,5 @@ eclipse.project {
     name = appName + "-core"
 }
 dependencies {
-    compile files('build/libs/json-org.jar')
+    compile 'org.json:json:20090211'
 }
