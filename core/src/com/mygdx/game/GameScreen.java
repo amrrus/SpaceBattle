@@ -31,8 +31,12 @@ import com.mygdx.game.entities.PlayerEntity;
 import com.mygdx.game.entities.SpikeEntity;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 import java.net.URISyntaxException;
@@ -117,6 +121,9 @@ public class GameScreen extends BaseScreen {
             throw new RuntimeException(e);
         }
 
+        mSocket.on("receive", listen_msg );
+        
+
     }
     /**
      * This method will be executed when this screen is about to be rendered.
@@ -125,6 +132,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void show() {
         mSocket.connect();
+
         EntityFactory factory = new EntityFactory(game.getManager());
 
         // Create the player. It has an initial position.
@@ -253,6 +261,7 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void dispose() {
+        mSocket.disconnect();
         // Dispose the stage to remove the Batch references in the graphics card.
         stage.dispose();
 
@@ -357,6 +366,24 @@ public class GameScreen extends BaseScreen {
         // Here two lonely methods that I don't use but have to override anyway.
         @Override public void preSolve(Contact contact, Manifold oldManifold) { }
         @Override public void postSolve(Contact contact, ContactImpulse impulse) { }
+    }
+    private Emitter.Listener listen_msg;
+    {
+    listen_msg = new Emitter.Listener() {
+        public void call(final Object... args) {
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        Integer id_msg = 999;
+                        String text_msg = "asd";
+                        id_msg = data.getInt("id");
+                        text_msg = data.getString("text");
+                        System.out.print("id: " + id_msg + System.getProperty("line.separator"));
+                        System.out.print("text: " + text_msg + System.getProperty("line.separator"));
+                    } catch (JSONException e) {
+                        System.out.print("Error to receive message." + System.getProperty("line.separator"));
+                    }
+        }
+    };
     }
 
 
