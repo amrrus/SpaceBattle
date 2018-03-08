@@ -72,11 +72,16 @@ public class MenuScreen extends BaseScreen {
         // Now I position things on screen. Sorry for making this the hardest part of this screen.
         // I position things on the screen so that they look centered. This is why I make the
         // buttons the same size.
-        logo.setPosition(440 - logo.getWidth() / 2, 320 - logo.getHeight());
-        play.setSize(200, 80);
-        credits.setSize(200, 80);
-        play.setPosition(40, 140);
-        credits.setPosition(40, 40);
+        logo.setPosition(1160 - logo.getWidth() / 2, 640 - logo.getHeight());
+        logo.setSize(logo.getWidth() * 2, logo.getHeight() * 2);
+
+        play.setSize(600, 240);
+        play.getLabel().setFontScale(4, 4);
+        credits.setSize(600, 240);
+        credits.getLabel().setFontScale(4, 4);
+
+        play.setPosition(120, 420);
+        credits.setPosition(120, 120);
 
         // Do not forget to add actors to the stage or we wouldn't see anything.
         stage.addActor(play);

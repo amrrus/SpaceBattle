@@ -26,14 +26,14 @@ public class EntityFactory {
      * @param position  initial position ofr the player in the world (meters,meters).
      * @return          a player.
      */
-    public TopPlayerEntity createPlayer(World world, Vector2 position) {
-        Texture playerTexture = manager.get("blueShipUp.png");
+    public TopPlayerEntity createTopPlayer(World world, Vector2 position) {
+        Texture playerTexture = manager.get("blueShipDown.png");
         return new TopPlayerEntity(world, playerTexture, position);
     }
 
-    public BottomPlayerEntity createBoth(World world, Vector2 position) {
-        Texture bothTexture = manager.get("blueShipDown.png");
-        return new BottomPlayerEntity(world, bothTexture, position);
+    public BottomPlayerEntity createBottomPlayer(World world, Vector2 position) {
+        Texture playerTexture = manager.get("blueShipUp.png");
+        return new BottomPlayerEntity(world, playerTexture, position);
     }
  }
 

@@ -1,6 +1,5 @@
 package com.mygdx.game.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -37,24 +36,6 @@ public class TopPlayerEntity extends Actor {
      */
     private boolean alive = true;
 
-    /**
-     * Is the player jumping? If the player is jumping, then it is not possible to jump again
-     * because the user cannot double jump. The flag has to be set when starting a jump and be
-     * unset when touching the floor again.
-     */
-    private boolean jumping = false;
-
-    /**
-     * Does the player have to jump? This flag is used when the player touches the floor and the
-     * user is still touching the screen, to make a double jump. Remember that we cannot add
-     * a force inside a ContactListener. We have to use this flag to remember that the player
-     * had to jump after the collision.
-     */
-    private boolean mustJump=false;
-
-
-    private boolean movingLeft = false;
-    private boolean movingRight = false;
 
     public TopPlayerEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
@@ -74,7 +55,6 @@ public class TopPlayerEntity extends Actor {
         fixture.setUserData("player");              // (4) Set the user data.
         box.dispose();                              // (5) Destroy the shape.
 
-
         // Set the size to a value that is big enough to be rendered on the screen.
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
     }
@@ -84,88 +64,15 @@ public class TopPlayerEntity extends Actor {
         // Always update the position of the actor when you are going to draw it, so that the
         // position of the actor on the screen is as accurate as possible to the current position
         // of the Box2D body.
-        float incremento=0f;
-        if(movingLeft){
-            incremento=-0.2f;
-            body.getPosition().rotate(90);
-        }else if(movingRight){
-            incremento=0.2f;
-            body.getPosition().rotate(-2);
-        }
-        setPosition((body.getPosition().x - 0.5f + incremento) * Constants.PIXELS_IN_METER,
-                (body.getPosition().y - 0.5f - incremento) * Constants.PIXELS_IN_METER);
+        setPosition((body.getPosition().x - 0.5f) * Constants.PIXELS_IN_METER,
+                (body.getPosition().y - 0.5f) * Constants.PIXELS_IN_METER);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
     @Override
     public void act(float delta) {
-        if (Gdx.input.justTouched()) {
-            if (Gdx.input.getX() > Constants.WIDTH_SCREEN / 2) {
-                moveRight();
-            }
-            else{
-                moveLeft();
-            }
-        }
 
 
-        /*
-
-        // Jump when you touch the screen.
-        if (Gdx.input.justTouched()) {
-            jump();
-        }
-
-        // Jump if we were required to jump during a collision.
-        if (mustJump) {
-            mustJump = false;
-            jump();
-        }
-
-        // If the player is alive, change the speed so that it moves.
-        if (alive) {
-            // Only change X speed. Do not change Y speed because if the player is jumping,
-            // this speed has to be managed by the forces applied to the player. If we modify
-            // Y speed, jumps can get very very weir.d
-            float speedY = body.getLinearVelocity().y;
-            body.setLinearVelocity(Constants.PLAYER_SPEED, speedY);
-        }
-
-        // If the player is jumping, apply some opposite force so that the player falls faster.
-        if (jumping) {
-            body.applyForceToCenter(0, -Constants.IMPULSE_JUMP * 1.15f, true);
-        }
-
-        */
-    }
-
-    public void moveLeft(){
-        movingLeft=true;
-        //Vector2 position = body.getPosition();
-        //body.applyLinearImpulse(-3,3,position.x,position.y,true);
-        //body.getPosition().rotate(-2);
-        //body.getPosition().set(position.x-0.2f,position.y+0.2f);
-
-    }
-    public void moveRight(){
-        movingRight=true;
-        //if (body.getLinearVelocity().x<=3) {
-        //    Vector2 position = body.getPosition();
-        //    body.applyLinearImpulse(4, 0, position.x, position.y, true);
-        //}
-    }
-    public void jump() {
-        // The player must not be already jumping and be alive to jump.
-        if (!jumping && alive) {
-            jumping = true;
-
-            // Apply an impulse to the player. This will make change the velocity almost
-            // at the moment unlike using forces, which gradually changes the force used
-            // during the jump. We get the position becase we have to apply the impulse
-            // at the center of mass of the body.
-            Vector2 position = body.getPosition();
-            body.applyLinearImpulse(0, Constants.IMPULSE_JUMP, position.x, position.y, true);
-        }
     }
 
     public void detach() {
@@ -183,12 +90,5 @@ public class TopPlayerEntity extends Actor {
         this.alive = alive;
     }
 
-    public void setJumping(boolean jumping) {
-        this.jumping = jumping;
-    }
-
-    public void setMustJump(boolean mustJump) {
-        this.mustJump = mustJump;
-    }
 }
 

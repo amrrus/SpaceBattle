@@ -31,13 +31,6 @@ public class BottomPlayerEntity extends Actor {
     /** The fixture for this player. */
     private Fixture fixture;
 
-    /**
-     * Is the player alive? If he touches a spike, is not alive. The player will only move and
-     * jump if it's alive. Otherwise it is said that the user has lost and the game is over.
-     */
-    private boolean alive = true;
-
-
     public BottomPlayerEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
         this.texture = texture;
@@ -56,6 +49,7 @@ public class BottomPlayerEntity extends Actor {
         fixture.setUserData("player");              // (4) Set the user data.
         box.dispose();                              // (5) Destroy the shape.
 
+
         // Set the size to a value that is big enough to be rendered on the screen.
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
     }
@@ -72,23 +66,27 @@ public class BottomPlayerEntity extends Actor {
 
     @Override
     public void act(float delta) {
-
-
+        if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
+            int moveSign = 1; // move right is the default movement
+            if (Gdx.input.getX() < Constants.WIDTH_SCREEN / 2) {
+                moveSign = -1;
+            }
+            move(moveSign);
+        }
     }
+
+    public void move(int moveSign){
+        Vector2 position = body.getPosition();
+
+        if(! (body.getLinearVelocity().x + Constants.IMPULSE_PLAYER*moveSign > Constants.MAX_PLAYER_SPEED || body.getLinearVelocity().x + Constants.IMPULSE_PLAYER*moveSign < -Constants.MAX_PLAYER_SPEED)){
+            body.applyLinearImpulse(Constants.IMPULSE_PLAYER*moveSign, 0, position.x, position.y, true);
+        }
+    }
+
 
     public void detach() {
         body.destroyFixture(fixture);
         world.destroyBody(body);
-    }
-
-    // Getter and setter festival below here.
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
     }
 
 }

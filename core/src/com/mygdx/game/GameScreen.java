@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
@@ -35,9 +36,9 @@ public class GameScreen extends BaseScreen {
 
     private BottomPlayerEntity bottomPlayer;
 
-    public Socket mSocket;
+    private Texture background;
 
-    private Texture backgroundTexture;
+    public Socket mSocket;
 
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
@@ -49,7 +50,7 @@ public class GameScreen extends BaseScreen {
 
         // Create a new Scene2D stage for displaying things.
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
-        backgroundTexture = game.getManager().get("dividedPlanet.png");
+        //backgroundTexture = game.getManager().get("dividedPlanet.png");
 
         // Create a new Box2D world for managing things.
         world = new World(new Vector2(0, 0), true);
@@ -71,8 +72,9 @@ public class GameScreen extends BaseScreen {
         EntityFactory factory = new EntityFactory(game.getManager());
 
         // Create the player. It has an initial position.
-        topPlayer = factory.createPlayer(world, new Vector2(0f, -7.5f));
-        bottomPlayer = factory.createBoth(world, new Vector2(0f, 7.5f));
+        topPlayer = factory.createTopPlayer(world, new Vector2(0f, 5.5f));
+        bottomPlayer = factory.createBottomPlayer(world, new Vector2(0f, -5.5f));
+        background = game.getManager().get("dividedPlanet.png");
 
 
         // Add the player to the stage too.
@@ -123,7 +125,7 @@ public class GameScreen extends BaseScreen {
 
         // Render the screen. Remember, this is the last step!
         stage.getBatch().begin();
-        stage.getBatch().draw(backgroundTexture,-230,-230);
+        stage.getBatch().draw(background,-510,-510, Constants.HEIGHT_SCREEN*0.95f, Constants.HEIGHT_SCREEN*0.95f);
         stage.getBatch().end();
 
         stage.draw();
@@ -142,7 +144,7 @@ public class GameScreen extends BaseScreen {
 
         // Dispose the world to remove the Box2D native data (C++ backend, invoked by Java).
         world.dispose();
-        backgroundTexture.dispose();
+        background.dispose();
     }
 
 
