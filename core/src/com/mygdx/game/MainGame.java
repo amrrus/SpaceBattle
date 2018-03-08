@@ -29,18 +29,11 @@ public class MainGame extends Game {
         // inside the LoadingScreen screen. Remember to put the name of the asset in the first
         // argument, then the type of the asset in the second argument.
         manager = new AssetManager();
-        manager.load("floor.png", Texture.class);
         manager.load("gameover.png", Texture.class);
         manager.load("blueShipUp.png",Texture.class);
         manager.load("blueShipDown.png",Texture.class);
-        //manager.load("overfloor.png", Texture.class);
         manager.load("dividedPlanet.png",Texture.class);
         manager.load("logo.png", Texture.class);
-        manager.load("spike.png", Texture.class);
-        //manager.load("player.png", Texture.class);
-        manager.load("audio/die.ogg", Sound.class);
-        manager.load("audio/jump.ogg", Sound.class);
-        manager.load("audio/song.ogg", Music.class);
 
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);
