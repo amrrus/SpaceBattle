@@ -15,12 +15,16 @@ import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.TopPlayerEntity;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 import java.net.URISyntaxException;
-
+import Connections.sendPossition;
 
 /**
  * This is the main screen for the game. All the fun happen here.
@@ -42,6 +46,8 @@ public class GameScreen extends BaseScreen {
 
     public Socket mSocket;
 
+    public Integer nFrame;
+
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
      * it is safe to do critical code here such as loading assets and setting up the stage.
@@ -62,7 +68,8 @@ public class GameScreen extends BaseScreen {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-
+        mSocket.on("pos",pos);
+        nFrame=0;
     }
 
     /**
@@ -114,14 +121,32 @@ public class GameScreen extends BaseScreen {
      * This method is executed whenever the game requires this screen to be rendered. This will
      * display things on the screen. This method is also used to update the game.
      */
-    @Override
+
+    private float fps=0;
     public void render(float delta) {
+        nFrame+=1;
+
+        fps+=delta;
+        if (fps>0.1f){
+            JSONObject msg=new JSONObject();
+            msg.put("id",2);
+            msg.put("x",bottomPlayer.getX());
+            msg.put("y",bottomPlayer.getY());
+            msg.put("nframe",nFrame);
+            //mSocket.emit("pos",msg);
+            sendPossition s=new sendPossition(msg,mSocket);
+            s.run();
+            fps=fps-0.1f;
+        }
+
+
         // Do not forget to clean the screen.
         Gdx.gl.glClearColor(0.1f, 0.125f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Update the stage. This will update the player speed.
         stage.act();
+
 
         // Step the world. This will update the physics and update entity positions.
         world.step(delta, 6, 2);
@@ -150,6 +175,27 @@ public class GameScreen extends BaseScreen {
         background.dispose();
     }
 
+
+    private Emitter.Listener pos;
+    {   pos = new Emitter.Listener() {
+        public void call(final Object... args){
+            JSONObject data = (JSONObject) args[0];
+            try {
+                Integer id = 999;
+                Integer posx= 999;
+                Integer posy= 999;
+                Integer nframe = 999;
+                id = data.getInt("id");
+                posx = data.getInt("x");
+                posy = data.getInt("y");
+                nframe = data.getInt("nframe");
+                System.out.print("Cliente:"+id+", PosX:"+posx+", PosY:"+posy+", nFrame"+nframe+"\n");
+            } catch (JSONException e) {
+                System.out.print("Error to receive message." + System.getProperty("line.separator"));
+            }
+        }
+    };
+    }
 
 
 }
