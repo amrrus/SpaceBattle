@@ -48,6 +48,8 @@ public class GameScreen extends BaseScreen {
 
     public Integer nFrame;
 
+    private Integer idClient;
+
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
      * it is safe to do critical code here such as loading assets and setting up the stage.
@@ -69,6 +71,9 @@ public class GameScreen extends BaseScreen {
             throw new RuntimeException(e);
         }
         mSocket.on("pos",pos);
+        mSocket.on("setId",setId);
+        mSocket.on("createAsteroid",createAsteroid);
+        idClient=0;
         nFrame=0;
     }
 
@@ -134,8 +139,8 @@ public class GameScreen extends BaseScreen {
             msg.put("y",bottomPlayer.getY());
             msg.put("nframe",nFrame);
             //mSocket.emit("pos",msg);
-            sendPossition s=new sendPossition(msg,mSocket);
-            s.run();
+            //sendPossition s=new sendPossition(msg,mSocket);
+            //s.run();
             fps=fps-0.1f;
         }
 
@@ -180,19 +185,55 @@ public class GameScreen extends BaseScreen {
     {   pos = new Emitter.Listener() {
         public void call(final Object... args){
             JSONObject data = (JSONObject) args[0];
+            int id = 999;
+            float posx= 999;
+            float posy= 999;
             try {
-                Integer id = 999;
-                Integer posx= 999;
-                Integer posy= 999;
-                Integer nframe = 999;
                 id = data.getInt("id");
-                posx = data.getInt("x");
-                posy = data.getInt("y");
-                nframe = data.getInt("nframe");
-                System.out.print("Cliente:"+id+", PosX:"+posx+", PosY:"+posy+", nFrame"+nframe+"\n");
+                posx = data.getFloat("x");
+                posy = data.getFloat("y");
+                //System.out.print("Cliente:"+id+", PosX:"+posx+", PosY:"+posy+"\n");
             } catch (JSONException e) {
                 System.out.print("Error to receive message." + System.getProperty("line.separator"));
             }
+            if (id==0){
+                bottomPlayer.setPosition((posx - 0.5f) * Constants.PIXELS_IN_METER,
+                        (posy - 0.5f) * Constants.PIXELS_IN_METER);
+            }else  if (id==1){
+                topPlayer.setPosition((posx - 0.5f) * Constants.PIXELS_IN_METER,
+                        (posy - 0.5f) * Constants.PIXELS_IN_METER);
+            }
+        }
+    };
+    }
+    private Emitter.Listener setId;
+    {   setId = new Emitter.Listener() {
+        public void call(final Object... args){
+            idClient = new Integer ((Integer) args[0]);
+            System.out.print("IdCliente: "+idClient+"\n");
+
+        }
+    };
+    }
+
+    private Emitter.Listener createAsteroid;
+    {   createAsteroid = new Emitter.Listener() {
+        public void call(final Object... args){
+            JSONObject data = (JSONObject) args[0];
+            float x = 999;
+            float y= 999;
+            float vx= 999;
+            float vy=999;
+            try {
+                x = data.getInt("x");
+                y = data.getFloat("y");
+                vx = data.getFloat("vx");
+                vy = data.getFloat("vy");
+                System.out.print("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+"\n");
+            } catch (JSONException e) {
+                System.out.print("Error to receive message." + System.getProperty("line.separator"));
+            }
+
         }
     };
     }
