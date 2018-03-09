@@ -26,6 +26,7 @@ public class LoadingScreen extends BaseScreen {
     private Label loading;
 
     public LoadingScreen(MainGame game) {
+
         super(game);
 
         // Set up the stage and the skin. See GameOverScreen for more comments on this.

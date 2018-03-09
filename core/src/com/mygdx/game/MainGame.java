@@ -34,6 +34,7 @@ public class MainGame extends Game {
         manager.load("blueShipDown.png",Texture.class);
         manager.load("dividedPlanet.png",Texture.class);
         manager.load("logo.png", Texture.class);
+        manager.load("asteroide.png", Texture.class);
 
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);

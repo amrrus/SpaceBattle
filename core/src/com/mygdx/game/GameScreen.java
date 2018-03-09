@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.entities.Asteroide;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.TopPlayerEntity;
@@ -48,6 +49,8 @@ public class GameScreen extends BaseScreen {
 
     public Integer nFrame;
 
+    private Asteroide asteroide;
+
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
      * it is safe to do critical code here such as loading assets and setting up the stage.
@@ -62,6 +65,7 @@ public class GameScreen extends BaseScreen {
 
         // Create a new Box2D world for managing things.
         world = new World(new Vector2(0, 0), true);
+
 
         try {
             mSocket = IO.socket(Constants.SERVER_URL);
@@ -97,6 +101,10 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
+        Texture asteroideTexture = game.getManager().get("asteroide.png");
+        asteroide = new Asteroide(world, asteroideTexture, new Vector2(0,0), new Vector2(-2,6));
+        stage.addActor(asteroide);
+
     }
 
     /**
@@ -114,6 +122,8 @@ public class GameScreen extends BaseScreen {
         // Detach every entity from the world they have been living in.
         bottomPlayer.detach();
         topPlayer.detach();
+        asteroide.detach();
+        asteroide.remove();
 
     }
 
@@ -134,7 +144,7 @@ public class GameScreen extends BaseScreen {
             msg.put("y",bottomPlayer.getY());
             msg.put("nframe",nFrame);
             //mSocket.emit("pos",msg);
-            sendPossition s=new sendPossition(msg,mSocket);
+            sendPossition s=new sendPossition(msg, mSocket);
             s.run();
             fps=fps-0.1f;
         }
