@@ -1,16 +1,23 @@
 package com.mygdx.game.entities;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
+import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
+
+import java.util.List;
 
 /**
  * This is the body the user controls. It has to jump and don't die, like the title of the game
@@ -28,8 +35,20 @@ public class BottomPlayerEntity extends Actor {
     /** The body for this player. */
     private Body body;
 
+    private Body bodyCenter;
+
+    private Body bodyLimRight;
+
+    private Body bodyLimLeft;
+
     /** The fixture for this player. */
     private Fixture fixture;
+
+    private Fixture fixtureLimRight;
+
+    private Fixture fixtureLimLeft;
+
+    private Joint joint;
 
     public BottomPlayerEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
@@ -41,6 +60,48 @@ public class BottomPlayerEntity extends Actor {
         def.type = BodyDef.BodyType.DynamicBody;    // (3) Remember to make it dynamic.
 
         body = world.createBody(def);               // (4) Now create the body.
+
+        // Create the player body.
+        BodyDef defCenter = new BodyDef();                // (1) Create the body definition.
+        defCenter.position.set(new Vector2(0,0));                 // (2) Put the body in the initial position.
+        defCenter.type = BodyDef.BodyType.StaticBody;    // (3) Remember to make it dynamic.
+
+        bodyCenter = world.createBody(defCenter);               // (4) Now create the body.
+
+        DistanceJointDef distanceJointDef = new DistanceJointDef();
+        distanceJointDef.bodyA = body;
+        distanceJointDef.bodyB = bodyCenter;
+        distanceJointDef.length = 5.5f;
+
+        joint = world.createJoint(distanceJointDef);
+
+        BodyDef defLimLeft = new BodyDef();                // (1) Create the body definition.
+        defLimLeft.position.set(new Vector2(-5.5f,0));                 // (2) Put the body in the initial position.
+        defLimLeft.type = BodyDef.BodyType.StaticBody;
+
+        bodyLimLeft = world.createBody(defLimLeft);
+
+        BodyDef defLimRight = new BodyDef();                // (1) Create the body definition.
+        defLimRight.position.set(new Vector2(5.5f,0));                 // (2) Put the body in the initial position.
+        defLimRight.type = BodyDef.BodyType.StaticBody;
+
+        bodyLimRight = world.createBody(defLimRight);
+
+        /** LEFT LIMIT*/
+        // Give it some shape.
+        PolygonShape boxLeft = new PolygonShape();      // (1) Create the shape.
+        boxLeft.setAsBox(0.01f, 0.01f);                   // (2) 1x1 meter box.
+        fixtureLimLeft = bodyLimLeft.createFixture(boxLeft, 3);       // (3) Create the fixture.
+        boxLeft.dispose();                              // (5) Destroy the shape.
+
+
+        /** RIGTH LIMIT*/
+        // Give it some shape.
+        PolygonShape boxRight = new PolygonShape();      // (1) Create the shape.
+        boxLeft.setAsBox(0.01f, 0.01f);                   // (2) 1x1 meter box.
+        fixtureLimRight = bodyLimRight.createFixture(boxRight, 3);       // (3) Create the fixture.
+        boxRight.dispose();                              // (5) Destroy the shape.
+
 
         // Give it some shape.
         PolygonShape box = new PolygonShape();      // (1) Create the shape.
@@ -66,24 +127,19 @@ public class BottomPlayerEntity extends Actor {
 
     @Override
     public void act(float delta) {
-        if (Gdx.input.justTouched() || Gdx.input.isTouched()) {
-            int moveSign = 1; // move right is the default movement
-            if (Gdx.input.getX() <  320) {
+        if (Gdx.input.isTouched()) {
+            int moveSign = 1; // right is the default movement
+            if (Gdx.input.getX() <  (Gdx.graphics.getWidth()/2)) {
                 moveSign = -1;
             }
 
             move(moveSign);
         }
+
     }
 
     public void move(int moveSign){
-        Vector2 position = body.getPosition();
-
-        if(! (body.getLinearVelocity().x + Constants.IMPULSE_PLAYER*moveSign > Constants.MAX_PLAYER_SPEED || body.getLinearVelocity().x + Constants.IMPULSE_PLAYER*moveSign < -Constants.MAX_PLAYER_SPEED)){
-            body.applyLinearImpulse(Constants.IMPULSE_PLAYER*moveSign, 0, position.x, position.y, true);
-        }
-        body.getPosition().set(0,0);
-
+        body.setLinearVelocity(Constants.IMPULSE_PLAYER*moveSign,0);
     }
 
 

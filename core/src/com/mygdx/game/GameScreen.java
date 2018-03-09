@@ -1,7 +1,9 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -50,7 +52,7 @@ public class GameScreen extends BaseScreen {
 
         // Create a new Scene2D stage for displaying things.
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
-        //backgroundTexture = game.getManager().get("dividedPlanet.png");
+        stage.setDebugAll(true);
 
         // Create a new Box2D world for managing things.
         world = new World(new Vector2(0, 0), true);
@@ -62,6 +64,7 @@ public class GameScreen extends BaseScreen {
         }
 
     }
+
     /**
      * This method will be executed when this screen is about to be rendered.
      * Here, I use this method to set up the initial position for the stage.

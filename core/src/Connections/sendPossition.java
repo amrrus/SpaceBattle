@@ -5,4 +5,8 @@ package Connections;
  */
 
 public class sendPossition implements Runnable {
+    @Override
+    public void run() {
+
+    }
 }

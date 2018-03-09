@@ -16,7 +16,7 @@ public class Constants {
      */
     public static final int IMPULSE_JUMP = 20;
 
-    public static final float IMPULSE_PLAYER = 2f;
+    public static final float IMPULSE_PLAYER = 10f;
     public static final float MAX_PLAYER_SPEED = 10f;
 
     public static final int WIDTH_SCREEN=1920;
