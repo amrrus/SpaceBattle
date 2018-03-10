@@ -50,6 +50,10 @@ public class BottomPlayerEntity extends Actor {
 
     private Joint joint;
 
+    Integer moveSign;
+
+    Boolean keepMoving;
+
     public BottomPlayerEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
         this.texture = texture;
@@ -110,6 +114,9 @@ public class BottomPlayerEntity extends Actor {
         fixture.setUserData("player");              // (4) Set the user data.
         box.dispose();                              // (5) Destroy the shape.
 
+        moveSign=0;
+        keepMoving=false;
+
 
         // Set the size to a value that is big enough to be rendered on the screen.
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
@@ -117,23 +124,27 @@ public class BottomPlayerEntity extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Always update the position of the actor when you are going to draw it, so that the
-        // position of the actor on the screen is as accurate as possible to the current position
-        // of the Box2D body.
-        //setPosition((body.getPosition().x - 0.5f) * Constants.PIXELS_IN_METER,
-        //        (body.getPosition().y - 0.5f) * Constants.PIXELS_IN_METER);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
     @Override
     public void act(float delta) {
-        if (Gdx.input.isTouched()) {
-            int moveSign = 1; // right is the default movement
+        if(!keepMoving && Gdx.input.justTouched()){
             if (Gdx.input.getX() <  (Gdx.graphics.getWidth()/2)) {
                 moveSign = -1;
+                keepMoving= true;
+                //emit moveLeft event
+            }else{
+                moveSign = 1;
+                keepMoving= true;
+                //emit moveRight event
             }
 
-            move(moveSign);
+        }
+        if (keepMoving && !Gdx.input.isTouched()) {
+            keepMoving = false;
+            moveSign = 0;
+            //emit stop move
         }
 
     }
