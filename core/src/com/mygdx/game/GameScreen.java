@@ -102,7 +102,7 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().update();
 
         Texture asteroideTexture = game.getManager().get("asteroide.png");
-        asteroide = new Asteroide(world, asteroideTexture, new Vector2(0,0), new Vector2(-2,6));
+        asteroide = new Asteroide(world, asteroideTexture, new Vector2(0,0), new Vector2(5,6));
         stage.addActor(asteroide);
 
     }

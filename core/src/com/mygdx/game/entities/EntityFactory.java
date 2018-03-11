@@ -35,5 +35,10 @@ public class EntityFactory {
         Texture playerTexture = manager.get("blueShipUp.png");
         return new BottomPlayerEntity(world, playerTexture, position);
     }
+
+    public Asteroide createAsteroide(World world, Vector2 position){
+        Texture asteroideTexture = manager.get("asteroide.png");
+        return new Asteroide(world, asteroideTexture, position, new Vector2());
+    }
  }
 
