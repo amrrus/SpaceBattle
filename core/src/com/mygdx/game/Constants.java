@@ -9,15 +9,7 @@ public class Constants {
      */
     public static final float PIXELS_IN_METER = 90f;
 
-    /**
-     * The force in N/s that the player uses to jump in an impulse. This force will also be applied
-     * in the opposite direction to make the player fall faster multiplied by some value to make
-     * it stronger.
-     */
-    public static final int IMPULSE_JUMP = 20;
 
-    public static final float IMPULSE_PLAYER = 10f;
-    public static final float MAX_PLAYER_SPEED = 10f;
 
     public static final int WIDTH_SCREEN=1920;
     public static final int HEIGHT_SCREEN =1080;

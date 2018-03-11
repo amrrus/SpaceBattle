@@ -36,9 +36,6 @@ public class TopPlayerEntity extends Actor {
      */
     private boolean alive = true;
 
-    private float posx;
-    private float posy;
-
 
     public TopPlayerEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
@@ -65,19 +62,9 @@ public class TopPlayerEntity extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Always update the position of the actor when you are going to draw it, so that the
-        // position of the actor on the screen is as accurate as possible to the current position
-        // of the Box2D body.
-        //setPosition((body.getPosition().x - 0.5f) * Constants.PIXELS_IN_METER,
-        //        (body.getPosition().y - 0.5f) * Constants.PIXELS_IN_METER);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
-    @Override
-    public void act(float delta) {
-
-
-    }
 
     public void detach() {
         body.destroyFixture(fixture);

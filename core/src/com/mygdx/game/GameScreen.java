@@ -7,10 +7,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.TopPlayerEntity;
 
+
+import java.util.Map;
 
 import Connections.Connection;
 
@@ -20,10 +23,10 @@ import Connections.Connection;
 public class GameScreen extends BaseScreen {
 
     /** Stage instance for Scene2D rendering. */
-    private Stage stage;
+    public Stage stage;
 
     /** World instance for Box2D engine. */
-    private World world;
+    public World world;
 
     /** Player entity. */
     public TopPlayerEntity topPlayer;
@@ -35,8 +38,8 @@ public class GameScreen extends BaseScreen {
     public Connection conn;
 
 
+    public EntityFactory factory;
 
-    public Integer idClient;
 
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
@@ -52,9 +55,7 @@ public class GameScreen extends BaseScreen {
 
         // Create a new Box2D world for managing things.
         world = new World(new Vector2(0, 0), true);
-
         conn=new Connection(this);
-        idClient=0;
     }
 
     /**
@@ -63,18 +64,18 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void show() {
-        conn.connect();
-        EntityFactory factory = new EntityFactory(game.getManager());
+        factory = new EntityFactory(game.getManager());
 
+        conn.connect();
         // Create the player. It has an initial position.
         topPlayer = factory.createTopPlayer(world, new Vector2(0f, 5.5f));
-        bottomPlayer = factory.createBottomPlayer(world, new Vector2(0f, -5.5f));
+        bottomPlayer = factory.createBottomPlayer(world, new Vector2(0f, -5.5f),conn);
         background = game.getManager().get("dividedPlanet.png");
-
 
         // Add the player to the stage too.
         stage.addActor(topPlayer);
         stage.addActor(bottomPlayer);
+
 
         // Reset the camera to the left. This is required because we have translated the camera
         // during the game. We need to put the camera on the initial position so that you can

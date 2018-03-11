@@ -19,6 +19,9 @@ import com.mygdx.game.Constants;
 
 import java.util.List;
 
+import Connections.Connection;
+import io.socket.client.Socket;
+
 /**
  * This is the body the user controls. It has to jump and don't die, like the title of the game
  * says. You can make it jump by touching the screen. Don't let the player touch any spike or
@@ -54,7 +57,11 @@ public class BottomPlayerEntity extends Actor {
 
     Boolean keepMoving;
 
-    public BottomPlayerEntity(World world, Texture texture, Vector2 position) {
+    Connection conn;
+
+    Integer idClient;
+
+    public BottomPlayerEntity(World world, Texture texture, Vector2 position,Connection conn) {
         this.world = world;
         this.texture = texture;
 
@@ -65,48 +72,6 @@ public class BottomPlayerEntity extends Actor {
 
         body = world.createBody(def);               // (4) Now create the body.
 
-        // Create the player body.
-        BodyDef defCenter = new BodyDef();                // (1) Create the body definition.
-        defCenter.position.set(new Vector2(0,0));                 // (2) Put the body in the initial position.
-        defCenter.type = BodyDef.BodyType.StaticBody;    // (3) Remember to make it dynamic.
-
-        bodyCenter = world.createBody(defCenter);               // (4) Now create the body.
-
-        DistanceJointDef distanceJointDef = new DistanceJointDef();
-        distanceJointDef.bodyA = body;
-        distanceJointDef.bodyB = bodyCenter;
-        distanceJointDef.length = 5.5f;
-
-        joint = world.createJoint(distanceJointDef);
-
-        BodyDef defLimLeft = new BodyDef();                // (1) Create the body definition.
-        defLimLeft.position.set(new Vector2(-5.5f,0));                 // (2) Put the body in the initial position.
-        defLimLeft.type = BodyDef.BodyType.StaticBody;
-
-        bodyLimLeft = world.createBody(defLimLeft);
-
-        BodyDef defLimRight = new BodyDef();                // (1) Create the body definition.
-        defLimRight.position.set(new Vector2(5.5f,0));                 // (2) Put the body in the initial position.
-        defLimRight.type = BodyDef.BodyType.StaticBody;
-
-        bodyLimRight = world.createBody(defLimRight);
-
-        /** LEFT LIMIT*/
-        // Give it some shape.
-        PolygonShape boxLeft = new PolygonShape();      // (1) Create the shape.
-        boxLeft.setAsBox(0.01f, 0.01f);                   // (2) 1x1 meter box.
-        fixtureLimLeft = bodyLimLeft.createFixture(boxLeft, 3);       // (3) Create the fixture.
-        boxLeft.dispose();                              // (5) Destroy the shape.
-
-
-        /** RIGTH LIMIT*/
-        // Give it some shape.
-        PolygonShape boxRight = new PolygonShape();      // (1) Create the shape.
-        boxLeft.setAsBox(0.01f, 0.01f);                   // (2) 1x1 meter box.
-        fixtureLimRight = bodyLimRight.createFixture(boxRight, 3);       // (3) Create the fixture.
-        boxRight.dispose();                              // (5) Destroy the shape.
-
-
         // Give it some shape.
         PolygonShape box = new PolygonShape();      // (1) Create the shape.
         box.setAsBox(0.5f, 0.5f);                   // (2) 1x1 meter box.
@@ -114,8 +79,9 @@ public class BottomPlayerEntity extends Actor {
         fixture.setUserData("player");              // (4) Set the user data.
         box.dispose();                              // (5) Destroy the shape.
 
-        moveSign=0;
-        keepMoving=false;
+        this.moveSign = 0;
+        this.keepMoving = false;
+        this.conn = conn;
 
 
         // Set the size to a value that is big enough to be rendered on the screen.
@@ -124,6 +90,7 @@ public class BottomPlayerEntity extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        this.setRotation(0.25f);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
@@ -134,23 +101,25 @@ public class BottomPlayerEntity extends Actor {
                 moveSign = -1;
                 keepMoving= true;
                 //emit moveLeft event
+                // System.out.println("moveSing:" +moveSign+", keepMoving"+keepMoving);
+                conn.move(moveSign);
+
             }else{
                 moveSign = 1;
                 keepMoving= true;
                 //emit moveRight event
+                //System.out.println("moveSing:" +moveSign+", keepMoving"+keepMoving);
+                conn.move(moveSign);
             }
-
         }
         if (keepMoving && !Gdx.input.isTouched()) {
             keepMoving = false;
             moveSign = 0;
             //emit stop move
+            // System.out.println("moveSing:" +moveSign+", keepMoving"+keepMoving);
+            conn.move(moveSign);
         }
 
-    }
-
-    public void move(int moveSign){
-        body.setLinearVelocity(Constants.IMPULSE_PLAYER*moveSign,0);
     }
 
 
