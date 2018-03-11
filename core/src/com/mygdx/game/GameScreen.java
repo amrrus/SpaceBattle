@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
+import com.mygdx.game.entities.ShotEntity;
 import com.mygdx.game.entities.TopPlayerEntity;
 
 
@@ -76,10 +77,7 @@ public class GameScreen extends BaseScreen {
         stage.addActor(topPlayer);
         stage.addActor(bottomPlayer);
 
-
-        // Reset the camera to the left. This is required because we have translated the camera
-        // during the game. We need to put the camera on the initial position so that you can
-        // use it again if you replay the game.
+        // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 

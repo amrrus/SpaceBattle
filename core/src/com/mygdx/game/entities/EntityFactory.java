@@ -21,6 +21,8 @@ public class EntityFactory {
 
     private HashMap<Integer,Body> asteroids;
 
+    private HashMap<Integer,Body> shots;
+
     /**
      * Create a new entity factory using the provided asset manager.
      * @param manager   the asset manager used to generate things.
@@ -28,7 +30,7 @@ public class EntityFactory {
     public EntityFactory(AssetManager manager) {
         this.manager = manager;
         this.asteroids = new HashMap<Integer, Body>();
-
+        this.shots =  new HashMap<Integer, Body>();
 
     }
 
@@ -52,7 +54,7 @@ public class EntityFactory {
         Texture asteroidTexture = manager.get("asteroid.png");
         AsteroidEntity a = new AsteroidEntity(world, asteroidTexture, position, impulse,radius);
         asteroids.put(idAsteroid,a.getBody());
-        System.out.println(asteroids.keySet());
+        //System.out.println(asteroids.keySet());
         return a;
     }
 
@@ -62,5 +64,21 @@ public class EntityFactory {
             asteroids.remove(idAsteroid);
         }
     }
+
+    public ShotEntity createShot(World world, Vector2 position, Vector2 impulse, Integer idShot, Integer idClient){
+        Texture shotTexture = manager.get("asteroid.png");
+        ShotEntity s = new ShotEntity(world, shotTexture, position, impulse,idClient);
+        shots.put(idShot,s.getBody());
+        //System.out.println(shots.keySet());
+        return s;
+    }
+
+    public void deleteShot(World world,Integer idShot){
+        if (shots.containsKey(idShot)) {
+            world.destroyBody(shots.get(idShot));
+            shots.remove(idShot);
+        }
+    }
+
  }
 

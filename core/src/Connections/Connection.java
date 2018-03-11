@@ -5,6 +5,7 @@ import com.mygdx.game.Constants;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.EntityFactory;
+import com.mygdx.game.entities.ShotEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,15 +16,14 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
-/**
- * Created by Antonio M on 10/03/2018.
- */
 
 public class Connection {
     private Socket mSocket;
     private Emitter.Listener config;
     private Emitter.Listener deleteAst;
     private Emitter.Listener createAst;
+    private Emitter.Listener deleteShot;
+    private Emitter.Listener createShot;
     private Emitter.Listener setId;
     private Emitter.Listener setPos;
     private GameScreen gs;
@@ -39,8 +39,11 @@ public class Connection {
         }
         mSocket.on("CR_setPos",setPos);
         mSocket.on("CR_setId",setId);
-        mSocket.on("CR_deleteAst", deleteAst);
         mSocket.on("CR_createAst",createAst);
+        mSocket.on("CR_deleteAst", deleteAst);
+        mSocket.on("CR_createShot",createShot);
+        mSocket.on("CR_deleteShot", deleteShot);
+
     }
 
     public void connect(){
@@ -49,9 +52,7 @@ public class Connection {
     public void disconnect(){
         mSocket.disconnect();
     }
-    public void setIdClient(Integer idClient){
-        this.idClient = idClient;
-    }
+
     public void move(Integer moveSing){
         JSONObject msg = new JSONObject();
         try {
@@ -77,17 +78,16 @@ public class Connection {
             } catch (JSONException e) {
                 System.out.println("Error to receive message.");
             }
-            if (id==0){
+            if (id==0){ //id player bottom is 0
                 gs.bottomPlayer.setPosition((posx - 0.5f) * Constants.PIXELS_IN_METER,
                         (posy - 0.5f) * Constants.PIXELS_IN_METER);
-            }else  if (id==1){
+            }else  if (id==1){ //id player top is 1
                 gs.topPlayer.setPosition((posx - 0.5f) * Constants.PIXELS_IN_METER,
                         (posy - 0.5f) * Constants.PIXELS_IN_METER);
             }
         }
     };
     }
-
 
     {   setId = new Emitter.Listener() {
         public void call(final Object... args){
@@ -97,7 +97,6 @@ public class Connection {
         }
     };
     }
-
 
     {   createAst = new Emitter.Listener() {
         public void call(final Object... args){
@@ -115,7 +114,7 @@ public class Connection {
                 vx = data.getFloat("vx");
                 vy = data.getFloat("vy");
                 radius= data.getFloat("radius");
-                System.out.println("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+", radio: "+radius);
+                //System.out.println("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+", radio: "+radius);
                 AsteroidEntity a = gs.factory.createAsteroid(gs.world,new Vector2(x,y),new Vector2(vx,vy),id,radius);
                 gs.stage.addActor(a);
             } catch (JSONException e) {
@@ -130,7 +129,44 @@ public class Connection {
         public void call(final Object... args){
             Integer id = (Integer)args[0];
             gs.factory.deleteAsteroid(gs.world,id);
-            System.out.println("Asteroid deleted, id: "+id);
+            //System.out.println("Asteroid deleted, id: "+id);
+        }
+    };
+    }
+
+    {   createShot = new Emitter.Listener() {
+        public void call(final Object... args){
+            JSONObject data = (JSONObject) args[0];
+            Integer idShot=0;
+            Integer idClient=0;
+            float x = 999;
+            float y = 999;
+            float vx = 999;
+            float vy = 999;
+            try {
+                idShot = data.getInt("idShot");
+                idClient = data.getInt("idClient");
+                x = data.getFloat("x");
+                y = data.getFloat("y");
+                vx = data.getFloat("vx");
+                vy = data.getFloat("vy");
+                //System.out.println("Shot created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+ ", idShot: "
+                //        + idShot + "idClient: " +idClient);
+                ShotEntity a = gs.factory.createShot(gs.world,new Vector2(x,y),new Vector2(vx,vy),idShot,idClient);
+                gs.stage.addActor(a);
+            } catch (JSONException e) {
+                System.out.println("Error to receive message.");
+            }
+
+        }
+    };
+    }
+
+    {   deleteShot = new Emitter.Listener() {
+        public void call(final Object... args){
+            Integer idShot = (Integer)args[0];
+            gs.factory.deleteShot(gs.world,idShot);
+            System.out.println("Shot deleted, id: "+idShot);
         }
     };
     }
@@ -139,12 +175,9 @@ public class Connection {
         public void call(final Object... args){
             JSONObject data = (JSONObject) args[0];
             float ppm = 999;
-            float y= 999;
-            float vx= 999;
-            float vy=999;
             try {
                 ppm = data.getFloat("ppm");
-                //System.out.print("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+"\n");
+                System.out.println("Config: ppm:"+ppm);
                 //Constants.PIXELS_IN_METER = ppm;
             } catch (JSONException e) {
                 System.out.println("Error to receive message.");

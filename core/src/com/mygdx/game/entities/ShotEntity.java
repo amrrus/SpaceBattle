@@ -12,18 +12,18 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
 
 
-public class AsteroidEntity extends Actor {
+public class ShotEntity extends Actor {
 
     private Texture texture;
     private World world;
     private Body body;
     private Fixture fixture;
-    private Float radius;
+    private Integer idClient;
 
-    public AsteroidEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Float radius){
+    public ShotEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Integer idClient){
         this.world = world;
         this.texture = texture;
-        this.radius = radius;
+        this.idClient = idClient;
 
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(initialPosition);
@@ -32,21 +32,21 @@ public class AsteroidEntity extends Actor {
         body = world.createBody(bodydef);
 
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(radius);
-        fixture = body.createFixture(circleShape,Constants.ASTEROID_DENSITY);
+        circleShape.setRadius(Constants.SHOT_RADIUS);
+        fixture = body.createFixture(circleShape,Constants.SHOT_DENSITY);
         fixture.setFriction(0);
-        fixture.setUserData("asteroid");
+        fixture.setUserData("shot");
 
         body.applyLinearImpulse(impulse.x, impulse.y, getX(),getY(),  true);
         circleShape.dispose();
 
-        setSize(2 * this.radius * Constants.PIXELS_IN_METER,
-                2 * this.radius * Constants.PIXELS_IN_METER);
+        setSize(2*Constants.SHOT_RADIUS*Constants.PIXELS_IN_METER,
+                2*Constants.SHOT_RADIUS*Constants.PIXELS_IN_METER);
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        setPosition((body.getPosition().x - radius) * Constants.PIXELS_IN_METER,
-                (body.getPosition().y - radius) * Constants.PIXELS_IN_METER);
+        setPosition((body.getPosition().x - Constants.SHOT_RADIUS) * Constants.PIXELS_IN_METER,
+                (body.getPosition().y - Constants.SHOT_RADIUS) * Constants.PIXELS_IN_METER);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
@@ -62,6 +62,10 @@ public class AsteroidEntity extends Actor {
 
     public World getWorld(){
         return this.world;
+    }
+
+    public Integer getIdClient(){
+        return this.idClient;
     }
     //Por si se quiere hacer con un constructor con más parámetros
     //public Asteroide (World world, Float x, Float y, Vector2 impulse){
