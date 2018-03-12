@@ -1,18 +1,18 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.Asteroide;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
+import com.mygdx.game.entities.LimiterEntity;
 import com.mygdx.game.entities.TopPlayerEntity;
 
 
@@ -42,6 +42,10 @@ public class GameScreen extends BaseScreen {
     private TopPlayerEntity topPlayer;
 
     private BottomPlayerEntity bottomPlayer;
+
+    private LimiterEntity leftLimiter;
+
+    private LimiterEntity rightLimiter;
 
     private Texture background;
 
@@ -88,23 +92,21 @@ public class GameScreen extends BaseScreen {
         // Create the player. It has an initial position.
         topPlayer = factory.createTopPlayer(world, new Vector2(0f, 5.5f));
         bottomPlayer = factory.createBottomPlayer(world, new Vector2(0f, -5.5f));
+        leftLimiter = factory.createLimiter(world, new Vector2(-5.5f, 0));
+        rightLimiter = factory.createLimiter(world, new Vector2(5.5f, 0));
         background = game.getManager().get("dividedPlanet.png");
 
-
-        // Add the player to the stage too.
+        stage.addActor(leftLimiter);
+        stage.addActor(rightLimiter);
         stage.addActor(topPlayer);
         stage.addActor(bottomPlayer);
 
-        // Reset the camera to the left. This is required because we have translated the camera
-        // during the game. We need to put the camera on the initial position so that you can
-        // use it again if you replay the game.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
         Texture asteroideTexture = game.getManager().get("asteroide.png");
         asteroide = new Asteroide(world, asteroideTexture, new Vector2(0,0), new Vector2(5,6));
         stage.addActor(asteroide);
-
     }
 
     /**
@@ -114,14 +116,13 @@ public class GameScreen extends BaseScreen {
     @Override
     public void hide() {
         mSocket.disconnect();
-        // Clear the stage. This will remove ALL actors from the stage and it is faster than
-        // removing every single actor one by one. This is not shown in the video but it is
-        // an improvement.
+
         stage.clear();
 
-        // Detach every entity from the world they have been living in.
         bottomPlayer.detach();
         topPlayer.detach();
+        leftLimiter.detach();
+        rightLimiter.detach();
         asteroide.detach();
         asteroide.remove();
 
@@ -134,6 +135,25 @@ public class GameScreen extends BaseScreen {
 
     private float fps=0;
     public void render(float delta) {
+
+        /** Pulsar ESCAPE para irnos a la pantalla de GAME OVER (para debug)*/
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)){
+            stage.addAction(
+                    Actions.sequence(
+                            Actions.delay(0f),
+                            Actions.run(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    game.setScreen(game.gameOverScreen);
+                                }
+                            })
+                    )
+            );
+        }
+        /** */
+
+
         nFrame+=1;
 
         fps+=delta;

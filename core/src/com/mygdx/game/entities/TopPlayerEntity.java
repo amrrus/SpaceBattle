@@ -37,7 +37,7 @@ public class TopPlayerEntity extends Actor {
     private boolean alive = true;
 
 
-    public TopPlayerEntity(World world, Texture texture, Vector2 position) {
+    public TopPlayerEntity(World world, Texture texture, Vector2 position, EntityFactory factory) {
         this.world = world;
         this.texture = texture;
 

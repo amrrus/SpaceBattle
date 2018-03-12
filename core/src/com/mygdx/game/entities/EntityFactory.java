@@ -2,6 +2,7 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -28,17 +29,26 @@ public class EntityFactory {
      */
     public TopPlayerEntity createTopPlayer(World world, Vector2 position) {
         Texture playerTexture = manager.get("blueShipDown.png");
-        return new TopPlayerEntity(world, playerTexture, position);
+        return new TopPlayerEntity(world, playerTexture, position, this);
     }
 
     public BottomPlayerEntity createBottomPlayer(World world, Vector2 position) {
         Texture playerTexture = manager.get("blueShipUp.png");
-        return new BottomPlayerEntity(world, playerTexture, position);
+        return new BottomPlayerEntity(world, playerTexture, position, this);
     }
 
     public Asteroide createAsteroide(World world, Vector2 position){
         Texture asteroideTexture = manager.get("asteroide.png");
         return new Asteroide(world, asteroideTexture, position, new Vector2());
+    }
+
+    public LimiterEntity createLimiter(World world, Vector2 position) {
+        return new LimiterEntity(world, position);
+    }
+
+    public ShotEntity createShot(World world, Vector2 position, Vector2 direction) {
+        Texture shotTexture = manager.get("shot.png");
+        return new ShotEntity(world, shotTexture, position, direction);
     }
  }
 

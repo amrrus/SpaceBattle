@@ -9,12 +9,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJoint;
 import com.badlogic.gdx.physics.box2d.joints.DistanceJointDef;
+import com.badlogic.gdx.physics.box2d.joints.RevoluteJointDef;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.mygdx.game.Constants;
 
 import java.util.List;
@@ -37,36 +40,51 @@ public class BottomPlayerEntity extends Actor {
 
     private Body bodyCenter;
 
-    private Body bodyLimRight;
-
-    private Body bodyLimLeft;
-
     /** The fixture for this player. */
     private Fixture fixture;
 
-    private Fixture fixtureLimRight;
-
-    private Fixture fixtureLimLeft;
-
     private Joint joint;
 
-    public BottomPlayerEntity(World world, Texture texture, Vector2 position) {
+    private EntityFactory factory;
+
+    private int timerShot;
+    private int numOfShots;
+
+    public BottomPlayerEntity(World world, Texture texture, Vector2 position, EntityFactory factory) {
         this.world = world;
         this.texture = texture;
+        this.factory = factory;
 
-        // Create the player body.
-        BodyDef def = new BodyDef();                // (1) Create the body definition.
-        def.position.set(position);                 // (2) Put the body in the initial position.
-        def.type = BodyDef.BodyType.DynamicBody;    // (3) Remember to make it dynamic.
+        this.timerShot = 0;
+        this.numOfShots = 0;
 
-        body = world.createBody(def);               // (4) Now create the body.
+        /** Player */
 
-        // Create the player body.
-        BodyDef defCenter = new BodyDef();                // (1) Create the body definition.
-        defCenter.position.set(new Vector2(0,0));                 // (2) Put the body in the initial position.
-        defCenter.type = BodyDef.BodyType.StaticBody;    // (3) Remember to make it dynamic.
+        BodyDef def = new BodyDef();
+        def.position.set(position);
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.fixedRotation = false;
 
-        bodyCenter = world.createBody(defCenter);               // (4) Now create the body.
+        body = world.createBody(def);
+
+        PolygonShape box = new PolygonShape();
+        box.setAsBox(0.5f, 0.5f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = box;
+        fixtureDef.density = 3;
+        fixtureDef.filter.categoryBits = 18;
+        fixtureDef.filter.groupIndex = -1;
+        fixture = body.createFixture(fixtureDef);
+        fixture.setUserData("player");
+        box.dispose();
+
+        /** Joint */
+
+        BodyDef defCenter = new BodyDef();
+        defCenter.position.set(new Vector2(0,0));
+        defCenter.type = BodyDef.BodyType.StaticBody;
+
+        bodyCenter = world.createBody(defCenter);
 
         DistanceJointDef distanceJointDef = new DistanceJointDef();
         distanceJointDef.bodyA = body;
@@ -75,51 +93,21 @@ public class BottomPlayerEntity extends Actor {
 
         joint = world.createJoint(distanceJointDef);
 
-        BodyDef defLimLeft = new BodyDef();                // (1) Create the body definition.
-        defLimLeft.position.set(new Vector2(-5.5f,0));                 // (2) Put the body in the initial position.
-        defLimLeft.type = BodyDef.BodyType.StaticBody;
-
-        bodyLimLeft = world.createBody(defLimLeft);
-
-        BodyDef defLimRight = new BodyDef();                // (1) Create the body definition.
-        defLimRight.position.set(new Vector2(5.5f,0));                 // (2) Put the body in the initial position.
-        defLimRight.type = BodyDef.BodyType.StaticBody;
-
-        bodyLimRight = world.createBody(defLimRight);
-
-        /** LEFT LIMIT*/
-        // Give it some shape.
-        PolygonShape boxLeft = new PolygonShape();      // (1) Create the shape.
-        boxLeft.setAsBox(0.01f, 0.01f);                   // (2) 1x1 meter box.
-        fixtureLimLeft = bodyLimLeft.createFixture(boxLeft, 3);       // (3) Create the fixture.
-        boxLeft.dispose();                              // (5) Destroy the shape.
-
-
-        /** RIGTH LIMIT*/
-        // Give it some shape.
-        PolygonShape boxRight = new PolygonShape();      // (1) Create the shape.
-        boxLeft.setAsBox(0.01f, 0.01f);                   // (2) 1x1 meter box.
-        fixtureLimRight = bodyLimRight.createFixture(boxRight, 3);       // (3) Create the fixture.
-        boxRight.dispose();                              // (5) Destroy the shape.
-
-
-        // Give it some shape.
-        PolygonShape box = new PolygonShape();      // (1) Create the shape.
-        box.setAsBox(0.5f, 0.5f);                   // (2) 1x1 meter box.
-        fixture = body.createFixture(box, 3);       // (3) Create the fixture.
-        fixture.setUserData("player");              // (4) Set the user data.
-        box.dispose();                              // (5) Destroy the shape.
-
-
-        // Set the size to a value that is big enough to be rendered on the screen.
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        // Always update the position of the actor when you are going to draw it, so that the
-        // position of the actor on the screen is as accurate as possible to the current position
-        // of the Box2D body.
+        /** TODO: MEJORAR LA FORMA EN LA QUE SE CREAN LOS DISPAROS */
+        if(timerShot>=30) {
+            ShotEntity shot = factory.createShot(world, body.getPosition(), new Vector2(0,0).sub(body.getPosition()));
+            getStage().addActor(shot);
+            numOfShots++;
+            timerShot=0;
+        }else{
+            timerShot++;
+        }
+
         setPosition((body.getPosition().x - 0.5f) * Constants.PIXELS_IN_METER,
                 (body.getPosition().y - 0.5f) * Constants.PIXELS_IN_METER);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
@@ -140,6 +128,8 @@ public class BottomPlayerEntity extends Actor {
 
     public void move(int moveSign){
         body.setLinearVelocity(Constants.IMPULSE_PLAYER*moveSign,0);
+
+
     }
 
 

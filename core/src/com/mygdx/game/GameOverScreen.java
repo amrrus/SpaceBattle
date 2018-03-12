@@ -71,11 +71,15 @@ public class GameOverScreen extends BaseScreen {
         // Now I position things on screen. Sorry for making this the hardest part of this screen.
         // I position things on the screen so that they look centered. This is why I make the
         // buttons the same size.
-        gameover.setPosition(320 - gameover.getWidth() / 2, 320 - gameover.getHeight());
-        retry.setSize(200, 80);
-        menu.setSize(200, 80);
-        retry.setPosition(60, 50);
-        menu.setPosition(380, 50);
+        gameover.setPosition(Constants.WIDTH_SCREEN/2 - gameover.getWidth() / 2, Constants.HEIGHT_SCREEN*2/3 - gameover.getHeight());
+        retry.setSize(600, 240);
+        retry.getLabel().setFontScale(4, 4);
+
+        menu.setSize(600, 240);
+        menu.getLabel().setFontScale(4, 4);
+
+        retry.setPosition(300, 120);
+        menu.setPosition(1000, 120);
 
         // Do not forget to add actors to the stage or we wouldn't see anything.
         stage.addActor(retry);
@@ -109,8 +113,8 @@ public class GameOverScreen extends BaseScreen {
 
     @Override
     public void render(float delta) {
-        // Just render things.
-        Gdx.gl.glClearColor(0.4f, 0.5f, 0.8f, 1f);
+
+        Gdx.gl.glClearColor(0.2f, 0.3f, 0.5f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
