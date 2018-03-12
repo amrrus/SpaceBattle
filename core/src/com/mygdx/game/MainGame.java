@@ -6,6 +6,8 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
+import sun.awt.image.GifImageDecoder;
+
 /**
  * This is our main game. This is the class that we pass to the Application in Android launcher
  * as well as in desktop launcher. Because we want to create a screen-based game, we use Game
@@ -36,7 +38,6 @@ public class MainGame extends Game {
         manager.load("logo.png", Texture.class);
         manager.load("asteroid.png", Texture.class);
         manager.load("explosion.png", Texture.class);
-
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);
         setScreen(loadingScreen);

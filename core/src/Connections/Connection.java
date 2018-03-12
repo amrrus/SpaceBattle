@@ -28,10 +28,12 @@ public class Connection {
     private Emitter.Listener setPos;
     private GameScreen gs;
     private Integer idClient;
+    private Vector2 oy;
 
 
     public Connection(GameScreen gs){
         this.gs=gs;
+        this.oy=new Vector2(0f,5.5f);
         try {
             mSocket = IO.socket(Constants.SERVER_URL);
         } catch (URISyntaxException e) {
@@ -70,20 +72,20 @@ public class Connection {
             int id = 999;
             float posx= 999;
             float posy= 999;
+            float alpha=0;
             try {
                 id = data.getInt("id");
                 posx = data.getFloat("x");
                 posy = data.getFloat("y");
                 //System.out.print("Cliente:"+id+", PosX:"+posx+", PosY:"+posy+"\n");
+
             } catch (JSONException e) {
                 System.out.println("Error to receive message.");
             }
             if (id==0){ //id player bottom is 0
-                gs.bottomPlayer.setPosition((posx - 0.5f) * Constants.PIXELS_IN_METER,
-                        (posy - 0.5f) * Constants.PIXELS_IN_METER);
+                gs.bottomPlayer.setPosition(posx,posy);
             }else  if (id==1){ //id player top is 1
-                gs.topPlayer.setPosition((posx - 0.5f) * Constants.PIXELS_IN_METER,
-                        (posy - 0.5f) * Constants.PIXELS_IN_METER);
+                gs.topPlayer.setPosition(posx,posy);
             }
         }
     };

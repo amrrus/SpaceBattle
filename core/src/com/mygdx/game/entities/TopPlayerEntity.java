@@ -2,6 +2,7 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -36,11 +37,13 @@ public class TopPlayerEntity extends Actor {
      */
     private boolean alive = true;
 
+    private Vector2 oy;
+
 
     public TopPlayerEntity(World world, Texture texture, Vector2 position) {
         this.world = world;
         this.texture = texture;
-
+        this.oy = new Vector2(0,1);
         // Create the player body.
         BodyDef def = new BodyDef();                // (1) Create the body definition.
         def.position.set(position);                 // (2) Put the body in the initial position.
@@ -56,13 +59,20 @@ public class TopPlayerEntity extends Actor {
         box.dispose();
         // (5) Destroy the shape.
 
+        setPosition(-0.5f*Constants.PIXELS_IN_METER,5f*Constants.PIXELS_IN_METER);
         // Set the size to a value that is big enough to be rendered on the screen.
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(texture, getX(), getY(), getWidth(), getHeight());
+        float alpha = oy.angle(new Vector2(getX(), getY()));
+        setRotation(alpha);
+        float x = (getX()+(0.5f* MathUtils.sinDeg(alpha)))*Constants.PIXELS_IN_METER;
+        float y = (getY()-(0.5f*MathUtils.cosDeg(alpha)))*Constants.PIXELS_IN_METER;
+        //setPosition(x,y);
+        batch.draw(texture, x, y,0,0, getWidth(), getHeight(),1f,1f,alpha,0,0,158,258,false,false);
+
     }
 
 

@@ -7,20 +7,15 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
-import com.mygdx.game.entities.ShotEntity;
 import com.mygdx.game.entities.TopPlayerEntity;
-
-
-import java.util.Map;
-
 import Connections.Connection;
 
 /**
  * This is the main screen for the game. All the fun happen here.
  */
+
 public class GameScreen extends BaseScreen {
 
     /** Stage instance for Scene2D rendering. */
@@ -37,7 +32,6 @@ public class GameScreen extends BaseScreen {
     private Texture background;
 
     public Connection conn;
-
 
     public EntityFactory factory;
 
