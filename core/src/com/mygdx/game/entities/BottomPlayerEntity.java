@@ -94,12 +94,10 @@ public class BottomPlayerEntity extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        float alpha = oy.angle(new Vector2(getX(), getY()));
-        setRotation(alpha);
-        float x = (getX()+(0.5f*MathUtils.sinDeg(alpha)))*Constants.PIXELS_IN_METER;
-        float y = (getY()-(0.5f*MathUtils.cosDeg(alpha)))*Constants.PIXELS_IN_METER;
+        //float x = (getX()+(0.5f*MathUtils.sinDeg(getRotation())))*Constants.PIXELS_IN_METER;
+        //float y = (getY()-(0.5f*MathUtils.cosDeg(getRotation())))*Constants.PIXELS_IN_METER;
         //setPosition(x,y);
-        batch.draw(texture, x, y,0,0, getWidth(), getHeight(),1f,1f,alpha,0,0,158,258,false,false);
+        batch.draw(texture, getX(), getY(),0,0, getWidth(), getHeight(),1f,1f,getRotation(),0,0,158,258,false,false);
 
     }
 
@@ -137,5 +135,9 @@ public class BottomPlayerEntity extends Actor {
         //world.destroyBody(body);
     }
 
+    public void setPosition(float x, float y,float alpha) {
+        super.setPosition(x*Constants.PIXELS_IN_METER, y*Constants.PIXELS_IN_METER);
+        this.setRotation(alpha);
+    }
 }
 

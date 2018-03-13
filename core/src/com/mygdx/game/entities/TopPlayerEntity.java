@@ -44,19 +44,20 @@ public class TopPlayerEntity extends Actor {
         this.world = world;
         this.texture = texture;
         this.oy = new Vector2(0,1);
-        // Create the player body.
-        BodyDef def = new BodyDef();                // (1) Create the body definition.
-        def.position.set(position);                 // (2) Put the body in the initial position.
-        def.type = BodyDef.BodyType.DynamicBody;    // (3) Remember to make it dynamic.
 
-        body = world.createBody(def);               // (4) Now create the body.
+        // Create the player body.
+        //BodyDef def = new BodyDef();                // (1) Create the body definition.
+        //def.position.set(position);                 // (2) Put the body in the initial position.
+        //def.type = BodyDef.BodyType.DynamicBody;    // (3) Remember to make it dynamic.
+
+        //body = world.createBody(def);               // (4) Now create the body.
 
         // Give it some shape.
-        PolygonShape box = new PolygonShape();      // (1) Create the shape.
-        box.setAsBox(0.5f, 0.5f);                   // (2) 1x1 meter box.
-        fixture = body.createFixture(box, 3);       // (3) Create the fixture.
-        fixture.setUserData("player");              // (4) Set the user data.
-        box.dispose();
+        //PolygonShape box = new PolygonShape();      // (1) Create the shape.
+        //box.setAsBox(0.5f, 0.5f);                   // (2) 1x1 meter box.
+        //fixture = body.createFixture(box, 3);       // (3) Create the fixture.
+        //fixture.setUserData("player");              // (4) Set the user data.
+       //box.dispose();
         // (5) Destroy the shape.
 
         setPosition(-0.5f*Constants.PIXELS_IN_METER,5f*Constants.PIXELS_IN_METER);
@@ -66,12 +67,12 @@ public class TopPlayerEntity extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        float alpha = oy.angle(new Vector2(getX(), getY()));
-        setRotation(alpha);
-        float x = (getX()+(0.5f* MathUtils.sinDeg(alpha)))*Constants.PIXELS_IN_METER;
-        float y = (getY()-(0.5f*MathUtils.cosDeg(alpha)))*Constants.PIXELS_IN_METER;
+        //float alpha = oy.angle(new Vector2(getX(), getY()));
+        //setRotation(alpha);
+        //float x = (getX()+(0.5f* MathUtils.sinDeg(getRotation())))*Constants.PIXELS_IN_METER;
+        //float y = (getY()-(0.5f*MathUtils.cosDeg(getRotation())))*Constants.PIXELS_IN_METER;
         //setPosition(x,y);
-        batch.draw(texture, x, y,0,0, getWidth(), getHeight(),1f,1f,alpha,0,0,158,258,false,false);
+        batch.draw(texture, getX(), getY(),0,0, getWidth(), getHeight(),1f,1f,getRotation(),0,0,158,258,false,false);
 
     }
 
@@ -91,5 +92,9 @@ public class TopPlayerEntity extends Actor {
         this.alive = alive;
     }
 
+    public void setPosition(float x, float y,float alpha) {
+        super.setPosition(x*Constants.PIXELS_IN_METER, y*Constants.PIXELS_IN_METER);
+        this.setRotation(alpha);
+    }
 }
 

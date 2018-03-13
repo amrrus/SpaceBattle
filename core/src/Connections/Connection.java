@@ -24,6 +24,7 @@ public class Connection {
     private Emitter.Listener createAst;
     private Emitter.Listener deleteShot;
     private Emitter.Listener createShot;
+    private Emitter.Listener explosion;
     private Emitter.Listener setId;
     private Emitter.Listener setPos;
     private GameScreen gs;
@@ -45,6 +46,7 @@ public class Connection {
         mSocket.on("CR_deleteAst", deleteAst);
         mSocket.on("CR_createShot",createShot);
         mSocket.on("CR_deleteShot", deleteShot);
+        mSocket.on("CR_explosion", explosion);
 
     }
 
@@ -77,15 +79,16 @@ public class Connection {
                 id = data.getInt("id");
                 posx = data.getFloat("x");
                 posy = data.getFloat("y");
+                alpha = data.getFloat("alpha");
                 //System.out.print("Cliente:"+id+", PosX:"+posx+", PosY:"+posy+"\n");
 
             } catch (JSONException e) {
                 System.out.println("Error to receive message.");
             }
             if (id==0){ //id player bottom is 0
-                gs.bottomPlayer.setPosition(posx,posy);
+                gs.bottomPlayer.setPosition(posx,posy,alpha);
             }else  if (id==1){ //id player top is 1
-                gs.topPlayer.setPosition(posx,posy);
+                gs.topPlayer.setPosition(posx,posy,alpha);
             }
         }
     };
@@ -94,7 +97,7 @@ public class Connection {
     {   setId = new Emitter.Listener() {
         public void call(final Object... args){
             idClient = new Integer ((Integer) args[0]);
-            System.out.print("IdCliente: "+idClient+"\n");
+            //System.out.print("IdCliente: "+idClient+"\n");
 
         }
     };
@@ -168,18 +171,35 @@ public class Connection {
         public void call(final Object... args){
             Integer idShot = (Integer)args[0];
             gs.factory.deleteShot(gs.world,idShot);
-            System.out.println("Shot deleted, id: "+idShot);
+            //System.out.println("Shot deleted, id: "+idShot);
         }
     };
     }
 
+    {   explosion = new Emitter.Listener() {
+        public void call(final Object... args){
+            JSONObject data = (JSONObject) args[0];
+            float x = 0;
+            float y = 0;
+            try {
+                x = data.getFloat("x");
+                y = data.getFloat("y");
+                //System.out.println("Explosion produced: x: "+x+", y: "+y);
+                //Constants.PIXELS_IN_METER = ppm;
+            } catch (JSONException e) {
+                System.out.println("Error to receive message.");
+            }
+
+        }
+    };
+    }
     {   config = new Emitter.Listener() {
         public void call(final Object... args){
             JSONObject data = (JSONObject) args[0];
             float ppm = 999;
             try {
                 ppm = data.getFloat("ppm");
-                System.out.println("Config: ppm:"+ppm);
+                //System.out.println("Config: ppm:"+ppm);
                 //Constants.PIXELS_IN_METER = ppm;
             } catch (JSONException e) {
                 System.out.println("Error to receive message.");
