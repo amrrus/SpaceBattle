@@ -20,7 +20,7 @@ public class AsteroidEntity extends Actor {
     private Fixture fixture;
     private Float radius;
 
-    public AsteroidEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Float radius){
+    protected AsteroidEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Float radius){
         this.world = world;
         this.texture = texture;
         this.radius = radius;
@@ -53,7 +53,6 @@ public class AsteroidEntity extends Actor {
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);
-
     }
 
     public Body getBody(){
@@ -63,8 +62,5 @@ public class AsteroidEntity extends Actor {
     public World getWorld(){
         return this.world;
     }
-    //Por si se quiere hacer con un constructor con más parámetros
-    //public Asteroide (World world, Float x, Float y, Vector2 impulse){
-    //}
 
 }

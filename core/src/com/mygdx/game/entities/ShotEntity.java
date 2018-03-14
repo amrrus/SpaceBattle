@@ -20,7 +20,7 @@ public class ShotEntity extends Actor {
     private Fixture fixture;
     private Integer idClient;
 
-    public ShotEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Integer idClient){
+    protected ShotEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Integer idClient){
         this.world = world;
         this.texture = texture;
         this.idClient = idClient;

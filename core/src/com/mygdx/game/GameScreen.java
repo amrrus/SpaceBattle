@@ -4,9 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.TopPlayerEntity;
@@ -18,21 +21,12 @@ import Connections.Connection;
 
 public class GameScreen extends BaseScreen {
 
-    /** Stage instance for Scene2D rendering. */
     public Stage stage;
-
-    /** World instance for Box2D engine. */
     public World world;
-
-    /** Player entity. */
     public TopPlayerEntity topPlayer;
-
     public BottomPlayerEntity bottomPlayer;
-
     private Texture background;
-
-    public Connection conn;
-
+    private Connection conn;
     public EntityFactory factory;
 
 
@@ -44,27 +38,20 @@ public class GameScreen extends BaseScreen {
     public GameScreen(MainGame game) {
         super(game);
 
-        // Create a new Scene2D stage for displaying things.
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
         stage.setDebugAll(true);
 
-        // Create a new Box2D world for managing things.
         world = new World(new Vector2(0, 0), true);
         conn=new Connection(this);
     }
 
-    /**
-     * This method will be executed when this screen is about to be rendered.
-     * Here, I use this method to set up the initial position for the stage.
-     */
-    @Override
     public void show() {
         factory = new EntityFactory(game.getManager());
-
         conn.connect();
-        // Create the player. It has an initial position.
-        topPlayer = factory.createTopPlayer(world, new Vector2(0f, 5.5f));
-        bottomPlayer = factory.createBottomPlayer(world, new Vector2(0f, -5.5f),conn);
+
+        // Create the players.
+        topPlayer = factory.createTopPlayer(conn);
+        bottomPlayer = factory.createBottomPlayer(conn);
         background = game.getManager().get("dividedPlanet.png");
 
         // Add the player to the stage too.
@@ -88,10 +75,7 @@ public class GameScreen extends BaseScreen {
         // removing every single actor one by one. This is not shown in the video but it is
         // an improvement.
         stage.clear();
-
         // Detach every entity from the world they have been living in.
-        bottomPlayer.detach();
-        topPlayer.detach();
 
     }
 
@@ -108,7 +92,6 @@ public class GameScreen extends BaseScreen {
         // Update the stage. This will update the player speed.
         stage.act();
 
-
         // Step the world. This will update the physics and update entity positions.
         world.step(delta, 6, 2);
 
@@ -116,17 +99,9 @@ public class GameScreen extends BaseScreen {
         stage.getBatch().begin();
         stage.getBatch().draw(background,-510,-510, Constants.HEIGHT_SCREEN*0.95f, Constants.HEIGHT_SCREEN*0.95f);
         stage.getBatch().end();
-
         stage.draw();
-
-
     }
 
-    /**
-     * This method is executed when the screen can be safely disposed.
-     * I use this method to dispose things that have to be manually disposed.
-     */
-    @Override
     public void dispose() {
         // Dispose the stage to remove the Batch references in the graphics card.
         stage.dispose();
@@ -135,7 +110,5 @@ public class GameScreen extends BaseScreen {
         world.dispose();
         background.dispose();
     }
-
-
 }
 
