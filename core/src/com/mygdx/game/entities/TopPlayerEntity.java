@@ -40,7 +40,7 @@ public class TopPlayerEntity extends Actor {
     private Vector2 oy;
 
 
-    public TopPlayerEntity(World world, Texture texture, Vector2 position) {
+    public TopPlayerEntity(World world, Texture texture, Vector2 position, EntityFactory factory) {
         this.world = world;
         this.texture = texture;
         this.oy = new Vector2(0,1);
