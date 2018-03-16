@@ -12,6 +12,7 @@ public class Constants {
     public static final float ASTEROID_DENSITY = 1f;
     public static final float SHOT_RADIUS = 0.1f;
     public static final float SHOT_DENSITY = 10f;
+    public static final float EXPLOSION_DENSITY = 1f;
 
 
 

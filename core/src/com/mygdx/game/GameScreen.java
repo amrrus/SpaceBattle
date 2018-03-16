@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
+import com.mygdx.game.entities.ExplosionEntity;
 import com.mygdx.game.entities.TopPlayerEntity;
 import Connections.Connection;
 
@@ -25,6 +26,7 @@ public class GameScreen extends BaseScreen {
     public World world;
     public TopPlayerEntity topPlayer;
     public BottomPlayerEntity bottomPlayer;
+    public ExplosionEntity explosion;
     private Texture background;
     private Connection conn;
     public EntityFactory factory;
@@ -61,6 +63,9 @@ public class GameScreen extends BaseScreen {
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
+
+        explosion = new ExplosionEntity(new Vector2(0,0));
+        stage.addActor(explosion);
 
     }
 
