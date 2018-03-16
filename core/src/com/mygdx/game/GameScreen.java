@@ -64,7 +64,7 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
-        explosion = new ExplosionEntity(new Vector2(0,0));
+        explosion = new ExplosionEntity(40f, 0f, 1f );
         stage.addActor(explosion);
 
     }
