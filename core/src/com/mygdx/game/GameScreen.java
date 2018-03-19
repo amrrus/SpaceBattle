@@ -4,16 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.entities.AsteroidEntity;
-import com.mygdx.game.entities.BottomPlayerEntity;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.ExplosionEntity;
-import com.mygdx.game.entities.TopPlayerEntity;
+import com.mygdx.game.entities.PlayerEntity;
+import com.mygdx.game.entities.PlayerMoveControlEntity;
 import Connections.Connection;
 
 /**
@@ -24,8 +21,9 @@ public class GameScreen extends BaseScreen {
 
     public Stage stage;
     public World world;
-    public TopPlayerEntity topPlayer;
-    public BottomPlayerEntity bottomPlayer;
+    public PlayerEntity topPlayer;
+    public PlayerEntity bottomPlayer;
+    public PlayerMoveControlEntity playerMoveControl;
     public ExplosionEntity explosion;
     private Texture background;
     private Connection conn;
@@ -52,11 +50,12 @@ public class GameScreen extends BaseScreen {
         conn.connect();
 
         // Create the players.
-        topPlayer = factory.createTopPlayer(conn);
-        bottomPlayer = factory.createBottomPlayer(conn);
+        topPlayer = factory.createTopPlayer();
+        bottomPlayer = factory.createBottomPlayer();
+        playerMoveControl = factory.createPlayerMoveControl(conn);
         background = game.getManager().get("dividedPlanet.png");
 
-        // Add the player to the stage too.
+        stage.addActor(playerMoveControl);
         stage.addActor(topPlayer);
         stage.addActor(bottomPlayer);
 
@@ -116,4 +115,3 @@ public class GameScreen extends BaseScreen {
         background.dispose();
     }
 }
-

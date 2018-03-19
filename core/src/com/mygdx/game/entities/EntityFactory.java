@@ -23,14 +23,18 @@ public class EntityFactory {
         this.shots =  new HashMap<Integer, ShotEntity>();
     }
 
-    public TopPlayerEntity createTopPlayer(Connection conn) {
+    public PlayerEntity createTopPlayer() {
         Texture playerTexture = manager.get("blueShipDown.png");
-        return new TopPlayerEntity(playerTexture, conn);
+        return new PlayerEntity(playerTexture, new Vector2(-0.5f, 5f));
     }
 
-    public BottomPlayerEntity createBottomPlayer( Connection conn) {
+    public PlayerEntity createBottomPlayer() {
         Texture playerTexture = manager.get("blueShipUp.png");
-        return new BottomPlayerEntity(playerTexture,conn);
+        return new PlayerEntity(playerTexture, new Vector2(-0.5f, -6f));
+    }
+
+    public PlayerMoveControlEntity createPlayerMoveControl(Connection conn){
+        return new PlayerMoveControlEntity(conn);
     }
 
     public AsteroidEntity createAsteroid(World world, Vector2 position, Vector2 impulse, Integer idAsteroid,Float radius){

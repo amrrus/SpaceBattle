@@ -55,6 +55,13 @@ public class Connection {
         mSocket.disconnect();
     }
 
+    public void move(Integer moveSing){
+        if(getClientId()==0)
+            moveBot(moveSing);
+        else
+            moveTop(moveSing);
+    }
+
     public void moveTop(Integer moveSing){
         JSONObject msg = new JSONObject();
         try {
@@ -97,99 +104,100 @@ public class Connection {
     };
     }
 
-    {   setId = new Emitter.Listener() {
-        public void call(final Object... args){
-            clientId = new Integer ((Integer) args[0]);
-            System.out.print("IdCliente: "+clientId+"\n");
-        }
-    };
+    {
+        setId = new Emitter.Listener() {
+            public void call(final Object... args){
+                clientId = new Integer ((Integer) args[0]);
+                System.out.print("IdCliente: "+clientId+"\n");
+            }
+        };
     }
 
     {   createAst = new Emitter.Listener() {
-        public void call(final Object... args){
-            JSONObject data = (JSONObject) args[0];
-            try {
-                Integer id = data.getInt("id");
-                float x = data.getFloat("x");
-                float y = data.getFloat("y");
-                float vx = data.getFloat("vx");
-                float vy = data.getFloat("vy");
-                float radius= data.getFloat("radius");
-                //System.out.println("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+", radio: "+radius);
-                AsteroidEntity a = gs.factory.createAsteroid(gs.world,new Vector2(x,y),new Vector2(vx,vy),id,radius);
-                gs.stage.addActor(a);
-            } catch (JSONException e) {
-                System.out.println("Error to receive message.");
-            }
+            public void call(final Object... args){
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    Integer id = data.getInt("id");
+                    float x = data.getFloat("x");
+                    float y = data.getFloat("y");
+                    float vx = data.getFloat("vx");
+                    float vy = data.getFloat("vy");
+                    float radius= data.getFloat("radius");
+                    //System.out.println("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+", radio: "+radius);
+                    AsteroidEntity a = gs.factory.createAsteroid(gs.world,new Vector2(x,y),new Vector2(vx,vy),id,radius);
+                    gs.stage.addActor(a);
+                } catch (JSONException e) {
+                    System.out.println("Error to receive message.");
+                }
 
-        }
-    };
+            }
+        };
     }
 
     {   deleteAst = new Emitter.Listener() {
-        public void call(final Object... args){
-            Integer id = (Integer)args[0];
-            gs.factory.deleteAsteroid(id);
-            //System.out.println("Asteroid deleted, id: "+id);
-        }
-    };
+            public void call(final Object... args){
+                Integer id = (Integer)args[0];
+                gs.factory.deleteAsteroid(id);
+                //System.out.println("Asteroid deleted, id: "+id);
+            }
+        };
     }
 
     {   createShot = new Emitter.Listener() {
-        public void call(final Object... args){
-            JSONObject data = (JSONObject) args[0];
-            try {
-                Integer idShot = data.getInt("idShot");
-                Integer idClient = data.getInt("idClient");
-                float x = data.getFloat("x");
-                float y = data.getFloat("y");
-                float vx = data.getFloat("vx");
-                float vy = data.getFloat("vy");
-                //System.out.println("Shot created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+ ", idShot: "+ idShot + "idClient: " +idClient);
-                ShotEntity a = gs.factory.createShot(gs.world,new Vector2(x,y),new Vector2(vx,vy),idShot,idClient);
-                gs.stage.addActor(a);
-            } catch (JSONException e) {
-                System.out.println("Error to receive message.");
-            }
+            public void call(final Object... args){
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    Integer idShot = data.getInt("idShot");
+                    Integer idClient = data.getInt("idClient");
+                    float x = data.getFloat("x");
+                    float y = data.getFloat("y");
+                    float vx = data.getFloat("vx");
+                    float vy = data.getFloat("vy");
+                    //System.out.println("Shot created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+ ", idShot: "+ idShot + "idClient: " +idClient);
+                    ShotEntity a = gs.factory.createShot(gs.world,new Vector2(x,y),new Vector2(vx,vy),idShot,idClient);
+                    gs.stage.addActor(a);
+                } catch (JSONException e) {
+                    System.out.println("Error to receive message.");
+                }
 
-        }
-    };
+            }
+        };
     }
 
     {   deleteShot = new Emitter.Listener() {
-        public void call(final Object... args){
-            Integer idShot = (Integer)args[0];
-            gs.factory.deleteShot(idShot);
-            //System.out.println("Shot deleted, id: "+idShot);
-        }
-    };
+            public void call(final Object... args){
+                Integer idShot = (Integer)args[0];
+                gs.factory.deleteShot(idShot);
+                //System.out.println("Shot deleted, id: "+idShot);
+            }
+        };
     }
 
     {   explosion = new Emitter.Listener() {
-        public void call(final Object... args){
-            JSONObject data = (JSONObject) args[0];
-            try {
-                float x = data.getFloat("x");
-                float y = data.getFloat("y");
-                //System.out.println("Explosion produced: x: "+x+", y: "+y);
-            } catch (JSONException e) {
-                System.out.println("Error to receive message.");
+            public void call(final Object... args){
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    float x = data.getFloat("x");
+                    float y = data.getFloat("y");
+                    //System.out.println("Explosion produced: x: "+x+", y: "+y);
+                } catch (JSONException e) {
+                    System.out.println("Error to receive message.");
+                }
             }
-        }
-    };
+        };
     }
     {   config = new Emitter.Listener() {
-        public void call(final Object... args){
-            JSONObject data = (JSONObject) args[0];
-            try {
-                float ppm = data.getFloat("ppm");
-                //System.out.println("Config: ppm:"+ppm);
-                //Constants.PIXELS_IN_METER = ppm;
-            } catch (JSONException e) {
-                System.out.println("Error to receive message.");
-            }
+            public void call(final Object... args){
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    float ppm = data.getFloat("ppm");
+                    //System.out.println("Config: ppm:"+ppm);
+                    //Constants.PIXELS_IN_METER = ppm;
+                } catch (JSONException e) {
+                    System.out.println("Error to receive message.");
+                }
 
-        }
-    };
+            }
+        };
     }
 }
