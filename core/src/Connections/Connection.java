@@ -1,12 +1,12 @@
 package Connections;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.mygdx.game.Constants;
 import com.mygdx.game.GameScreen;
 import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.ShotEntity;
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.net.URISyntaxException;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -63,28 +63,15 @@ public class Connection {
     }
 
     public void moveTop(Integer moveSing){
-        JSONObject msg = new JSONObject();
-        try {
-            msg.put("moveSing",moveSing);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mSocket.emit("CS_moveTop",msg);
+        mSocket.emit("CS_moveTop",moveSing);
     }
     public void moveBot(Integer moveSing){
-        JSONObject msg = new JSONObject();
-        try {
-            msg.put("moveSing",moveSing);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mSocket.emit("CS_moveBot",msg);
+        mSocket.emit("CS_moveBot",moveSing);
     }
 
     {   setPos = new Emitter.Listener() {
         public void call(final Object... args){
-            JSONObject data = (JSONObject) args[0];
-            try {
+            JsonValue data = new JsonReader().parse(args[0].toString());
                 Integer id = data.getInt("id");
                 float posx = data.getFloat("x");
                 float posy = data.getFloat("y");
@@ -95,11 +82,6 @@ public class Connection {
                 } else if (id == 1) { //id player top is 1
                     gs.topPlayer.setPosition(posx, posy, alpha);
                 }
-
-            } catch (JSONException e) {
-                System.out.println("Error to receive message.");
-            }
-
         }
     };
     }
@@ -108,15 +90,15 @@ public class Connection {
         setId = new Emitter.Listener() {
             public void call(final Object... args){
                 clientId = new Integer ((Integer) args[0]);
-                System.out.print("IdCliente: "+clientId+"\n");
+               // System.out.print("IdCliente: "+clientId+"\n");
             }
         };
     }
 
     {   createAst = new Emitter.Listener() {
             public void call(final Object... args){
-                JSONObject data = (JSONObject) args[0];
-                try {
+                JsonValue data = new JsonReader().parse(args[0].toString());
+
                     Integer id = data.getInt("id");
                     float x = data.getFloat("x");
                     float y = data.getFloat("y");
@@ -126,9 +108,6 @@ public class Connection {
                     //System.out.println("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+", radio: "+radius);
                     AsteroidEntity a = gs.factory.createAsteroid(gs.world,new Vector2(x,y),new Vector2(vx,vy),id,radius);
                     gs.stage.addActor(a);
-                } catch (JSONException e) {
-                    System.out.println("Error to receive message.");
-                }
 
             }
         };
@@ -145,8 +124,7 @@ public class Connection {
 
     {   createShot = new Emitter.Listener() {
             public void call(final Object... args){
-                JSONObject data = (JSONObject) args[0];
-                try {
+                JsonValue data = new JsonReader().parse(args[0].toString());
                     Integer idShot = data.getInt("idShot");
                     Integer idClient = data.getInt("idClient");
                     float x = data.getFloat("x");
@@ -156,9 +134,6 @@ public class Connection {
                     //System.out.println("Shot created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+ ", idShot: "+ idShot + "idClient: " +idClient);
                     ShotEntity a = gs.factory.createShot(gs.world,new Vector2(x,y),new Vector2(vx,vy),idShot,idClient);
                     gs.stage.addActor(a);
-                } catch (JSONException e) {
-                    System.out.println("Error to receive message.");
-                }
 
             }
         };
@@ -175,27 +150,20 @@ public class Connection {
 
     {   explosion = new Emitter.Listener() {
             public void call(final Object... args){
-                JSONObject data = (JSONObject) args[0];
-                try {
+                JsonValue data = new JsonReader().parse(args[0].toString());
                     float x = data.getFloat("x");
                     float y = data.getFloat("y");
                     //System.out.println("Explosion produced: x: "+x+", y: "+y);
-                } catch (JSONException e) {
-                    System.out.println("Error to receive message.");
-                }
             }
         };
     }
     {   config = new Emitter.Listener() {
             public void call(final Object... args){
-                JSONObject data = (JSONObject) args[0];
-                try {
+                JsonValue data = new JsonReader().parse(args[0].toString());
                     float ppm = data.getFloat("ppm");
                     //System.out.println("Config: ppm:"+ppm);
                     //Constants.PIXELS_IN_METER = ppm;
-                } catch (JSONException e) {
-                    System.out.println("Error to receive message.");
-                }
+
 
             }
         };
