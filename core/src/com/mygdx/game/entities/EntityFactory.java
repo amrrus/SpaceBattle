@@ -46,8 +46,8 @@ public class EntityFactory {
 
     public void deleteAsteroid(Integer idAsteroid){
         if (asteroids.containsKey(idAsteroid)) {
-            AsteroidEntity s = asteroids.get(idAsteroid);
-            s.detach();
+            AsteroidEntity a = asteroids.get(idAsteroid);
+            a.detach();
             asteroids.remove(idAsteroid);
             //optimization required
         }

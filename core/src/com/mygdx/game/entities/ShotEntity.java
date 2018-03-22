@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
@@ -33,11 +34,18 @@ public class ShotEntity extends Actor {
 
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(Constants.SHOT_RADIUS);
-        fixture = body.createFixture(circleShape,Constants.SHOT_DENSITY);
-        fixture.setFriction(0);
+        FixtureDef fds = new FixtureDef();
+        fds.shape = circleShape;
+        fds.density = Constants.SHOT_DENSITY;
+        fds.friction = 0f;
+        fds.filter.categoryBits=2;
+        fds.filter.maskBits= 4;
+        fds.filter.groupIndex = 0;
+
+        fixture = body.createFixture(fds);
         fixture.setUserData("shot");
 
-        body.applyLinearImpulse(impulse.x, impulse.y, getX(),getY(),  true);
+        body.setLinearVelocity(impulse);
         circleShape.dispose();
 
         setSize(2*Constants.SHOT_RADIUS*Constants.PIXELS_IN_METER,
@@ -53,7 +61,6 @@ public class ShotEntity extends Actor {
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);
-
     }
 
     public Body getBody(){

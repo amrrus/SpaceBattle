@@ -9,9 +9,9 @@ public class Constants {
      */
     public static final float PIXELS_IN_METER = 90f;
 
-    public static final float ASTEROID_DENSITY = 1f;
+    public static final float ASTEROID_DENSITY = 10000000f;
     public static final float SHOT_RADIUS = 0.1f;
-    public static final float SHOT_DENSITY = 10f;
+    public static final float SHOT_DENSITY = 5f;
 
 
     public static final int WIDTH_SCREEN=1920;

@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
@@ -33,11 +34,19 @@ public class AsteroidEntity extends Actor {
 
         CircleShape circleShape = new CircleShape();
         circleShape.setRadius(radius);
-        fixture = body.createFixture(circleShape,Constants.ASTEROID_DENSITY);
-        fixture.setFriction(0);
+
+        FixtureDef fds = new FixtureDef();
+        fds.shape = circleShape;
+        fds.density = Constants.ASTEROID_DENSITY;
+        fds.friction = 0f;
+        fds.filter.categoryBits=1;
+        fds.filter.maskBits=4;
+        fds.filter.groupIndex = 0;
+
+        fixture = body.createFixture(fds);
         fixture.setUserData("asteroid");
 
-        body.applyLinearImpulse(impulse.x, impulse.y, getX(),getY(),  true);
+        body.setLinearVelocity(impulse);
         circleShape.dispose();
 
         setSize(2 * this.radius * Constants.PIXELS_IN_METER,
