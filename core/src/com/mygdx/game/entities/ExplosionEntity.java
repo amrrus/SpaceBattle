@@ -38,6 +38,7 @@ public class ExplosionEntity extends Actor{
         }
         // TODO: Meter el 5f como constante
         //TODO: meter la clase en la EntityFactory
+
         animation = new Animation(5f, regionsExplosion);
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
         tiempo = 0f;
