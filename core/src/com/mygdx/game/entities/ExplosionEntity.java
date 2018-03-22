@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
 
+import static com.mygdx.game.Constants.FRAME_DURATION;
+
 /**
  * Created by patri on 16/03/2018.
  */
@@ -26,6 +28,7 @@ public class ExplosionEntity extends Actor{
         this.y = y;
         setPosition(x,y);
         //cargar la imagen
+        // TODO: usar el manager para extraer la textura como el asteroide en EntityFactory
         image = new Texture(Gdx.files.internal("transiciones-explosion.png"));
         TextureRegion[][] tmp = TextureRegion.split(image, image.getWidth()/5, image.getHeight()/2);
         regionsExplosion = new TextureRegion[10];
@@ -38,8 +41,9 @@ public class ExplosionEntity extends Actor{
         }
         // TODO: Meter el 5f como constante
         //TODO: meter la clase en la EntityFactory
+        //TODO: hacer mas pequeño la imagen
 
-        animation = new Animation(5f, regionsExplosion);
+        animation = new Animation(FRAME_DURATION, regionsExplosion);
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
         tiempo = 0f;
     }

@@ -13,6 +13,7 @@ public class Constants {
     public static final float SHOT_RADIUS = 0.1f;
     public static final float SHOT_DENSITY = 5f;
 
+    public static final float FRAME_DURATION = 5f;
 
     public static final int WIDTH_SCREEN=1920;
     public static final int HEIGHT_SCREEN =1080;
