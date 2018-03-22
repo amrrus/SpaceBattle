@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.EntityFactory;
@@ -63,11 +64,9 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
-        explosion = new ExplosionEntity(40f, 0f, 1f );
+        explosion = new ExplosionEntity(0f, 0f);
         stage.addActor(explosion);
-
     }
-
     /**
      * This method will be executed when this screen is no more the active screen.
      * I use this method to destroy all the things that have been used in the stage.
