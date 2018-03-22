@@ -42,6 +42,8 @@ public class AsteroidEntity extends Actor {
 
         setSize(2 * this.radius * Constants.PIXELS_IN_METER,
                 2 * this.radius * Constants.PIXELS_IN_METER);
+        //TODO: método ramdon en los asteroides en una clase Utils
+        //TODO: Que no se pisen los asteroides cuando salga uno no puede salir otro en la misma posicion o en el rango donde esté el vector de impulso
     }
 
     public void draw(Batch batch, float parentAlpha) {

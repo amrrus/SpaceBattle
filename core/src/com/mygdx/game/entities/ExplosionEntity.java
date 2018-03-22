@@ -36,13 +36,19 @@ public class ExplosionEntity extends Actor{
                 z++;
             }
         }
+        // TODO: Meter el 5f como constante
+        //TODO: meter la clase en la EntityFactory
         animation = new Animation(5f, regionsExplosion);
+        setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
         tiempo = 0f;
     }
 
     public void draw(Batch batch, float parentAlpha){
         tiempo += parentAlpha;//tiempo que pasa desde el ultimo render
-        frameActual = (TextureRegion) animation.getKeyFrame(tiempo, true);
+        frameActual = (TextureRegion) animation.getKeyFrame(tiempo, false);
         batch.draw(frameActual, x, y);
+        if(animation.isAnimationFinished(tiempo)){
+            this.remove();
+        }
     }
 }
