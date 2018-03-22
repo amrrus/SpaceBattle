@@ -39,6 +39,7 @@ public class MainGame extends Game {
         manager.load("logo.png", Texture.class);
         manager.load("asteroid.png", Texture.class);
         manager.load("explosion.gif", Texture.class);
+        manager.load("transiciones-explosion.png", Texture.class);
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);
         setScreen(loadingScreen);
