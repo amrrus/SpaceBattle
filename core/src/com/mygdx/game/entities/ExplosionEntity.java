@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
 
 import static com.mygdx.game.Constants.FRAME_DURATION;
+import static com.mygdx.game.Constants.HEIGHT_EXPLOSION;
+import static com.mygdx.game.Constants.WIDTH_EXPLOSION;
 
 /**
  * Created by patri on 16/03/2018.
@@ -39,9 +41,9 @@ public class ExplosionEntity extends Actor{
                 z++;
             }
         }
-        // TODO: Meter el 5f como constante
+        // TODO: Meter el 5f como constante : hecho
         //TODO: meter la clase en la EntityFactory
-        //TODO: hacer mas pequeño la imagen
+        //TODO: hacer mas pequeño la imagen : hecho
 
         animation = new Animation(FRAME_DURATION, regionsExplosion);
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
@@ -51,7 +53,8 @@ public class ExplosionEntity extends Actor{
     public void draw(Batch batch, float parentAlpha){
         tiempo += parentAlpha;//tiempo que pasa desde el ultimo render
         frameActual = (TextureRegion) animation.getKeyFrame(tiempo, false);
-        batch.draw(frameActual, x, y);
+        batch.draw(frameActual, x, y, WIDTH_EXPLOSION,HEIGHT_EXPLOSION);
+
         if(animation.isAnimationFinished(tiempo)){
             this.remove();
         }
