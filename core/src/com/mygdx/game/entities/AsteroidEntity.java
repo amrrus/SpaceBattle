@@ -21,7 +21,7 @@ public class AsteroidEntity extends Actor {
     private Fixture fixture;
     private Float radius;
 
-    protected AsteroidEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Float radius){
+    public AsteroidEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Float radius){
         this.world = world;
         this.texture = texture;
         this.radius = radius;

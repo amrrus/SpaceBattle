@@ -2,6 +2,7 @@ package com.mygdx.game.entities;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import java.util.HashMap;
@@ -67,6 +68,13 @@ public class EntityFactory {
             //optimization required
         }
     }
+
+    public ExplosionEntity createExplosion(Float x, Float y, float size){
+        Texture explosionT = manager.get("explosion-transitions.png");
+        ExplosionEntity explosion= new ExplosionEntity(explosionT, x, y, size);
+        return explosion;
+    }
+
 
  }
 
