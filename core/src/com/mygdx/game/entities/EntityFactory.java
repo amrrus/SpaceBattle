@@ -58,7 +58,6 @@ public class EntityFactory {
             AsteroidEntity a = asteroids.get(idAsteroid);
             a.detach();
             asteroids.remove(idAsteroid);
-            //optimization required
         }
     }
 
@@ -81,11 +80,10 @@ public class EntityFactory {
         return this.cm;
     }
 
-
-
     public ExplosionEntity createExplosion(Float x, Float y, float size){
         Texture explosionT = manager.get("explosion-transitions.png");
         ExplosionEntity explosion= new ExplosionEntity(explosionT, x, y, size);
+        gs.stage.addActor(explosion);
         return explosion;
     }
 

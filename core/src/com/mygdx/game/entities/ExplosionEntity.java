@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
-import com.mygdx.game.Constants;
+
 
 
 public class ExplosionEntity extends Actor{
@@ -17,7 +17,7 @@ public class ExplosionEntity extends Actor{
 
     public ExplosionEntity(Texture texture, Float x, Float y, float size){
         this.size = size;
-        setPosition(x,y);
+        setPosition(x* Constants.PIXELS_IN_METER,y * Constants.PIXELS_IN_METER);
         TextureRegion[][] tmp = TextureRegion.split(texture, texture.getWidth()/5, texture.getHeight()/2);
         TextureRegion[] regionsExplosion = new TextureRegion[10];
         int z=0;
