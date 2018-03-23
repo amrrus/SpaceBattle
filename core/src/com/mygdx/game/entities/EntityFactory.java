@@ -89,6 +89,6 @@ public class EntityFactory {
         return explosion;
     }
 
-    
+
 }
 

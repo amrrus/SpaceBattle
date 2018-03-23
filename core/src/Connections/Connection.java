@@ -170,6 +170,8 @@ public class Connection {
                 JsonValue data = new JsonReader().parse(args[0].toString());
                 float x = data.getFloat("x");
                 float y = data.getFloat("y");
+                float size = data.getFloat("size");
+                gs.factory.createExplosion(x,y,size);
 
             }
         };
