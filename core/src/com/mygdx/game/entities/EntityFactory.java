@@ -31,7 +31,6 @@ public class EntityFactory {
         this.cm = new ConcurrencyManager(this,this.gs.world);
     }
 
-
     public PlayerEntity createTopPlayer() {
         Texture playerTexture = manager.get("blueShipDown.png");
         return new PlayerEntity(playerTexture, new Vector2(-0.5f, 5f));
@@ -59,6 +58,7 @@ public class EntityFactory {
             AsteroidEntity a = asteroids.get(idAsteroid);
             a.detach();
             asteroids.remove(idAsteroid);
+            //optimization required
         }
     }
 
@@ -74,6 +74,7 @@ public class EntityFactory {
         if (shots.containsKey(idShot)) {
             shots.get(idShot).detach();
             shots.remove(idShot);
+            //optimization required
         }
     }
     public ConcurrencyManager getConcurrencyManager(){
@@ -82,5 +83,13 @@ public class EntityFactory {
 
 
 
+    public ExplosionEntity createExplosion(Float x, Float y, float size){
+        Texture explosionT = manager.get("explosion-transitions.png");
+        ExplosionEntity explosion= new ExplosionEntity(explosionT, x, y, size);
+        return explosion;
+    }
+
+
+ }
 }
 

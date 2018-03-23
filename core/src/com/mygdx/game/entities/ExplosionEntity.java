@@ -9,6 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
 
 import static com.mygdx.game.Constants.FRAME_DURATION;
+import static com.mygdx.game.Constants.HEIGHT_EXPLOSION;
+import static com.mygdx.game.Constants.WIDTH_EXPLOSION;
 
 /**
  * Created by patri on 16/03/2018.
@@ -20,17 +22,18 @@ public class ExplosionEntity extends Actor{
     Animation animation;
     Float tiempo;
     TextureRegion[] regionsExplosion;
-    Texture image;
     TextureRegion frameActual;
+    float size;
 
-    public ExplosionEntity(Float x, Float y){
+    public ExplosionEntity(Texture texture, Float x, Float y, float size){
         this.x = x;
         this.y = y;
+        this.size = size;
         setPosition(x,y);
         //cargar la imagen
-        // TODO: usar el manager para extraer la textura como el asteroide en EntityFactory
-        image = new Texture(Gdx.files.internal("transiciones-explosion.png"));
-        TextureRegion[][] tmp = TextureRegion.split(image, image.getWidth()/5, image.getHeight()/2);
+        // TODO: usar el manager para extraer la textura como el asteroide en EntityFactory:  hecho
+       // texture = new Texture(Gdx.files.internal("explosion-transitions.png"));
+        TextureRegion[][] tmp = TextureRegion.split(texture, texture.getWidth()/5, texture.getHeight()/2);
         regionsExplosion = new TextureRegion[10];
         int z=0;
         for(int i=0; i<2; i++) {
@@ -39,19 +42,20 @@ public class ExplosionEntity extends Actor{
                 z++;
             }
         }
-        // TODO: Meter el 5f como constante
-        //TODO: meter la clase en la EntityFactory
-        //TODO: hacer mas pequeño la imagen
+        // TODO: Meter el 5f como constante : hecho
+        //TODO: meter la clase en la EntityFactory:  hecho
+        //TODO: hacer mas pequeño la imagen : hecho
 
         animation = new Animation(FRAME_DURATION, regionsExplosion);
-        setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
+        setSize(Constants.PIXELS_IN_METER * size, Constants.PIXELS_IN_METER * size);
         tiempo = 0f;
     }
 
     public void draw(Batch batch, float parentAlpha){
         tiempo += parentAlpha;//tiempo que pasa desde el ultimo render
         frameActual = (TextureRegion) animation.getKeyFrame(tiempo, false);
-        batch.draw(frameActual, x, y);
+        batch.draw(frameActual, x, y, WIDTH_EXPLOSION * size, HEIGHT_EXPLOSION * size);
+
         if(animation.isAnimationFinished(tiempo)){
             this.remove();
         }
