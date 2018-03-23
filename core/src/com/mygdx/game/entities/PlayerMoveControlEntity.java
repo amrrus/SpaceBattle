@@ -10,13 +10,13 @@ public class PlayerMoveControlEntity extends Actor {
     private Integer moveSign;
     private Connection conn;
 
-    public PlayerMoveControlEntity(Connection conn){
+    PlayerMoveControlEntity(Connection conn){
         this.conn = conn;
         this.keepMoving = false;
         this.moveSign = 0;
     }
 
-    @Override
+
     public void act(float delta) {
         if (!keepMoving && Gdx.input.justTouched()) {
             if (Gdx.input.getX() < (Gdx.graphics.getWidth() / 2)) {

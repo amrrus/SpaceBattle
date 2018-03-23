@@ -4,6 +4,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.GameScreen;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import Connections.Connection;
 
@@ -14,14 +17,20 @@ import Connections.Connection;
 public class EntityFactory {
 
     private AssetManager manager;
+    private GameScreen gs;
     private HashMap<Integer,AsteroidEntity> asteroids;
     private HashMap<Integer,ShotEntity> shots;
+    private ConcurrencyManager cm;
 
-    public EntityFactory(AssetManager manager) {
+
+    public EntityFactory(AssetManager manager, GameScreen gs) {
         this.manager = manager;
+        this.gs = gs;
         this.asteroids = new HashMap<Integer, AsteroidEntity>();
         this.shots =  new HashMap<Integer, ShotEntity>();
+        this.cm = new ConcurrencyManager(this,this.gs.world);
     }
+
 
     public PlayerEntity createTopPlayer() {
         Texture playerTexture = manager.get("blueShipDown.png");
@@ -37,36 +46,41 @@ public class EntityFactory {
         return new PlayerMoveControlEntity(conn);
     }
 
-    public AsteroidEntity createAsteroid(World world, Vector2 position, Vector2 impulse, Integer idAsteroid,Float radius){
+    protected AsteroidEntity createAsteroid(Vector2 position, Vector2 impulse, Integer idAsteroid,Float radius){
         Texture asteroidTexture = manager.get("asteroid.png");
-        AsteroidEntity a = new AsteroidEntity(world, asteroidTexture, position, impulse,radius);
+        AsteroidEntity a = new AsteroidEntity(gs.world, asteroidTexture, position, impulse,radius);
+        gs.stage.addActor(a);
         asteroids.put(idAsteroid,a);
         return a;
     }
 
-    public void deleteAsteroid(Integer idAsteroid){
+    protected void deleteAsteroid(Integer idAsteroid){
         if (asteroids.containsKey(idAsteroid)) {
             AsteroidEntity a = asteroids.get(idAsteroid);
             a.detach();
             asteroids.remove(idAsteroid);
-            //optimization required
         }
     }
 
-    public ShotEntity createShot(World world, Vector2 position, Vector2 impulse, Integer idShot, Integer idClient){
+    protected ShotEntity createShot( Vector2 position, Vector2 impulse, Integer idShot, Integer idClient){
         Texture shotTexture = manager.get("asteroid.png");
-        ShotEntity s = new ShotEntity(world, shotTexture, position, impulse,idClient);
+        ShotEntity s = new ShotEntity(gs.world, shotTexture, position, impulse,idClient);
+        gs.stage.addActor(s);
         shots.put(idShot,s);
         return s;
     }
 
-    public void deleteShot(Integer idShot){
+    protected void deleteShot(Integer idShot){
         if (shots.containsKey(idShot)) {
             shots.get(idShot).detach();
             shots.remove(idShot);
-            //optimization required
         }
     }
+    public ConcurrencyManager getConcurrencyManager(){
+        return this.cm;
+    }
 
- }
+
+
+}
 

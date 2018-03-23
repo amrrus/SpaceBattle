@@ -1,5 +1,6 @@
 package Connections;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
@@ -98,16 +99,20 @@ public class Connection {
     {   createAst = new Emitter.Listener() {
             public void call(final Object... args){
                 JsonValue data = new JsonReader().parse(args[0].toString());
+                Integer id = data.getInt("id");
+                float x = data.getFloat("x");
+                float y = data.getFloat("y");
+                float vx = data.getFloat("vx");
+                float vy = data.getFloat("vy");
+                float radius= data.getFloat("radius");
+                //System.out.println("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+", radio: "+radius);
+                try{
+                    gs.factory.getConcurrencyManager().addAsteroidToCreate(x,y,vx,vy,id,radius);
+                }catch (InterruptedException e){
+                    Gdx.app.log("ConcurrencyException","addAsteroidToCreate");
+                }
 
-                    Integer id = data.getInt("id");
-                    float x = data.getFloat("x");
-                    float y = data.getFloat("y");
-                    float vx = data.getFloat("vx");
-                    float vy = data.getFloat("vy");
-                    float radius= data.getFloat("radius");
-                    //System.out.println("Asteroid created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+", radio: "+radius);
-                    AsteroidEntity a = gs.factory.createAsteroid(gs.world,new Vector2(x,y),new Vector2(vx,vy),id,radius);
-                    gs.stage.addActor(a);
+
 
             }
         };
@@ -116,8 +121,11 @@ public class Connection {
     {   deleteAst = new Emitter.Listener() {
             public void call(final Object... args){
                 Integer id = (Integer)args[0];
-                gs.factory.deleteAsteroid(id);
-                //System.out.println("Asteroid deleted, id: "+id);
+                try{
+                    gs.factory.getConcurrencyManager().addAsteroidToRemove(id);
+                }catch (InterruptedException e){
+                    Gdx.app.log("ConcurrencyException","addAsteroidToRemove");
+                }
             }
         };
     }
@@ -125,15 +133,21 @@ public class Connection {
     {   createShot = new Emitter.Listener() {
             public void call(final Object... args){
                 JsonValue data = new JsonReader().parse(args[0].toString());
-                    Integer idShot = data.getInt("idShot");
-                    Integer idClient = data.getInt("idClient");
-                    float x = data.getFloat("x");
-                    float y = data.getFloat("y");
-                    float vx = data.getFloat("vx");
-                    float vy = data.getFloat("vy");
-                    //System.out.println("Shot created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+ ", idShot: "+ idShot + "idClient: " +idClient);
-                    ShotEntity a = gs.factory.createShot(gs.world,new Vector2(x,y),new Vector2(vx,vy),idShot,idClient);
-                    gs.stage.addActor(a);
+                Integer idShot = data.getInt("idShot");
+                Integer idClient = data.getInt("idClient");
+                float x = data.getFloat("x");
+                float y = data.getFloat("y");
+                float vx = data.getFloat("vx");
+                float vy = data.getFloat("vy");
+                //System.out.println("Shot created: x:"+x+", y:"+y+", vx:"+vx+", vy:"+vy+ ", idShot: "+ idShot + "idClient: " +idClient);
+                try{
+                    gs.factory.getConcurrencyManager().addShotToCreate(x, y, vx, vy, idShot, idClient);
+                }catch (InterruptedException e){
+                    Gdx.app.log("ConcurrencyException","addShotToCreate");
+                }
+
+
+
 
             }
         };
@@ -142,8 +156,11 @@ public class Connection {
     {   deleteShot = new Emitter.Listener() {
             public void call(final Object... args){
                 Integer idShot = (Integer)args[0];
-                gs.factory.deleteShot(idShot);
-                //System.out.println("Shot deleted, id: "+idShot);
+                try{
+                    gs.factory.getConcurrencyManager().addShotToRemove(idShot);
+                }catch (InterruptedException e){
+                    Gdx.app.log("ConcurrencyException","addShotToRemove");
+                }
             }
         };
     }
@@ -151,18 +168,17 @@ public class Connection {
     {   explosion = new Emitter.Listener() {
             public void call(final Object... args){
                 JsonValue data = new JsonReader().parse(args[0].toString());
-                    float x = data.getFloat("x");
-                    float y = data.getFloat("y");
-                    //System.out.println("Explosion produced: x: "+x+", y: "+y);
+                float x = data.getFloat("x");
+                float y = data.getFloat("y");
+
             }
         };
     }
     {   config = new Emitter.Listener() {
             public void call(final Object... args){
                 JsonValue data = new JsonReader().parse(args[0].toString());
-                    float ppm = data.getFloat("ppm");
-                    //System.out.println("Config: ppm:"+ppm);
-                    //Constants.PIXELS_IN_METER = ppm;
+                //float ppm = data.getFloat("ppm");
+                //TODO : sync constants with server
 
 
             }

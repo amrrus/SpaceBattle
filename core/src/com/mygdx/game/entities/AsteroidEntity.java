@@ -64,6 +64,7 @@ public class AsteroidEntity extends Actor {
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);
+        this.remove();
     }
 
     public Body getBody(){

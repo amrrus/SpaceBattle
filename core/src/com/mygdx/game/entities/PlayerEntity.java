@@ -11,7 +11,7 @@ public class PlayerEntity extends Actor {
     private Texture texture;
     private Boolean alive;
 
-    protected PlayerEntity( Texture texture, Vector2 initialPos) {
+    PlayerEntity( Texture texture, Vector2 initialPos) {
         this.texture = texture;
         setPosition(initialPos.x* Constants.PIXELS_IN_METER,initialPos.y*Constants.PIXELS_IN_METER);
 

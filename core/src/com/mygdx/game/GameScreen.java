@@ -47,7 +47,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void show() {
-        factory = new EntityFactory(game.getManager());
+        factory = new EntityFactory(game.getManager(),this);
         conn.connect();
 
         // Create the players.
@@ -98,11 +98,19 @@ public class GameScreen extends BaseScreen {
         // Step the world. This will update the physics and update entity positions.
         world.step(delta, 6, 2);
 
+
         // Render the screen. Remember, this is the last step!
         stage.getBatch().begin();
         stage.getBatch().draw(background,-510,-510, Constants.HEIGHT_SCREEN*0.95f, Constants.HEIGHT_SCREEN*0.95f);
         stage.getBatch().end();
         stage.draw();
+
+        //Create and delete bodies after render world
+
+        factory.getConcurrencyManager().checkAsteroidsToRemove();
+        factory.getConcurrencyManager().checkShotsToRemove();
+        factory.getConcurrencyManager().checkAsteroidsToCreate();
+        factory.getConcurrencyManager().checkShotsToCreate();
     }
 
     public void dispose() {

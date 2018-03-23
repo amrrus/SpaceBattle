@@ -61,6 +61,7 @@ public class ShotEntity extends Actor {
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);
+        this.remove();
     }
 
     public Body getBody(){
@@ -74,8 +75,6 @@ public class ShotEntity extends Actor {
     public Integer getIdClient(){
         return this.idClient;
     }
-    //Por si se quiere hacer con un constructor con más parámetros
-    //public Asteroide (World world, Float x, Float y, Vector2 impulse){
-    //}
+
 
 }
