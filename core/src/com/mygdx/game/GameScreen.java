@@ -40,7 +40,7 @@ public class GameScreen extends BaseScreen {
         super(game);
 
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
 
         world = new World(new Vector2(0, 0), true);
         conn=new Connection(this);

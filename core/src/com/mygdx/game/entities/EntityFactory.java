@@ -62,7 +62,7 @@ public class EntityFactory {
     }
 
     protected ShotEntity createShot( Vector2 position, Vector2 impulse, Integer idShot, Integer idClient){
-        Texture shotTexture = manager.get("asteroid.png");
+        Texture shotTexture = manager.get("bullet-green.png");
         ShotEntity s = new ShotEntity(gs.world, shotTexture, position, impulse,idClient);
         gs.stage.addActor(s);
         shots.put(idShot,s);
