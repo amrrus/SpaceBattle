@@ -5,13 +5,15 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.ExplosionEntity;
 import com.mygdx.game.entities.PlayerEntity;
 import com.mygdx.game.entities.PlayerMoveControlEntity;
+
+import javax.rmi.CORBA.Util;
+
 import Connections.Connection;
 
 /**
@@ -29,6 +31,7 @@ public class GameScreen extends BaseScreen {
     private Texture background;
     private Connection conn;
     public EntityFactory factory;
+
 
 
     /**
@@ -68,6 +71,7 @@ public class GameScreen extends BaseScreen {
         explosion = new ExplosionEntity(explosionT, 0f, 0f);*/
         explosion = factory.createExplosion(0f, 0f, 1f);
         stage.addActor(explosion);
+
     }
     /**
      * This method will be executed when this screen is no more the active screen.
@@ -113,6 +117,7 @@ public class GameScreen extends BaseScreen {
         factory.getConcurrencyManager().checkShotsToRemove();
         factory.getConcurrencyManager().checkAsteroidsToCreate();
         factory.getConcurrencyManager().checkShotsToCreate();
+
     }
 
     public void dispose() {

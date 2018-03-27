@@ -45,7 +45,7 @@ public class EntityFactory {
         return new PlayerMoveControlEntity(conn);
     }
 
-    protected AsteroidEntity createAsteroid(Vector2 position, Vector2 impulse, Integer idAsteroid,Float radius){
+    public AsteroidEntity createAsteroid(Vector2 position, Vector2 impulse, Integer idAsteroid,Float radius){
         Texture asteroidTexture = manager.get("asteroid.png");
         AsteroidEntity a = new AsteroidEntity(gs.world, asteroidTexture, position, impulse,radius);
         gs.stage.addActor(a);
