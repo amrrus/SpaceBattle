@@ -1,13 +1,14 @@
 package Connections;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 import com.mygdx.game.Constants;
 import com.mygdx.game.GameScreen;
-import com.mygdx.game.entities.AsteroidEntity;
-import com.mygdx.game.entities.ShotEntity;
+
+import java.io.StringWriter;
 import java.net.URISyntaxException;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -22,33 +23,30 @@ public class Connection {
     private Emitter.Listener deleteShot;
     private Emitter.Listener createShot;
     private Emitter.Listener explosion;
-    private Emitter.Listener setId;
     private Emitter.Listener setPos;
     private GameScreen gs;
-    private Integer clientId;
 
+    private String room;
 
     public Connection(GameScreen gs){
         this.gs=gs;
-        this.clientId=0;
         try {
             mSocket = IO.socket(Constants.SERVER_URL);
+            Gdx.app.log("connection", mSocket.toString());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-        mSocket.on("CR_setPos",setPos);
-        mSocket.on("CR_setId",setId);
-        mSocket.on("CR_createAst",createAst);
-        mSocket.on("CR_deleteAst", deleteAst);
-        mSocket.on("CR_createShot",createShot);
-        mSocket.on("CR_deleteShot", deleteShot);
-        mSocket.on("CR_explosion", explosion);
+        mSocket.on("update_player_position",setPos);
+        mSocket.on("create_asteroid",createAst);
+        mSocket.on("delete_asteroid", deleteAst);
+        mSocket.on("create_shot",createShot);
+        mSocket.on("delete_shot", deleteShot);
+        mSocket.on("create_explosion", explosion);
+
+        mSocket.emit("room", generateRoomMessage());
 
     }
 
-    public Integer getClientId(){
-        return this.clientId;
-    }
     public void connect(){
         mSocket.connect();
     }
@@ -57,18 +55,9 @@ public class Connection {
     }
 
     public void move(Integer moveSing){
-        if(getClientId()==0)
-            moveBot(moveSing);
-        else
-            moveTop(moveSing);
+        mSocket.emit("move_player",moveSing);
     }
 
-    public void moveTop(Integer moveSing){
-        mSocket.emit("CS_moveTop",moveSing);
-    }
-    public void moveBot(Integer moveSing){
-        mSocket.emit("CS_moveBot",moveSing);
-    }
 
     {   setPos = new Emitter.Listener() {
         public void call(final Object... args){
@@ -77,7 +66,7 @@ public class Connection {
                 float posx = data.getFloat("x");
                 float posy = data.getFloat("y");
                 float alpha = data.getFloat("alpha");
-                //System.out.print("Cliente:"+id+", PosX:"+posx+", PosY:"+posy+"\n");
+
                 if (id == 0) { //id player bottom is 0
                     gs.bottomPlayer.setPosition(posx, posy, alpha);
                 } else if (id == 1) { //id player top is 1
@@ -87,14 +76,6 @@ public class Connection {
     };
     }
 
-    {
-        setId = new Emitter.Listener() {
-            public void call(final Object... args){
-                clientId = new Integer ((Integer) args[0]);
-               // System.out.print("IdCliente: "+clientId+"\n");
-            }
-        };
-    }
 
     {   createAst = new Emitter.Listener() {
             public void call(final Object... args){
@@ -185,5 +166,18 @@ public class Connection {
 
             }
         };
+    }
+
+    private String generateRoomMessage(){
+        this.room = "room";
+        Json msg = new Json();
+        StringWriter jsonText = new StringWriter();
+        JsonWriter writer = new JsonWriter(jsonText);
+        msg.setOutputType(JsonWriter.OutputType.json);
+        msg.setWriter(writer);
+        msg.writeObjectStart();
+        msg.writeValue("room", room);
+        msg.writeObjectEnd();
+        return msg.getWriter().getWriter().toString();
     }
 }
