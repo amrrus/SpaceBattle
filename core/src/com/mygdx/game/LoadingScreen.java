@@ -35,7 +35,9 @@ public class LoadingScreen extends BaseScreen {
 
         // Create some loading text using this skin file and position it on screen.
         loading = new Label("Loading...", skin);
-        loading.setPosition(320 - loading.getWidth() / 2, 180 - loading.getHeight() / 2);
+        loading.setFontScale(2,2);
+        loading.setPosition((Constants.WIDTH_SCREEN - loading.getWidth()) / 2, (Constants.HEIGHT_SCREEN - loading.getHeight()) / 2);
+
         stage.addActor(loading);
     }
 
