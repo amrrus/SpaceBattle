@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.ExplosionEntity;
 import com.mygdx.game.entities.PlayerEntity;
@@ -66,6 +67,9 @@ public class GameScreen extends BaseScreen {
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
+
+        Utils util = new Utils(factory, world, this);
+        util.randomAsteroids();
 
     }
     /**
