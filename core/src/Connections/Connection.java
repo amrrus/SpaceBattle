@@ -25,6 +25,7 @@ public class Connection {
     private Emitter.Listener explosion;
     private Emitter.Listener setPos;
     private Emitter.Listener setLives;
+    private Emitter.Listener playerDeath;
     private GameScreen gs;
 
     private String room;
@@ -38,6 +39,8 @@ public class Connection {
             throw new RuntimeException(e);
         }
         mSocket.on("update_player_position",setPos);
+        mSocket.on("update_player_lives",setLives);
+        mSocket.on("update_player_death",playerDeath);
         mSocket.on("create_asteroid",createAst);
         mSocket.on("delete_asteroid", deleteAst);
         mSocket.on("create_shot",createShot);
@@ -59,6 +62,18 @@ public class Connection {
         mSocket.emit("move_player",moveSing);
     }
 
+    private String generateRoomMessage(){
+        this.room = "room";
+        Json msg = new Json();
+        StringWriter jsonText = new StringWriter();
+        JsonWriter writer = new JsonWriter(jsonText);
+        msg.setOutputType(JsonWriter.OutputType.json);
+        msg.setWriter(writer);
+        msg.writeObjectStart();
+        msg.writeValue("room", room);
+        msg.writeObjectEnd();
+        return msg.getWriter().getWriter().toString();
+    }
 
     {   setPos = new Emitter.Listener() {
         public void call(final Object... args){
@@ -158,6 +173,7 @@ public class Connection {
             }
         };
     }
+
     {   config = new Emitter.Listener() {
             public void call(final Object... args){
                 JsonValue data = new JsonReader().parse(args[0].toString());
@@ -169,29 +185,27 @@ public class Connection {
         };
     }
 
-    private String generateRoomMessage(){
-        this.room = "room";
-        Json msg = new Json();
-        StringWriter jsonText = new StringWriter();
-        JsonWriter writer = new JsonWriter(jsonText);
-        msg.setOutputType(JsonWriter.OutputType.json);
-        msg.setWriter(writer);
-        msg.writeObjectStart();
-        msg.writeValue("room", room);
-        msg.writeObjectEnd();
-        return msg.getWriter().getWriter().toString();
-    }
-
     {   setLives = new Emitter.Listener() {
         public void call(final Object... args){
             JsonValue data = new JsonReader().parse(args[0].toString());
-            float playerId = data.getFloat("playerId");
+            Integer playerId = data.getInt("playerId");
             Integer lives = data.getInt("lives");
             if (playerId==0){
                 gs.bottomPlayer.setLives(lives);
             }else{
                 gs.topPlayer.setLives(lives);
             }
+
+
+        }
+    };
+    }
+
+    {   playerDeath = new Emitter.Listener() {
+        public void call(final Object... args){
+            JsonValue data = new JsonReader().parse(args[0].toString());
+            Integer playerId = data.getInt("playerId");
+            //TODO: Stop client
 
 
         }
