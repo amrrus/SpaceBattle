@@ -8,14 +8,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.ExplosionEntity;
 import com.mygdx.game.entities.PlayerEntity;
 import com.mygdx.game.entities.PlayerMoveControlEntity;
+
+import javax.rmi.CORBA.Util;
+
 
 import java.util.ArrayList;
 
@@ -41,6 +44,7 @@ public class GameScreen extends BaseScreen {
 
 
 
+
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
      * it is safe to do critical code here such as loading assets and setting up the stage.
@@ -50,10 +54,9 @@ public class GameScreen extends BaseScreen {
         super(game);
 
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
-        stage.setDebugAll(true);
+        //stage.setDebugAll(true);
 
         world = new World(new Vector2(0, 0), true);
-
         conn=new Connection(this);
 
         background = game.getManager().get("dividedPlanet.png");
@@ -72,8 +75,7 @@ public class GameScreen extends BaseScreen {
         topPlayer = factory.createTopPlayer();
         bottomPlayer = factory.createBottomPlayer();
         playerMoveControl = factory.createPlayerMoveControl(conn);
-
-
+        background = game.getManager().get("dividedPlanet.png");
 
         stage.addActor(playerMoveControl);
         stage.addActor(topPlayer);
@@ -83,6 +85,8 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
+        Utils util = new Utils(factory, world, this);
+        util.randomAsteroids();
 
     }
     /**
@@ -96,7 +100,6 @@ public class GameScreen extends BaseScreen {
         // removing every single actor one by one. This is not shown in the video but it is
         // an improvement.
         stage.clear();
-
         // Detach every entity from the world they have been living in.
         Array<Body> copy = new Array<Body>();
         world.getBodies(copy);

@@ -1,5 +1,6 @@
 package com.mygdx.game.entities;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -45,7 +46,7 @@ public class EntityFactory {
         return new PlayerMoveControlEntity(conn);
     }
 
-    protected AsteroidEntity createAsteroid(Vector2 position, Vector2 impulse, Integer idAsteroid,Float radius){
+    public AsteroidEntity createAsteroid(Vector2 position, Vector2 impulse, Integer idAsteroid,Float radius){
         Texture asteroidTexture = manager.get("asteroid.png");
         AsteroidEntity a = new AsteroidEntity(gs.world, asteroidTexture, position, impulse,radius);
         gs.stage.addActor(a);
@@ -62,7 +63,7 @@ public class EntityFactory {
     }
 
     protected ShotEntity createShot( Vector2 position, Vector2 impulse, Integer idShot, Integer idClient){
-        Texture shotTexture = manager.get("asteroid.png");
+        Texture shotTexture = manager.get("bullet-green.png");
         ShotEntity s = new ShotEntity(gs.world, shotTexture, position, impulse,idClient);
         gs.stage.addActor(s);
         shots.put(idShot,s);
