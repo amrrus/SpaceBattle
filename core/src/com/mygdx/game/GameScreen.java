@@ -3,25 +3,15 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.entities.AsteroidEntity;
 import com.mygdx.game.entities.EntityFactory;
-import com.mygdx.game.entities.ExplosionEntity;
 import com.mygdx.game.entities.PlayerEntity;
 import com.mygdx.game.entities.PlayerMoveControlEntity;
-
-import javax.rmi.CORBA.Util;
-
-
-import java.util.ArrayList;
-
 import Connections.Connection;
 
 /**
@@ -35,15 +25,10 @@ public class GameScreen extends BaseScreen {
     public PlayerEntity topPlayer;
     public PlayerEntity bottomPlayer;
     public PlayerMoveControlEntity playerMoveControl;
-    public ExplosionEntity explosion;
     private Texture background;
-    private Texture textureLive;
     private Connection conn;
     public EntityFactory factory;
-    private BitmapFont font;
-
-
-
+    private ScoreBoard sb;
 
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
@@ -58,12 +43,8 @@ public class GameScreen extends BaseScreen {
 
         world = new World(new Vector2(0, 0), true);
         conn=new Connection(this);
+        this.sb = new ScoreBoard(this);
 
-        background = game.getManager().get("dividedPlanet.png");
-        textureLive = game.getManager().get("blueShipUp.png");
-        font = new BitmapFont();
-        font.getData().setScale(4);
-        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
     }
 
@@ -84,9 +65,6 @@ public class GameScreen extends BaseScreen {
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
-
-        Utils util = new Utils(factory, world, this);
-        util.randomAsteroids();
 
     }
     /**
@@ -118,26 +96,19 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClearColor(0.1f, 0.125f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Update the stage. This will update the player speed.
+        // Update the stage. This will update the actors.
         stage.act();
 
         // Step the world. This will update the physics and update entity positions.
         world.step(delta, 6, 2);
 
-
         // Render the screen. Remember, this is the last step!
         stage.getBatch().begin();
         stage.getBatch().draw(background,-510,-510, Constants.HEIGHT_SCREEN*0.95f, Constants.HEIGHT_SCREEN*0.95f);
-        font.draw(stage.getBatch(),"Reparaciones:",-900,530);
-        for (int i=0;i<topPlayer.getLives();i++) {
-            stage.getBatch().draw(textureLive, -880 + 60*i, 400, 50, 50);
-        }
-        font.draw(stage.getBatch(),"Reparaciones:",-900, -400);
-        for (int i=0;i<bottomPlayer.getLives();i++) {
-            stage.getBatch().draw(textureLive, -880 + 60*i, -530, 50, 50);
-        }
+        sb.displayScoreBoard();
         stage.getBatch().end();
         stage.draw();
+
 
         //Create and delete bodies after render world
 
@@ -154,7 +125,6 @@ public class GameScreen extends BaseScreen {
         // Dispose the world to remove the Box2D native data (C++ backend, invoked by Java).
         world.dispose();
         background.dispose();
-        font.dispose();
-        textureLive.dispose();
+        sb.dispose();
     }
 }

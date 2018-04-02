@@ -18,6 +18,7 @@ public class Constants {
     public static final int WIDTH_SCREEN=1920;
     public static final int HEIGHT_SCREEN =1080;
 
+    public static final String MSG_DISPLAY_LIVES ="Reparaciones:";
 
     public static final String SERVER_URL = "http://0.0.0.0:3000"; //0.0.0.0 not valid
 }
