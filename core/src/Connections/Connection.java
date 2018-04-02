@@ -1,13 +1,10 @@
 package Connections;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.mygdx.game.Constants;
 import com.mygdx.game.GameScreen;
-import com.mygdx.game.entities.AsteroidEntity;
-import com.mygdx.game.entities.ShotEntity;
 import java.net.URISyntaxException;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -24,6 +21,7 @@ public class Connection {
     private Emitter.Listener explosion;
     private Emitter.Listener setId;
     private Emitter.Listener setPos;
+    private Emitter.Listener setLives;
     private GameScreen gs;
     private Integer clientId;
 
@@ -43,6 +41,7 @@ public class Connection {
         mSocket.on("CR_createShot",createShot);
         mSocket.on("CR_deleteShot", deleteShot);
         mSocket.on("CR_explosion", explosion);
+        mSocket.on("CR_setLives", setLives);
 
     }
 
@@ -185,5 +184,20 @@ public class Connection {
 
             }
         };
+    }
+    {   setLives = new Emitter.Listener() {
+        public void call(final Object... args){
+            JsonValue data = new JsonReader().parse(args[0].toString());
+            float playerId = data.getFloat("playerId");
+            Integer lives = data.getInt("lives");
+            if (playerId==0){
+                gs.bottomPlayer.setLives(lives);
+            }else{
+                gs.topPlayer.setLives(lives);
+            }
+
+
+        }
+    };
     }
 }

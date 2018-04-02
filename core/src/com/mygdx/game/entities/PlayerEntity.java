@@ -10,12 +10,14 @@ public class PlayerEntity extends Actor {
 
     private Texture texture;
     private Boolean alive;
+    private Integer lives;
 
     PlayerEntity( Texture texture, Vector2 initialPos) {
         this.texture = texture;
         setPosition(initialPos.x* Constants.PIXELS_IN_METER,initialPos.y*Constants.PIXELS_IN_METER);
-
         setSize(Constants.PIXELS_IN_METER, Constants.PIXELS_IN_METER);
+        this.lives = 3;
+
     }
 
     public void draw(Batch batch, float parentAlpha) {
@@ -43,4 +45,7 @@ public class PlayerEntity extends Actor {
         this.alive = alive;
     }
 
+    public Integer getLives(){ return this.lives;}
+
+    public void setLives(Integer lives){ this.lives = lives;}
 }

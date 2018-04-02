@@ -3,15 +3,22 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.ExplosionEntity;
 import com.mygdx.game.entities.PlayerEntity;
 import com.mygdx.game.entities.PlayerMoveControlEntity;
+
+import java.util.ArrayList;
+
 import Connections.Connection;
 
 /**
@@ -27,8 +34,11 @@ public class GameScreen extends BaseScreen {
     public PlayerMoveControlEntity playerMoveControl;
     public ExplosionEntity explosion;
     private Texture background;
+    private Texture textureLive;
     private Connection conn;
     public EntityFactory factory;
+    private BitmapFont font;
+
 
 
     /**
@@ -43,7 +53,15 @@ public class GameScreen extends BaseScreen {
         stage.setDebugAll(true);
 
         world = new World(new Vector2(0, 0), true);
+
         conn=new Connection(this);
+
+        background = game.getManager().get("dividedPlanet.png");
+        textureLive = game.getManager().get("blueShipUp.png");
+        font = new BitmapFont();
+        font.getData().setScale(4);
+        font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
     }
 
     public void show() {
@@ -54,7 +72,8 @@ public class GameScreen extends BaseScreen {
         topPlayer = factory.createTopPlayer();
         bottomPlayer = factory.createBottomPlayer();
         playerMoveControl = factory.createPlayerMoveControl(conn);
-        background = game.getManager().get("dividedPlanet.png");
+
+
 
         stage.addActor(playerMoveControl);
         stage.addActor(topPlayer);
@@ -64,10 +83,7 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
-        /*Texture explosionT = new Texture("explosion-transitions.png");
-        explosion = new ExplosionEntity(explosionT, 0f, 0f);*/
-        explosion = factory.createExplosion(0f, 0f, 1f);
-        stage.addActor(explosion);
+
     }
     /**
      * This method will be executed when this screen is no more the active screen.
@@ -80,8 +96,13 @@ public class GameScreen extends BaseScreen {
         // removing every single actor one by one. This is not shown in the video but it is
         // an improvement.
         stage.clear();
-        // Detach every entity from the world they have been living in.
 
+        // Detach every entity from the world they have been living in.
+        Array<Body> copy = new Array<Body>();
+        world.getBodies(copy);
+        for (int i=0;i<copy.size;i++){
+            world.destroyBody(copy.get(i));
+        }
     }
 
     /**
@@ -104,6 +125,14 @@ public class GameScreen extends BaseScreen {
         // Render the screen. Remember, this is the last step!
         stage.getBatch().begin();
         stage.getBatch().draw(background,-510,-510, Constants.HEIGHT_SCREEN*0.95f, Constants.HEIGHT_SCREEN*0.95f);
+        font.draw(stage.getBatch(),"Reparaciones:",-900,530);
+        for (int i=0;i<topPlayer.getLives();i++) {
+            stage.getBatch().draw(textureLive, -880 + 60*i, 400, 50, 50);
+        }
+        font.draw(stage.getBatch(),"Reparaciones:",-900, -400);
+        for (int i=0;i<bottomPlayer.getLives();i++) {
+            stage.getBatch().draw(textureLive, -880 + 60*i, -530, 50, 50);
+        }
         stage.getBatch().end();
         stage.draw();
 
@@ -122,5 +151,7 @@ public class GameScreen extends BaseScreen {
         // Dispose the world to remove the Box2D native data (C++ backend, invoked by Java).
         world.dispose();
         background.dispose();
+        font.dispose();
+        textureLive.dispose();
     }
 }
