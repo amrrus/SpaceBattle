@@ -35,4 +35,11 @@ public class PlayerMoveControlEntity extends Actor {
         }
     }
 
+    public void startToShoot(){
+        conn.shoot(true);
+    }
+    public void stopToShoot(){
+        conn.shoot(false);
+    }
+
 }

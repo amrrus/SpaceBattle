@@ -22,6 +22,7 @@ public class Connection {
     private Emitter.Listener createAst;
     private Emitter.Listener deleteShot;
     private Emitter.Listener createShot;
+    private Emitter.Listener updateShots;
     private Emitter.Listener explosion;
     private Emitter.Listener setPos;
     private Emitter.Listener setLives;
@@ -41,6 +42,7 @@ public class Connection {
         mSocket.on("update_player_position",setPos);
         mSocket.on("update_player_lives",setLives);
         mSocket.on("update_player_death",playerDeath);
+        mSocket.on("update_player_shots",updateShots);
         mSocket.on("create_asteroid",createAst);
         mSocket.on("delete_asteroid", deleteAst);
         mSocket.on("create_shot",createShot);
@@ -61,6 +63,9 @@ public class Connection {
     public void move(Integer moveSing){
         mSocket.emit("move_player",moveSing);
     }
+    public void shoot(Boolean shoot){
+        mSocket.emit("player_shooting",shoot);
+    }
 
     private String generateRoomMessage(){
         this.room = "room";
@@ -74,6 +79,7 @@ public class Connection {
         msg.writeObjectEnd();
         return msg.getWriter().getWriter().toString();
     }
+
 
     {   setPos = new Emitter.Listener() {
         public void call(final Object... args){
@@ -206,6 +212,22 @@ public class Connection {
             JsonValue data = new JsonReader().parse(args[0].toString());
             Integer playerId = data.getInt("playerId");
             //TODO: Stop client
+
+
+        }
+    };
+    }
+
+    {   updateShots = new Emitter.Listener() {
+        public void call(final Object... args){
+            JsonValue data = new JsonReader().parse(args[0].toString());
+            Integer playerId = data.getInt("playerId");
+            Integer shots = data.getInt("shots");
+            if (playerId==0){
+                gs.bottomPlayer.setShots(shots);
+            }else{
+                gs.topPlayer.setShots(shots);
+            }
 
 
         }

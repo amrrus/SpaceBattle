@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -29,6 +30,7 @@ public class GameScreen extends BaseScreen {
     private Connection conn;
     public EntityFactory factory;
     private ScoreBoard sb;
+    private ShotButton shotButton;
 
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
@@ -43,7 +45,9 @@ public class GameScreen extends BaseScreen {
 
         world = new World(new Vector2(0, 0), true);
         conn=new Connection(this);
-        this.sb = new ScoreBoard(this);
+        sb = new ScoreBoard(this);
+        shotButton = new ShotButton(this);
+
 
 
     }
@@ -66,6 +70,9 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
+        //make touchable shot buttons
+        shotButton.show();
+
     }
     /**
      * This method will be executed when this screen is no more the active screen.
@@ -73,6 +80,7 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void hide() {
+        shotButton.hide();
         conn.disconnect();
         // Clear the stage. This will remove ALL actors from the stage and it is faster than
         // removing every single actor one by one. This is not shown in the video but it is
@@ -126,5 +134,10 @@ public class GameScreen extends BaseScreen {
         world.dispose();
         background.dispose();
         sb.dispose();
+        shotButton.dispose();
+    }
+
+    public AssetManager getManager(){
+        return this.game.getManager();
     }
 }

@@ -19,6 +19,9 @@ public class Constants {
     public static final int HEIGHT_SCREEN =1080;
 
     public static final String MSG_DISPLAY_LIVES ="Reparaciones:";
+    public static final String SHOT_BUTTON_LABEL = "Disparar";
+
+    public static final Integer MAX_NUMBER_SHOTS_STORED = 5;
 
     public static final String SERVER_URL = "http://0.0.0.0:3000"; //0.0.0.0 not valid
 }
