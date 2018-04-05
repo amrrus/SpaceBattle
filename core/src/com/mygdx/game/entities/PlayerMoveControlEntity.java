@@ -18,7 +18,7 @@ public class PlayerMoveControlEntity extends Actor {
 
 
     public void act(float delta) {
-        if (!keepMoving && Gdx.input.justTouched()) {
+        /*if (!keepMoving && Gdx.input.justTouched()) {
             if (Gdx.input.getX() < (Gdx.graphics.getWidth() / 2)) {
                 moveSign = -1;
                 keepMoving = true;
@@ -33,6 +33,7 @@ public class PlayerMoveControlEntity extends Actor {
             moveSign = 0;
             conn.move(moveSign);
         }
+        */
     }
 
     public void startToShoot(){

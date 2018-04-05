@@ -31,6 +31,7 @@ public class GameScreen extends BaseScreen {
     public EntityFactory factory;
     private ScoreBoard sb;
     private ShotButton shotButton;
+    private Controllers controllers;
 
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
@@ -46,8 +47,7 @@ public class GameScreen extends BaseScreen {
         world = new World(new Vector2(0, 0), true);
         conn=new Connection(this);
         sb = new ScoreBoard(this);
-        shotButton = new ShotButton(this);
-
+        //shotButton = new ShotButton(this);
 
 
     }
@@ -55,7 +55,7 @@ public class GameScreen extends BaseScreen {
     public void show() {
         factory = new EntityFactory(game.getManager(),this);
         conn.connect();
-
+        controllers = new Controllers(this,conn);
         // Create the players.
         topPlayer = factory.createTopPlayer();
         bottomPlayer = factory.createBottomPlayer();
@@ -71,7 +71,7 @@ public class GameScreen extends BaseScreen {
         stage.getCamera().update();
 
         //make touchable shot buttons
-        shotButton.show();
+        //shotButton.show();
 
     }
     /**
@@ -80,7 +80,7 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void hide() {
-        shotButton.hide();
+        //shotButton.hide();
         conn.disconnect();
         // Clear the stage. This will remove ALL actors from the stage and it is faster than
         // removing every single actor one by one. This is not shown in the video but it is
