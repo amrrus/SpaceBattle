@@ -56,7 +56,6 @@ public class Controllers extends Actor implements InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
-        Gdx.app.log("debug","keycode:"+keycode);
         if(keycode == 21){
             conn.move(-1);
         }else if(keycode == 22){

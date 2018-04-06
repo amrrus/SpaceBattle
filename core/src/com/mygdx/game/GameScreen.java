@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.PlayerEntity;
-import com.mygdx.game.entities.PlayerMoveControlEntity;
 import Connections.Connection;
 
 /**
@@ -25,13 +24,10 @@ public class GameScreen extends BaseScreen {
     public World world;
     public PlayerEntity topPlayer;
     public PlayerEntity bottomPlayer;
-    public PlayerMoveControlEntity playerMoveControl;
     private Texture background;
     private Connection conn;
     public EntityFactory factory;
     private ScoreBoard sb;
-    private ShotButton shotButton;
-    private Controllers controllers;
 
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
@@ -47,32 +43,30 @@ public class GameScreen extends BaseScreen {
         world = new World(new Vector2(0, 0), true);
         conn=new Connection(this);
         sb = new ScoreBoard(this);
-        //shotButton = new ShotButton(this);
 
 
     }
 
     public void show() {
+        //Create factory
         factory = new EntityFactory(game.getManager(),this);
+
+        //connection establishing
         conn.connect();
-        controllers = new Controllers(this,conn);
+
+        //set controls to play
+        new Controllers(this,conn);
+
         // Create the players.
         topPlayer = factory.createTopPlayer();
         bottomPlayer = factory.createBottomPlayer();
-        playerMoveControl = factory.createPlayerMoveControl(conn);
-        background = game.getManager().get("dividedPlanet.png");
 
-        stage.addActor(playerMoveControl);
-        stage.addActor(topPlayer);
-        stage.addActor(bottomPlayer);
+        //Load background image
+        background = factory.loadBackgroundImage();
 
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
-
-        //make touchable shot buttons
-        //shotButton.show();
-
     }
     /**
      * This method will be executed when this screen is no more the active screen.
@@ -80,12 +74,14 @@ public class GameScreen extends BaseScreen {
      */
     @Override
     public void hide() {
-        //shotButton.hide();
+        //Disconnect to server
         conn.disconnect();
+
         // Clear the stage. This will remove ALL actors from the stage and it is faster than
         // removing every single actor one by one. This is not shown in the video but it is
         // an improvement.
         stage.clear();
+
         // Detach every entity from the world they have been living in.
         Array<Body> copy = new Array<Body>();
         world.getBodies(copy);
@@ -134,7 +130,6 @@ public class GameScreen extends BaseScreen {
         world.dispose();
         background.dispose();
         sb.dispose();
-        shotButton.dispose();
     }
 
     public AssetManager getManager(){
