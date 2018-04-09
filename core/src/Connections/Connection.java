@@ -26,7 +26,7 @@ public class Connection {
     private Emitter.Listener explosion;
     private Emitter.Listener setPos;
     private Emitter.Listener setLives;
-    private Emitter.Listener playerDeath;
+    private Emitter.Listener endGame;
     private GameScreen gs;
 
     private String room;
@@ -41,7 +41,7 @@ public class Connection {
         }
         mSocket.on("update_player_position",setPos);
         mSocket.on("update_player_lives",setLives);
-        mSocket.on("update_player_death",playerDeath);
+        mSocket.on("end_game",endGame);
         mSocket.on("update_player_shots",updateShots);
         mSocket.on("create_asteroid",createAst);
         mSocket.on("delete_asteroid", deleteAst);
@@ -207,13 +207,11 @@ public class Connection {
     };
     }
 
-    {   playerDeath = new Emitter.Listener() {
+    {   endGame = new Emitter.Listener() {
         public void call(final Object... args){
             JsonValue data = new JsonReader().parse(args[0].toString());
-            Integer playerId = data.getInt("playerId");
-            //TODO: Stop client
-
-
+            Boolean loser = data.getBoolean("loser");
+            gs.endGame(loser);
         }
     };
     }
@@ -228,8 +226,6 @@ public class Connection {
             }else{
                 gs.topPlayer.setShots(shots);
             }
-
-
         }
     };
     }

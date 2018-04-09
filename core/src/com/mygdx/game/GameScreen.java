@@ -7,7 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.entities.EntityFactory;
@@ -28,6 +32,11 @@ public class GameScreen extends BaseScreen {
     private Connection conn;
     public EntityFactory factory;
     private ScoreBoard sb;
+    private Boolean endGame;
+    private Boolean loser;
+    private Skin skin;
+    private TextButton accept;
+    private Boolean finishPrepare;
 
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
@@ -41,8 +50,18 @@ public class GameScreen extends BaseScreen {
         //stage.setDebugAll(true);
 
         world = new World(new Vector2(0, 0), true);
-        conn=new Connection(this);
+
         sb = new ScoreBoard(this);
+
+        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
+
+        accept = new TextButton("Aceptar", skin);
+        accept.setSize(250, 100);
+        accept.getLabel().setFontScale(4, 4);
+        accept.setPosition(-125, -50);
+        stage.addActor(accept);
+
 
 
     }
@@ -52,11 +71,19 @@ public class GameScreen extends BaseScreen {
         factory = new EntityFactory(game.getManager(),this);
 
         //connection establishing
+        conn=new Connection(this);
         conn.connect();
 
         //set controls to play
         new Controllers(this,conn);
-
+        accept.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                // Take me to the game screen!
+                Gdx.app.log("debug","touched button");
+                game.setScreen(game.menuScreen);
+            }
+        });
         // Create the players.
         topPlayer = factory.createTopPlayer();
         bottomPlayer = factory.createBottomPlayer();
@@ -67,6 +94,11 @@ public class GameScreen extends BaseScreen {
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
+
+        endGame=false;
+        loser=false;
+        finishPrepare = true;
+        accept.setVisible(false);
     }
     /**
      * This method will be executed when this screen is no more the active screen.
@@ -88,6 +120,8 @@ public class GameScreen extends BaseScreen {
         for (int i=0;i<copy.size;i++){
             world.destroyBody(copy.get(i));
         }
+        //remove imput processor
+        Gdx.input.setInputProcessor(null);
     }
 
     /**
@@ -96,6 +130,7 @@ public class GameScreen extends BaseScreen {
      */
 
     public void render(float delta) {
+
         // Do not forget to clean the screen.
         Gdx.gl.glClearColor(0.1f, 0.125f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -103,8 +138,14 @@ public class GameScreen extends BaseScreen {
         // Update the stage. This will update the actors.
         stage.act();
 
-        // Step the world. This will update the physics and update entity positions.
-        world.step(delta, 6, 2);
+        if(endGame && finishPrepare){
+            accept.setVisible(true);
+            Gdx.input.setInputProcessor(stage);
+            finishPrepare = false;
+        }else {
+            // Step the world. This will update the physics and update entity positions.
+            world.step(delta, 6, 2);
+        }
 
         // Render the screen. Remember, this is the last step!
         stage.getBatch().begin();
@@ -134,5 +175,11 @@ public class GameScreen extends BaseScreen {
 
     public AssetManager getManager(){
         return this.game.getManager();
+    }
+
+    public void endGame(Boolean loser){
+        this.endGame=true;
+        this.loser = loser;
+        //this.game.setScreen(this.game.menuScreen);
     }
 }
