@@ -11,111 +11,85 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-/**
- * This is the screen that you see when you enter the game. It has a button for playing the game.
- * When you press this button, you go to the game screen so that you can start to play. This
- * screen was done by copying the code from GameOverScreen. All the cool comments have been
- * copy-pasted.
- */
 public class MenuScreen extends BaseScreen {
 
-    /** The stage where all the buttons are added. */
     private Stage stage;
 
-    /** The skin that we use to set the style of the buttons. */
     private Skin skin;
 
-    /** The logo image you see on top of the screen. */
     private Image logo;
+    private Image background;
 
-    /** The play button you use to jump to the game screen. */
-    private TextButton play, credits;
+    private TextButton play, howToPlay;
 
     public MenuScreen(final MainGame game) {
         super(game);
 
-        // Create a new stage, as usual.
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
-        // Load the skin file. The skin file contains information about the skins. It can be
-        // passed to any widget in Scene2D UI to set the style. It just works, amazing.
+
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        // For instance, here you see that I create a new button by telling the label of the
-        // button as well as the skin file. The background image for the button is in the skin
-        // file.
-        play = new TextButton("Play", skin);
-        credits = new TextButton("Credits", skin);
+        play = new TextButton("Jugar", skin);
+        howToPlay = new TextButton("Como jugar", skin);
 
-        // Also, create an image. Images are actors that only display some texture. Useful if you
-        // want to display a texture in a Scene2D based screen but you don't want to rewrite code.
         logo = new Image(game.getManager().get("logo.png", Texture.class));
+        background = new Image(game.getManager().get("background.png", Texture.class));
 
-        // Add capture listeners. Capture listeners have one method, changed, that is executed
-        // when the button is pressed or when the user interacts somehow with the widget. They are
-        // cool because they let you execute some code when you press them.
         play.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                // Take me to the game screen!
                 game.setScreen(game.gameScreen);
             }
         });
 
-        credits.addCaptureListener(new ChangeListener() {
+        howToPlay.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.creditsScreen);
+                game.setScreen(game.howToPlayScreen);
             }
         });
 
-        // Now I position things on screen. Sorry for making this the hardest part of this screen.
-        // I position things on the screen so that they look centered. This is why I make the
-        // buttons the same size.
-        logo.setPosition(1160 - logo.getWidth() / 2, 640 - logo.getHeight());
+
+        background.setPosition(0,0);
+        background.setSize(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN);
+
+        logo.setPosition(2*(Constants.WIDTH_SCREEN/2 - logo.getWidth()) - 60, Constants.HEIGHT_SCREEN/2 - logo.getHeight());
         logo.setSize(logo.getWidth() * 2, logo.getHeight() * 2);
 
         play.setSize(600, 240);
         play.getLabel().setFontScale(4, 4);
-        credits.setSize(600, 240);
-        credits.getLabel().setFontScale(4, 4);
-
         play.setPosition(120, 420);
-        credits.setPosition(120, 120);
 
-        // Do not forget to add actors to the stage or we wouldn't see anything.
-        stage.addActor(play);
+        howToPlay.setSize(600, 240);
+        howToPlay.getLabel().setFontScale(4, 4);
+        howToPlay.setPosition(120, 120);
+
+        stage.addActor(background);
         stage.addActor(logo);
-        stage.addActor(credits);
+        stage.addActor(play);
+        stage.addActor(howToPlay);
     }
 
     @Override
     public void show() {
-        // Now this is important. If you want to be able to click the button, you have to make
-        // the Input system handle input using this Stage. Stages are also InputProcessors. By
-        // making the Stage the default input processor for this game, it is now possible to
-        // click on buttons and even to type on input fields.
         Gdx.input.setInputProcessor(stage);
     }
 
     @Override
     public void hide() {
-        // When the screen is no more visible, you have to remember to unset the input processor.
-        // Otherwise, input might act weird, because even if you aren't using this screen, you are
-        // still using the stage for handling input.
         Gdx.input.setInputProcessor(null);
     }
 
     @Override
     public void dispose() {
-        // Dispose assets.
         stage.dispose();
         skin.dispose();
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0.2f, 0.3f, 0.5f, 1f);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
