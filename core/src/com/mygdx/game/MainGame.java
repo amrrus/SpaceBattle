@@ -2,10 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import Connections.Connection;
 import sun.awt.image.GifImageDecoder;
@@ -21,18 +18,10 @@ public class MainGame extends Game {
     /** This is the asset manager we use to centralize the assets. */
     private AssetManager manager;
 
-    /**
-     * These are the screens that we use in this game. I invite you to use a better system than
-     * just public variables. For instance, you could create an ArrayList or maybe use some
-     * structure such as a map where you can associate a number or a string to a screen.
-     */
-    public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, creditsScreen;
+    public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, howToPlayScreen;
 
     @Override
     public void create() {
-        // Initialize the asset manager. We add every aset to the manager so that it can be loaded
-        // inside the LoadingScreen screen. Remember to put the name of the asset in the first
-        // argument, then the type of the asset in the second argument.
         manager = new AssetManager();
         manager.load("gameover.png", Texture.class);
         manager.load("blueShipUp.png",Texture.class);
@@ -53,18 +42,13 @@ public class MainGame extends Game {
         setScreen(loadingScreen);
     }
 
-    /**
-     * This method is invoked by LoadingScreen when all the assets are loaded. Use this method
-     * as a second-step loader. You can load the rest of the screens here and jump to the main
-     * screen now that everything is loaded.
-     */
     public void finishLoading() {
         this.conn = new Connection();
         this.conn.connect();
         menuScreen = new MenuScreen(this,this.conn);
         gameScreen = new GameScreen(this,this.conn);
         //gameOverScreen = new GameOverScreen(this,this.conn);
-        creditsScreen = new CreditsScreen(this);
+        creditsScreen = new HowToPlayScreen(this);
         setScreen(menuScreen);
     }
 

@@ -23,6 +23,6 @@ public class Constants {
 
     public static final Integer MAX_NUMBER_SHOTS_STORED = 5;
 
-    public static final String SERVER_URL = "http://192.168.1.101:3000"; //0.0.0.0 not valid
+    public static final String SERVER_URL = "http://192.168.0.113:3000"; //0.0.0.0 not valid
 }
 

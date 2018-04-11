@@ -1,11 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
 
 /**
  * Created by patry on 23/03/2018.
@@ -15,62 +11,38 @@ public class Utils {
     private float positionX;
     private float positionY;
     private float impulseX;
-    private ArrayList<Float> impulseY;
+    private float impulseY;
     private float radius;
-
-    /*public Utils() {
-        this.position = new Vector2(MathUtils.random(),MathUtils.random());
-        this.impulse = new Vector2(MathUtils.random(),MathUtils.random());
-        this.radius = MathUtils.random(0.3f,1f);
-    }*/
 
     public ArrayList<ArrayList<Float>> generateAttributesAsteroids() {
 
         ArrayList<ArrayList<Float>> l = new ArrayList<ArrayList<Float>>();
-        ArrayList<Float> sublist = new ArrayList<Float>();
-            /*sublist.add(positionX);
-            sublist.add(positionY);
-            sublist.add(impulseX);
-            sublist.add(impulseY);
-            sublist.add(radius);*/
-        for(int i=0; i<5; i++) {
-            impulseY = generaAleatorioList();
-            l.add(impulseY);
-        }
-
-        //TODO: queda método de las posiciones, ya genera una lista de listas con los impulsos.
-        System.out.print(l);
-       /* Integer contador=0;
-        for(int i=0; i<1; i++){
-            l.add(i, impulseY);
-            System.out.print(l);
-        }*/
-        //System.out.print(sublist);
-        //System.out.print(l);
+        ArrayList<Float> sublist;
+        sublist = generaAleatorioList();
+        l.add(sublist);
+        System.out.print(l+"\n");
         return l;
     }
 
     public ArrayList<Float> generaAleatorioList(){
         return iteraciones();
-
     }
 
-    private static float primerElemento(){
+    private float primerImpulso(){
         Integer signo=0;
-        float  n= MathUtils.random(-1.0f, 1.0f);
+        float  n=MathUtils.random(-1.0f, 1.0f);
         if(n<0){
             signo=-1;
         }else{
             signo=1;
         }
-        return n;
+        return signo;
     }
 
-    private float calculaPrimero = primerElemento();
+    private float calculaPrimero = primerImpulso();
 
-    private float restoElementos() {
-        float res = 0f;
-        res = MathUtils.random();
+    private float restoImpulsos() {
+        float res = MathUtils.random();
         if (calculaPrimero < 0) {
             res = res * (1);
             calculaPrimero = res;
@@ -81,13 +53,88 @@ public class Utils {
         return res;
     }
 
-    private ArrayList<Float> iteraciones(){
+    private ArrayList<Float> calculaPosicionesPrimeraIteracion(){
+        ArrayList<Float> lista1 = new ArrayList<Float>();
+        float resX = MathUtils.random();
+        float resY= MathUtils.random(-1.0f,1.0f);
+        if(resX>=0 && resY>=0){
+            positionX=resX;
+            positionY=resY;
+            lista1.add(0,positionX);
+            lista1.add(1,positionY);
+        }else if(resX<0 && resY>=0){
+            positionX=resX;
+            positionY=resY;
+            lista1.add(0,positionX);
+            lista1.add(1,positionY);
+        }else if(resX<0 && resY<0){
+            positionX=resX;
+            positionY=resY;
+            lista1.add(0,positionX);
+            lista1.add(1,positionY);
+        }else{
+            positionX=resX;
+            positionY=resY;
+            lista1.add(0,positionX);
+            lista1.add(1,positionY);
+        }
+        return lista1;
+    }
+
+    private ArrayList<Float> calculaPrimeraPosicion=calculaPosicionesPrimeraIteracion();
+
+    private ArrayList<Float> calculaRestoPosiciones(){
         ArrayList<Float> lista = new ArrayList<Float>();
-        float res = 0;
-        impulseX= MathUtils.random();
-        res = restoElementos();
+        float resX;
+        float resY;
+        if(calculaPrimeraPosicion.get(0)>=0f && calculaPrimeraPosicion.get(1)>=0){
+            //System.out.print("[" + calculaPrimeraPosicion.get(0) + "," + calculaPrimeraPosicion.get(1)+"] :" + "Se encuentra en el primer cuadrante\n");
+            lista.add(calculaPrimeraPosicion.get(0));
+            lista.add(calculaPrimeraPosicion.get(1));
+            resX = MathUtils.random(-1f,0f);
+            resY = MathUtils.random(-1f,0f);
+            calculaPrimeraPosicion.set(0, resX);
+            calculaPrimeraPosicion.set(1, resY);
+        }else if(calculaPrimeraPosicion.get(0)<0f && calculaPrimeraPosicion.get(1)>=0) {
+           // System.out.print("[" + calculaPrimeraPosicion.get(0) + "," + calculaPrimeraPosicion.get(1) + "] :" + "Se encuentra en el segundo cuadrante\n");
+            lista.add(calculaPrimeraPosicion.get(0));
+            lista.add(calculaPrimeraPosicion.get(1));
+            resX = MathUtils.random(0f,1f);
+            resY = MathUtils.random(-1f,0f);
+            calculaPrimeraPosicion.set(0, resX);
+            calculaPrimeraPosicion.set(1, resY);
+        }else  if(calculaPrimeraPosicion.get(0)<0f && calculaPrimeraPosicion.get(1)<0) {
+           // System.out.print("[" + calculaPrimeraPosicion.get(0) + "," + calculaPrimeraPosicion.get(1) + "] :" + "Se encuentra en el tercer cuadrante\n");
+            lista.add(calculaPrimeraPosicion.get(0));
+            lista.add(calculaPrimeraPosicion.get(1));
+            resX = MathUtils.random(-1f,0f);
+            resY = MathUtils.random(0f,1f);
+            calculaPrimeraPosicion.set(0, resX);
+            calculaPrimeraPosicion.set(1, resY);
+        }else if(calculaPrimeraPosicion.get(0)>=0f && calculaPrimeraPosicion.get(1)<0) {
+            //System.out.print("[" + calculaPrimeraPosicion.get(0) + "," + calculaPrimeraPosicion.get(1) + "] :" + "Se encuentra en el cuarto cuadrante\n");
+            lista.add(calculaPrimeraPosicion.get(0));
+            lista.add(calculaPrimeraPosicion.get(1));
+            resX = MathUtils.random(0f,1f);
+            resY = MathUtils.random(0f, 1f);
+            calculaPrimeraPosicion.set(0, resX);
+            calculaPrimeraPosicion.set(1, resY);
+        }
+        return lista;
+    }
+
+
+    private ArrayList<Float> iteraciones(){
+        ArrayList<Float> calculaPos = calculaRestoPosiciones();
+        ArrayList<Float> lista = new ArrayList<Float>();
+        radius = MathUtils.random(0.3f, 1.0f);
+        lista.add(calculaPos.get(0));
+        lista.add(calculaPos.get(1));
+        impulseX= MathUtils.random(-1f,1f);
+        impulseY = restoImpulsos();
         lista.add(impulseX);
-        lista.add(res);
+        lista.add(impulseY);
+        lista.add(radius);
         return lista;
     }
 }
