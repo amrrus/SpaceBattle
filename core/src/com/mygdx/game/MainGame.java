@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+import Connections.Connection;
 import sun.awt.image.GifImageDecoder;
 
 /**
@@ -16,6 +17,7 @@ import sun.awt.image.GifImageDecoder;
  */
 public class MainGame extends Game {
 
+    private Connection conn;
     /** This is the asset manager we use to centralize the assets. */
     private AssetManager manager;
 
@@ -42,6 +44,10 @@ public class MainGame extends Game {
         manager.load("bullet-red.png", Texture.class);
         manager.load("bullet-green.png", Texture.class);
         manager.load("shots-list.png",Texture.class);
+        manager.load("1.png",Texture.class);
+        manager.load("2.png",Texture.class);
+        manager.load("3.png",Texture.class);
+
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);
         setScreen(loadingScreen);
@@ -53,9 +59,11 @@ public class MainGame extends Game {
      * screen now that everything is loaded.
      */
     public void finishLoading() {
-        menuScreen = new MenuScreen(this);
-        gameScreen = new GameScreen(this);
-        gameOverScreen = new GameOverScreen(this);
+        this.conn = new Connection();
+        this.conn.connect();
+        menuScreen = new MenuScreen(this,this.conn);
+        gameScreen = new GameScreen(this,this.conn);
+        //gameOverScreen = new GameOverScreen(this,this.conn);
         creditsScreen = new CreditsScreen(this);
         setScreen(menuScreen);
     }

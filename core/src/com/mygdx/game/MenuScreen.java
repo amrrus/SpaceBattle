@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import Connections.Connection;
+
 /**
  * This is the screen that you see when you enter the game. It has a button for playing the game.
  * When you press this button, you go to the game screen so that you can start to play. This
@@ -31,8 +33,11 @@ public class MenuScreen extends BaseScreen {
     /** The play button you use to jump to the game screen. */
     private TextButton play, credits;
 
-    public MenuScreen(final MainGame game) {
+    private Connection conn;
+
+    public MenuScreen(final MainGame game,Connection conn) {
         super(game);
+        this.conn = conn;
 
         // Create a new stage, as usual.
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));

@@ -27,18 +27,28 @@ public class Connection {
     private Emitter.Listener setPos;
     private Emitter.Listener setLives;
     private Emitter.Listener endGame;
+    private Emitter.Listener countdown;
+    private Emitter.Listener debug;
     private GameScreen gs;
 
     private String room;
 
-    public Connection(GameScreen gs){
-        this.gs=gs;
+    public Connection(){
+        //this.gs=gs;
         try {
             mSocket = IO.socket(Constants.SERVER_URL);
             Gdx.app.log("connection", mSocket.toString());
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
+
+        mSocket.on("start_game",debug);
+
+
+
+    }
+    public void setGameScreen(GameScreen gs){
+        this.gs = gs;
         mSocket.on("update_player_position",setPos);
         mSocket.on("update_player_lives",setLives);
         mSocket.on("end_game",endGame);
@@ -48,11 +58,9 @@ public class Connection {
         mSocket.on("create_shot",createShot);
         mSocket.on("delete_shot", deleteShot);
         mSocket.on("create_explosion", explosion);
-
+        mSocket.on("countdown",countdown);
         mSocket.emit("room", generateRoomMessage());
-
     }
-
     public void connect(){
         mSocket.connect();
     }
@@ -226,6 +234,21 @@ public class Connection {
             }else{
                 gs.topPlayer.setShots(shots);
             }
+        }
+    };
+    }
+    {   countdown = new Emitter.Listener() {
+        public void call(final Object... args){
+            Integer count = (Integer)args[0];
+            Gdx.app.log("debug","Countdown:"+count);
+            gs.countdown = count;
+        }
+    };
+    }
+    {   debug = new Emitter.Listener() {
+        public void call(final Object... args){
+            Gdx.app.log("debug","start_server sended)");
+            //lanza la el juego
         }
     };
     }

@@ -29,6 +29,10 @@ public class GameScreen extends BaseScreen {
     public PlayerEntity topPlayer;
     public PlayerEntity bottomPlayer;
     private Texture background;
+    private Texture textureOne;
+    private Texture textureTwo;
+    private Texture textureThree;
+    public Integer countdown;
     private Connection conn;
     public EntityFactory factory;
     private ScoreBoard sb;
@@ -38,14 +42,15 @@ public class GameScreen extends BaseScreen {
     private TextButton accept;
     private Boolean finishPrepare;
 
+
     /**
      * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
      * it is safe to do critical code here such as loading assets and setting up the stage.
      * @param game
      */
-    public GameScreen(MainGame game) {
+    public GameScreen(MainGame game, Connection conn) {
         super(game);
-
+        this.conn=conn;
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
         //stage.setDebugAll(true);
 
@@ -71,8 +76,8 @@ public class GameScreen extends BaseScreen {
         factory = new EntityFactory(game.getManager(),this);
 
         //connection establishing
-        conn=new Connection(this);
-        conn.connect();
+        conn.setGameScreen(this);
+        countdown = 3;
 
         //set controls to play
         new Controllers(this,conn);
@@ -81,7 +86,8 @@ public class GameScreen extends BaseScreen {
             public void changed(ChangeEvent event, Actor actor) {
                 // Take me to the game screen!
                 Gdx.app.log("debug","touched button");
-                game.setScreen(game.menuScreen);
+                //game.setScreen(game.menuScreen);
+                Gdx.app.exit();
             }
         });
         // Create the players.
@@ -90,6 +96,10 @@ public class GameScreen extends BaseScreen {
 
         //Load background image
         background = factory.loadBackgroundImage();
+        //Load countdown images
+        textureOne = getManager().get("1.png");
+        textureTwo = getManager().get("2.png");
+        textureThree = getManager().get("3.png");
 
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
@@ -137,7 +147,6 @@ public class GameScreen extends BaseScreen {
 
         // Update the stage. This will update the actors.
         stage.act();
-
         if(endGame && finishPrepare){
             accept.setVisible(true);
             Gdx.input.setInputProcessor(stage);
@@ -149,7 +158,24 @@ public class GameScreen extends BaseScreen {
 
         // Render the screen. Remember, this is the last step!
         stage.getBatch().begin();
+
         stage.getBatch().draw(background,-510,-510, Constants.HEIGHT_SCREEN*0.95f, Constants.HEIGHT_SCREEN*0.95f);
+        if (countdown>0){
+            switch(countdown){
+                case 1:
+                    stage.getBatch().draw(textureOne,-256,-256);
+                    break;
+                case 2:
+                    stage.getBatch().draw(textureTwo,-256,-256);
+                    break;
+                case 3:
+                    stage.getBatch().draw(textureThree,-256,-256);
+                    break;
+            }
+        }
+        if (endGame){
+            //imagen de victoria o derrota en funcion de loser
+        }
         sb.displayScoreBoard();
         stage.getBatch().end();
         stage.draw();
@@ -180,6 +206,7 @@ public class GameScreen extends BaseScreen {
     public void endGame(Boolean loser){
         this.endGame=true;
         this.loser = loser;
+
         //this.game.setScreen(this.game.menuScreen);
     }
 }
