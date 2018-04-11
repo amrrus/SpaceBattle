@@ -7,14 +7,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
+import Connections.Connection;
+
 
 public class LoadingScreen extends BaseScreen {
 
     private Stage stage;
-
     private Skin skin;
-
     private Label loading;
+    private Connection conn;
+    private float timer;
+    private Boolean autoDisconnect;
 
     public LoadingScreen(MainGame game) {
 
@@ -28,6 +31,8 @@ public class LoadingScreen extends BaseScreen {
         loading.setPosition(Constants.WIDTH_SCREEN/2 - loading.getWidth(), Constants.HEIGHT_SCREEN/2 - loading.getHeight());
 
         stage.addActor(loading);
+        timer=0;
+        autoDisconnect=true;
     }
 
     @Override
@@ -35,11 +40,33 @@ public class LoadingScreen extends BaseScreen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        if (game.getManager().update()) {
+        if (game.getManager().update() && conn!= null && conn.connected()) {
             game.finishLoading();
         } else {
-            int progress = (int) (game.getManager().getProgress() * 100);
-            loading.setText("Loading... " + progress + "%");
+            if (game.getManager().getProgress()<1){
+                int progress = (int) (game.getManager().getProgress() * 100);
+                loading.setText("Cargando... " + progress + "%");
+            }else{
+                if (conn == null){
+                    this.conn = new Connection();
+                    this.conn.connect();
+                    loading.setText("Conectando...");
+                }else{
+                    timer+=delta;
+                    if (timer<15){
+                        loading.setText("Conectando...");
+                    }else{
+                        if (autoDisconnect){
+                            conn.disconnect();
+                            autoDisconnect = false;
+                        }
+                        loading.setText("Error de conexion. Pruebe mas tarde.");//faltan tildes
+                    }
+
+                }
+
+            }
+
         }
 
         stage.act();

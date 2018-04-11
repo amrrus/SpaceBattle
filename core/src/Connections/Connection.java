@@ -67,6 +67,9 @@ public class Connection {
     public void disconnect(){
         mSocket.disconnect();
     }
+    public Boolean connected(){
+        return this.mSocket.connected();
+    }
 
     public void move(Integer moveSing){
         mSocket.emit("move_player",moveSing);

@@ -33,9 +33,11 @@ public class MainGame extends Game {
         manager.load("bullet-red.png", Texture.class);
         manager.load("bullet-green.png", Texture.class);
         manager.load("shots-list.png",Texture.class);
+        manager.load("background.png",Texture.class);
         manager.load("1.png",Texture.class);
         manager.load("2.png",Texture.class);
         manager.load("3.png",Texture.class);
+
 
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);
@@ -48,7 +50,7 @@ public class MainGame extends Game {
         menuScreen = new MenuScreen(this,this.conn);
         gameScreen = new GameScreen(this,this.conn);
         //gameOverScreen = new GameOverScreen(this,this.conn);
-        creditsScreen = new HowToPlayScreen(this);
+        howToPlayScreen = new HowToPlayScreen(this);
         setScreen(menuScreen);
     }
 

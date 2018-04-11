@@ -91,8 +91,8 @@ public class GameScreen extends BaseScreen {
             public void changed(ChangeEvent event, Actor actor) {
                 // Take me to the game screen!
                 Gdx.app.log("debug","touched button");
-                //game.setScreen(game.menuScreen);
-                Gdx.app.exit();
+                game.setScreen(game.menuScreen);
+                //Gdx.app.exit();
             }
         });
         // Create the players.
