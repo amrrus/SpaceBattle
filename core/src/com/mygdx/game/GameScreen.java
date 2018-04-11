@@ -62,6 +62,11 @@ public class GameScreen extends BaseScreen {
         accept.setPosition(-125, -50);
         stage.addActor(accept);
 
+        Utils util = new Utils();
+        util.generateAttributesAsteroids();
+        util.generateAttributesAsteroids();
+        util.generateAttributesAsteroids();
+        util.generateAttributesAsteroids();
 
 
     }
