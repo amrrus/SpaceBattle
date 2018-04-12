@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -32,6 +33,8 @@ public class MenuScreen extends BaseScreen {
 
     private Connection conn;
 
+    private TextField nickname;
+
     public MenuScreen(final MainGame game,Connection conn) {
         super(game);
         this.conn = conn;
@@ -40,6 +43,11 @@ public class MenuScreen extends BaseScreen {
 
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
+        nickname=new TextField("Player1", skin);
+        TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
+        textFieldStyle.font.getData().setScale(3);
+        nickname.setStyle(textFieldStyle);
 
         play = new TextButton("Jugar", skin);
         howToPlay = new TextButton("Como jugar", skin);
@@ -65,6 +73,10 @@ public class MenuScreen extends BaseScreen {
         background.setPosition(0,0);
         background.setSize(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN);
 
+        nickname.setPosition(Constants.WIDTH_SCREEN/2 - nickname.getWidth()-690, Constants.HEIGHT_SCREEN/2 - nickname.getHeight()+200);
+        nickname.setSize(300, 100);
+
+
         logo.setPosition(2*(Constants.WIDTH_SCREEN/2 - logo.getWidth()) - 60, Constants.HEIGHT_SCREEN/2 - logo.getHeight());
         logo.setSize(logo.getWidth() * 2, logo.getHeight() * 2);
 
@@ -77,6 +89,7 @@ public class MenuScreen extends BaseScreen {
         howToPlay.setPosition(120, 120);
 
         stage.addActor(background);
+        stage.addActor(nickname);
         stage.addActor(logo);
         stage.addActor(play);
         stage.addActor(howToPlay);
