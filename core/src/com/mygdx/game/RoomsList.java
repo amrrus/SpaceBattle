@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.GUI.EmptyRoom;
+import com.mygdx.game.GUI.RoomGUI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -51,7 +52,10 @@ public class RoomsList extends BaseScreen {
         createRoom.setPosition(Constants.WIDTH_SCREEN-350, 650-(Constants.HEIGHT_SCREEN/2));
         createRoom.addCaptureListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameScreen);
+                //game.setScreen(game.gameScreen);
+                ArrayList<String>l = new ArrayList<String>();
+                l.add("a");l.add("b");l.add("c");l.add("d");
+                updateRoomList(l);
             }
         });
 
@@ -63,7 +67,6 @@ public class RoomsList extends BaseScreen {
         //fixed header
         shapeRenderer = new ShapeRenderer();
         shapeRenderer.setProjectionMatrix(stage.getBatch().getProjectionMatrix());
-        title = new BitmapFont();
         title = new BitmapFont();
         title.getData().setScale(4);
         title.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
@@ -95,7 +98,7 @@ public class RoomsList extends BaseScreen {
         shapeRenderer.rect(0,Constants.HEIGHT_SCREEN/2-heightHeader,Constants.WIDTH_SCREEN,heightHeader);
         shapeRenderer.end();
         stage.getBatch().begin();
-        title.draw(stage.getBatch(),"Salas",Constants.WIDTH_SCREEN/2-80,Constants.HEIGHT_SCREEN-50);
+        title.draw(stage.getBatch(),"Salas",Constants.WIDTH_SCREEN/2-90,Constants.HEIGHT_SCREEN-50);
 
         stage.getBatch().end();
     }
@@ -103,16 +106,30 @@ public class RoomsList extends BaseScreen {
 
         final Table scrollTable = new Table();
         scrollTable.add(emptyHead);
-        for (String room:l) {
+        for (final String room:l) {
             scrollTable.row();
-            scrollTable.add(new Image(game.getManager().get("blueShipDown.png", Texture.class)));
+
+            TextButton playRoom = new TextButton(room, skin);
+            playRoom.setSize(200, 200);
+            playRoom.getLabel().setFontScale(4, 4);
+            playRoom.addCaptureListener(new ChangeListener() {
+                public void changed(ChangeEvent event, Actor actor) {
+                    Gdx.app.log("Unimplemented","sent msg to connect to room:"+room);
+                }
+            });
+
+            scrollTable.add(new RoomGUI(room,250));
+            scrollTable.add(playRoom);
         }
         final ScrollPane scroller = new ScrollPane(scrollTable,skin);
 
         Rooms = new Table();
         Rooms.setFillParent(true);
         Rooms.add(scroller).fill().expand();
+        stage.clear();
         stage.addActor(Rooms);
+        stage.addActor(createRoom);
+
     }
 
 }

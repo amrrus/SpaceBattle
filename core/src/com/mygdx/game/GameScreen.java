@@ -66,13 +66,13 @@ public class GameScreen extends BaseScreen {
         accept.getLabel().setFontScale(4, 4);
         accept.setPosition(-125, -50);
         stage.addActor(accept);
-        Utils ut = new Utils();
-        Gdx.app.log("asteroide:",ut.genera2().toString());
-        Gdx.app.log("asteroide:",ut.genera2().toString());
-        Gdx.app.log("asteroide:",ut.genera2().toString());
-        Gdx.app.log("asteroide:",ut.genera2().toString());
-        Gdx.app.log("asteroide:",ut.genera2().toString());
-        Gdx.app.log("asteroide:",ut.genera2().toString());
+//        Utils ut = new Utils();
+//        Gdx.app.log("asteroide:",ut.genera2().toString());
+//        Gdx.app.log("asteroide:",ut.genera2().toString());
+//        Gdx.app.log("asteroide:",ut.genera2().toString());
+//        Gdx.app.log("asteroide:",ut.genera2().toString());
+//        Gdx.app.log("asteroide:",ut.genera2().toString());
+//        Gdx.app.log("asteroide:",ut.genera2().toString());
     }
 
     public void show() {
