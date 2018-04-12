@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -44,10 +45,12 @@ public class MenuScreen extends BaseScreen {
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        nickname=new TextField("Player1", skin);
+        nickname=new TextField("", skin);
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle.font.getData().setScale(3);
         nickname.setStyle(textFieldStyle);
+        int aleatorio = MathUtils.random(10000, 99999);
+        nickname.setText("Player" + aleatorio);
 
         play = new TextButton("Jugar", skin);
         howToPlay = new TextButton("Como jugar", skin);
@@ -74,7 +77,7 @@ public class MenuScreen extends BaseScreen {
         background.setSize(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN);
 
         nickname.setPosition(Constants.WIDTH_SCREEN/2 - nickname.getWidth()-690, Constants.HEIGHT_SCREEN/2 - nickname.getHeight()+200);
-        nickname.setSize(300, 100);
+        nickname.setSize(nickname.getWidth()*4, nickname.getHeight()*2);
 
 
         logo.setPosition(2*(Constants.WIDTH_SCREEN/2 - logo.getWidth()) - 60, Constants.HEIGHT_SCREEN/2 - logo.getHeight());
