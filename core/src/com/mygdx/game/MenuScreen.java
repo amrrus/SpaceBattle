@@ -50,7 +50,7 @@ public class MenuScreen extends BaseScreen {
         play.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.roomsList);
             }
         });
 

@@ -5,7 +5,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 
 import Connections.Connection;
-import sun.awt.image.GifImageDecoder;
 
 /**
  * This is our main game. This is the class that we pass to the Application in Android launcher
@@ -18,7 +17,7 @@ public class MainGame extends Game {
     /** This is the asset manager we use to centralize the assets. */
     private AssetManager manager;
 
-    public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, howToPlayScreen;
+    public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, howToPlayScreen,roomsList;
 
     @Override
     public void create() {
@@ -49,6 +48,7 @@ public class MainGame extends Game {
         this.conn.connect();
         menuScreen = new MenuScreen(this,this.conn);
         gameScreen = new GameScreen(this,this.conn);
+        roomsList = new RoomsList(this,this.conn);
         //gameOverScreen = new GameOverScreen(this,this.conn);
         howToPlayScreen = new HowToPlayScreen(this);
         setScreen(menuScreen);

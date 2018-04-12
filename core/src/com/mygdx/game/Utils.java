@@ -1,6 +1,9 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+
 import java.util.ArrayList;
 
 /**
@@ -136,6 +139,47 @@ public class Utils {
         lista.add(impulseY);
         lista.add(radius);
         return lista;
+    }
+    //-------------
+    private static final Float MaxRadioAparicion = 2f;
+    private static final Float MinRadioAparicion = 0.5f;
+    private static final Float MinImpulse = 1f;
+    private static final Float MaxImpulse = 3f;
+    private static final Float MinRadioAsteroide= 1f;
+    private static final Float MaxRadioAsteroide = 3f;
+    private Integer contador= MathUtils.ceil(MathUtils.random(0f,1f)*10);
+    public ArrayList<Float>genera2(){
+        ArrayList<Float> ret = new ArrayList<Float>();
+        Integer modulo = contador%4;
+        contador++;
+        Float posx=0f;
+        Float posy=0f;
+        switch (modulo){
+            case 0:
+                posx = MathUtils.random(MinRadioAparicion,MaxRadioAparicion);
+                posy = MathUtils.random(MinRadioAparicion,MaxRadioAparicion);
+                break;
+            case 1:
+                posx = MathUtils.random(-MaxRadioAparicion,-MinRadioAparicion);
+                posy = MathUtils.random(MinRadioAparicion,MaxRadioAparicion);
+                break;
+            case 2:
+                posx = MathUtils.random(-MaxRadioAparicion,-MinRadioAparicion);
+                posy = MathUtils.random(-MaxRadioAparicion,-MinRadioAparicion);
+                break;
+            case 3:
+                posx = MathUtils.random(MinRadioAparicion,MaxRadioAparicion);
+                posy = MathUtils.random(-MaxRadioAparicion,-MinRadioAparicion);
+                break;
+        }
+        ret.add(posx);ret.add(posy);
+        Vector2 impulso = new Vector2(posx,posy);
+        impulso.nor();
+        Float escalaImpulso=MathUtils.random(MinImpulse,MaxImpulse);
+        ret.add(impulso.x*escalaImpulso);
+        ret.add(impulso.y*escalaImpulso);
+        ret.add(MathUtils.random(MinRadioAsteroide,MaxRadioAsteroide));
+        return ret;
     }
 }
 
