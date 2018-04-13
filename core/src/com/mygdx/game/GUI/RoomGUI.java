@@ -21,15 +21,14 @@ public class RoomGUI extends Actor {
     private String roomName;
 
     public RoomGUI(String room, float height){
-        setSize(Constants.WIDTH_SCREEN/3,height);
-        setDebug(true);
+        setSize(Constants.WIDTH_SCREEN/2,height);
         roomName=room;
         text= new BitmapFont();
-        text.getData().setScale(6);
+        text.getData().setScale(4);
         text.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
     public void draw(Batch batch, float parentAlpha) {
-        text.draw(batch,roomName,getX()+200,getY()+getHeight()/2+40);
+        text.draw(batch,roomName,getX()+100,getY()+getHeight()/2+30);
     }
 
 

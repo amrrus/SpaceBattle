@@ -7,7 +7,7 @@ import com.mygdx.game.Constants;
 public class EmptyRoom extends Actor {
 
     public EmptyRoom(float height){
-        setHeight(height+20);
+        setHeight(height);
 
 
     }

@@ -2,39 +2,40 @@ package com.mygdx.game;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.GUI.EmptyRoom;
 import com.mygdx.game.GUI.RoomGUI;
-
 import java.util.ArrayList;
-import java.util.Collections;
-
 import Connections.Connection;
 
-public class RoomsList extends BaseScreen {
+public class RoomsList extends BaseScreen implements InputProcessor{
 
     private Connection conn;
     private Stage stage;
     private Skin skin;
     private TextButton createRoom;
-    private ShapeRenderer shapeRenderer;
     private BitmapFont title;
-    private float heightHeader;
+    private int heightHeader;
     private Table Rooms;
     private EmptyRoom emptyHead;
+    private Texture headerTexture;
 
     public RoomsList(final MainGame game, Connection conn){
         super(game);
@@ -45,17 +46,21 @@ public class RoomsList extends BaseScreen {
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
+        Pixmap pix = new Pixmap(Constants.WIDTH_SCREEN,heightHeader, Pixmap.Format.RGBA8888);
+        pix.setColor(Color.GRAY);
+        pix.fill();
+        headerTexture= new Texture(pix,true);
 
         createRoom = new TextButton("Crear", skin);
         createRoom.setSize(250, 250);
         createRoom.getLabel().setFontScale(4, 4);
-        createRoom.setPosition(Constants.WIDTH_SCREEN-350, 650-(Constants.HEIGHT_SCREEN/2));
+        createRoom.setPosition(Constants.WIDTH_SCREEN-300, 600-(Constants.HEIGHT_SCREEN/2));
         createRoom.addCaptureListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
-                //game.setScreen(game.gameScreen);
-                ArrayList<String>l = new ArrayList<String>();
-                l.add("a");l.add("b");l.add("c");l.add("d");
-                updateRoomList(l);
+                game.setScreen(game.waitingOpponentScreen);
+                //ArrayList<String>l = new ArrayList<String>();
+                //l.add("a");l.add("b");l.add("c");l.add("d");
+                //updateRoomList(l);
             }
         });
 
@@ -64,19 +69,18 @@ public class RoomsList extends BaseScreen {
         l.add("a");l.add("b");l.add("c");l.add("d");l.add("e");l.add("f");
         updateRoomList(l);
 
-        //fixed header
-        shapeRenderer = new ShapeRenderer();
-        shapeRenderer.setProjectionMatrix(stage.getBatch().getProjectionMatrix());
         title = new BitmapFont();
         title.getData().setScale(4);
         title.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
 
         stage.addActor(createRoom);
 
     }
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor( this );
+        multiplexer.addProcessor( stage );
+        Gdx.input.setInputProcessor( multiplexer );
     }
 
     public void hide() {
@@ -93,43 +97,89 @@ public class RoomsList extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(Color.FOREST);
-        shapeRenderer.rect(0,Constants.HEIGHT_SCREEN/2-heightHeader,Constants.WIDTH_SCREEN,heightHeader);
-        shapeRenderer.end();
         stage.getBatch().begin();
-        title.draw(stage.getBatch(),"Salas",Constants.WIDTH_SCREEN/2-90,Constants.HEIGHT_SCREEN-50);
-
+        stage.getBatch().draw(headerTexture,0,Constants.HEIGHT_SCREEN-heightHeader,Constants.WIDTH_SCREEN,heightHeader);
+        title.draw(stage.getBatch(),"Salas",Constants.WIDTH_SCREEN/2-90,Constants.HEIGHT_SCREEN-40);
+        title.draw(stage.getBatch(),conn.getNickName(),100,Constants.HEIGHT_SCREEN-40);
         stage.getBatch().end();
     }
     public void updateRoomList(ArrayList<String> l){
 
         final Table scrollTable = new Table();
+        scrollTable.setDebug(true,true);
         scrollTable.add(emptyHead);
+        scrollTable.padRight(25);
+
         for (final String room:l) {
             scrollTable.row();
+            scrollTable.add(new RoomGUI(room,250));
 
             TextButton playRoom = new TextButton(room, skin);
-            playRoom.setSize(200, 200);
             playRoom.getLabel().setFontScale(4, 4);
+            playRoom.setSize(200,200);
             playRoom.addCaptureListener(new ChangeListener() {
                 public void changed(ChangeEvent event, Actor actor) {
                     Gdx.app.log("Unimplemented","sent msg to connect to room:"+room);
                 }
             });
+            scrollTable.add(playRoom).minSize(200,200);
 
-            scrollTable.add(new RoomGUI(room,250));
-            scrollTable.add(playRoom);
+
         }
         final ScrollPane scroller = new ScrollPane(scrollTable,skin);
 
         Rooms = new Table();
+        Rooms.setBackground(new TextureRegionDrawable(new TextureRegion(
+                game.getManager().get("background.png", Texture.class))));
         Rooms.setFillParent(true);
-        Rooms.add(scroller).fill().expand();
+        Rooms.add(scroller).fill().expandY();
         stage.clear();
         stage.addActor(Rooms);
         stage.addActor(createRoom);
 
     }
 
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if(keycode== Input.Keys.BACK){
+            Gdx.app.log("debug","back");
+            Gdx.app.exit();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
+    }
 }

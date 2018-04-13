@@ -4,6 +4,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 
+import javax.xml.soap.Text;
+
 import Connections.Connection;
 
 /**
@@ -17,7 +19,7 @@ public class MainGame extends Game {
     /** This is the asset manager we use to centralize the assets. */
     private AssetManager manager;
 
-    public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, howToPlayScreen,roomsList;
+    public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, howToPlayScreen,roomsList,waitingOpponentScreen;
 
     @Override
     public void create() {
@@ -43,14 +45,14 @@ public class MainGame extends Game {
         setScreen(loadingScreen);
     }
 
-    public void finishLoading() {
-        this.conn = new Connection();
-        this.conn.connect();
+    public void finishLoading(Connection conn) {
+        this.conn=conn;
         menuScreen = new MenuScreen(this,this.conn);
         gameScreen = new GameScreen(this,this.conn);
         roomsList = new RoomsList(this,this.conn);
         //gameOverScreen = new GameOverScreen(this,this.conn);
         howToPlayScreen = new HowToPlayScreen(this);
+        waitingOpponentScreen = new WaitingOpponentScreen(this,this.conn);
         setScreen(menuScreen);
     }
 

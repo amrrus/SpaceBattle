@@ -41,7 +41,7 @@ public class LoadingScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         if (game.getManager().update() && conn!= null && conn.connected()) {
-            game.finishLoading();
+            game.finishLoading(conn);
         } else {
             if (game.getManager().getProgress()<1){
                 int progress = (int) (game.getManager().getProgress() * 100);
@@ -51,16 +51,20 @@ public class LoadingScreen extends BaseScreen {
                     this.conn = new Connection();
                     this.conn.connect();
                     loading.setText("Conectando...");
+                    loading.setPosition(Constants.WIDTH_SCREEN/2 - loading.getWidth(), Constants.HEIGHT_SCREEN/2 - loading.getHeight());
+
                 }else{
                     timer+=delta;
                     if (timer<15){
-                        loading.setText("Conectando...");
+                        //loading.setText("Conectando...");
                     }else{
                         if (autoDisconnect){
                             conn.disconnect();
                             autoDisconnect = false;
                         }
                         loading.setText("Error de conexion. Pruebe mas tarde.");//faltan tildes
+                        loading.setPosition(Constants.WIDTH_SCREEN/2 - loading.getWidth(), Constants.HEIGHT_SCREEN/2 - loading.getHeight());
+
                     }
 
                 }

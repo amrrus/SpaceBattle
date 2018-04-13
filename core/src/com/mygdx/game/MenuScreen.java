@@ -1,6 +1,9 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,7 +24,7 @@ import Connections.Connection;
  * screen was done by copying the code from GameOverScreen. All the cool comments have been
  * copy-pasted.
  */
-public class MenuScreen extends BaseScreen {
+public class MenuScreen extends BaseScreen implements InputProcessor {
 
     private Stage stage;
 
@@ -32,11 +35,11 @@ public class MenuScreen extends BaseScreen {
 
     private TextButton play, howToPlay;
 
-    private Connection conn;
+    private  Connection conn;
 
     private TextField nickname;
 
-    public MenuScreen(final MainGame game,Connection conn) {
+    public MenuScreen(final MainGame game, final Connection conn) {
         super(game);
         this.conn = conn;
 
@@ -61,6 +64,7 @@ public class MenuScreen extends BaseScreen {
         play.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                conn.setNickName(nickname.getText());
                 game.setScreen(game.roomsList);
             }
         });
@@ -100,7 +104,10 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor( this );
+        multiplexer.addProcessor( stage );
+        Gdx.input.setInputProcessor( multiplexer );
     }
 
     @Override
@@ -120,6 +127,51 @@ public class MenuScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        if(keycode== Input.Keys.BACK){
+            Gdx.app.log("debug","back");
+            Gdx.app.exit();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount) {
+        return false;
     }
 }
 

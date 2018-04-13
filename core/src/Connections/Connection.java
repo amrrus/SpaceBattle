@@ -78,6 +78,12 @@ public class Connection {
         mSocket.emit("player_shooting",shoot);
     }
 
+    public String getNickName(){
+        return this.room;
+    }
+    public void setNickName(String nickName){
+        this.room=nickName;
+    }
     private String generateRoomMessage(){
         this.room = "room";
         Json msg = new Json();
