@@ -38,6 +38,7 @@ public class MainGame extends Game {
         manager.load("1.png",Texture.class);
         manager.load("2.png",Texture.class);
         manager.load("3.png",Texture.class);
+        manager.load("vs.png",Texture.class);
 
 
         // Enter the loading screen to load the assets.

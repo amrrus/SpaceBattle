@@ -31,6 +31,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
     private Stage stage;
     private Skin skin;
     private TextButton createRoom;
+    private TextButton back;
     private BitmapFont title;
     private int heightHeader;
     private Table Rooms;
@@ -52,15 +53,21 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         headerTexture= new Texture(pix,true);
 
         createRoom = new TextButton("Crear", skin);
-        createRoom.setSize(250, 250);
+        createRoom.setSize(250, 120);
         createRoom.getLabel().setFontScale(4, 4);
-        createRoom.setPosition(Constants.WIDTH_SCREEN-300, 600-(Constants.HEIGHT_SCREEN/2));
+        createRoom.setPosition(Constants.WIDTH_SCREEN-310, 60);
         createRoom.addCaptureListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(game.waitingOpponentScreen);
-                //ArrayList<String>l = new ArrayList<String>();
-                //l.add("a");l.add("b");l.add("c");l.add("d");
-                //updateRoomList(l);
+            }
+        });
+        back = new TextButton("Menu", skin);
+        back.setSize(250, 120);
+        back.getLabel().setFontScale(4, 4);
+        back.setPosition(60, 60);
+        back.addCaptureListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                game.setScreen(game.menuScreen);
             }
         });
 
@@ -73,7 +80,9 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         title.getData().setScale(4);
         title.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
+
         stage.addActor(createRoom);
+        stage.addActor(back);
 
     }
     public void show() {
@@ -105,8 +114,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
     }
     public void updateRoomList(ArrayList<String> l){
 
-        final Table scrollTable = new Table();
-        scrollTable.setDebug(true,true);
+        Table scrollTable = new Table();
         scrollTable.add(emptyHead);
         scrollTable.padRight(25);
 
@@ -114,7 +122,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
             scrollTable.row();
             scrollTable.add(new RoomGUI(room,250));
 
-            TextButton playRoom = new TextButton(room, skin);
+            TextButton playRoom = new TextButton("VS", skin);
             playRoom.getLabel().setFontScale(4, 4);
             playRoom.setSize(200,200);
             playRoom.addCaptureListener(new ChangeListener() {
