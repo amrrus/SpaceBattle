@@ -30,22 +30,23 @@ public class WaitingOpponentScreen extends BaseScreen{
     private Integer sizeYShip;
     private String opponent;
 
-    public WaitingOpponentScreen(final MainGame game, Connection conn){
+    public WaitingOpponentScreen(final MainGame game, final Connection conn){
         super(game);
         this.conn=conn;
         this.stage=stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
         opponent="Nombreprueba";
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        back = new TextButton("salir", skin);
+        back = new TextButton("Salir", skin);
         back.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                conn.deleteRoom();
                 game.setScreen(game.roomsList);
             }
         });
         back.setSize(250, 120);
-        back.getLabel().setFontScale(3, 3);
+        back.getLabel().setFontScale(4, 4);
         back.setPosition(60, 60);
 
 

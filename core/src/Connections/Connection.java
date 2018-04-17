@@ -7,9 +7,12 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.mygdx.game.Constants;
 import com.mygdx.game.GameScreen;
+import com.mygdx.game.RoomsList;
 
 import java.io.StringWriter;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -28,8 +31,11 @@ public class Connection {
     private Emitter.Listener setLives;
     private Emitter.Listener endGame;
     private Emitter.Listener countdown;
-    private Emitter.Listener debug;
+    private Emitter.Listener startGame;
+    private Emitter.Listener refreshRooms;
+
     private GameScreen gs;
+    private RoomsList roomListInstance;
 
     private String room;
 
@@ -42,9 +48,8 @@ public class Connection {
             throw new RuntimeException(e);
         }
 
-        mSocket.on("start_game",debug);
-
-
+        mSocket.on("start_game",startGame);
+        mSocket.on("get_rooms", refreshRooms);
 
     }
     public void setGameScreen(GameScreen gs){
@@ -59,7 +64,7 @@ public class Connection {
         mSocket.on("delete_shot", deleteShot);
         mSocket.on("create_explosion", explosion);
         mSocket.on("countdown",countdown);
-        mSocket.emit("room", generateRoomMessage());
+
     }
     public void connect(){
         mSocket.connect();
@@ -69,6 +74,15 @@ public class Connection {
     }
     public Boolean connected(){
         return this.mSocket.connected();
+    }
+    public void removeGameEvents() {
+        String[] events = {"update_player_position", "update_player_lives", "end_game",
+                "update_player_shots", "create_asteroid", "delete_asteroid", "create_shot",
+                "delete_shot", "create_explosion", "countdown"};
+
+        for(String event: events){
+            this.mSocket.off(event);
+        }
     }
 
     public void move(Integer moveSing){
@@ -84,8 +98,44 @@ public class Connection {
     public void setNickName(String nickName){
         this.room=nickName;
     }
-    private String generateRoomMessage(){
-        this.room = "room";
+
+    public void getRooms(RoomsList roomListInstance) {
+        this.roomListInstance = roomListInstance;
+        mSocket.emit("get_rooms", "");
+    }
+
+    public void deleteRoom() {
+        mSocket.emit("delete_room", "");
+    }
+
+    {
+        refreshRooms = new Emitter.Listener() {
+            public void call(final Object... args){
+                Gdx.app.postRunnable(new Runnable() {
+                    @Override
+                    public void run() {
+                        JsonValue data = new JsonReader().parse(args[0].toString());
+
+                        ArrayList<String> rooms = new ArrayList<String>();
+                        for (String room: data.get("rooms").asStringArray()){
+                            rooms.add(room);
+                        }
+                        roomListInstance.updateRoomList(rooms);                    }
+                });
+
+            }
+        };
+    }
+
+    public void createRoom() {
+        mSocket.emit("create_room", "");
+    }
+
+    public void joinRoom(String room) {
+        mSocket.emit("join_room", generateRoomMessage(room));
+    }
+
+    private String generateRoomMessage(String room){
         Json msg = new Json();
         StringWriter jsonText = new StringWriter();
         JsonWriter writer = new JsonWriter(jsonText);
@@ -96,6 +146,8 @@ public class Connection {
         msg.writeObjectEnd();
         return msg.getWriter().getWriter().toString();
     }
+
+
 
 
     {   setPos = new Emitter.Listener() {
@@ -254,11 +306,13 @@ public class Connection {
         }
     };
     }
-    {   debug = new Emitter.Listener() {
-        public void call(final Object... args){
-            Gdx.app.log("debug","start_server sended)");
-            //lanza la el juego
-        }
-    };
+
+    {
+        startGame = new Emitter.Listener() {
+            public void call(final Object... args){
+                Gdx.app.log("startGame","start_server sent");
+                roomListInstance.getGame().setScreen(roomListInstance.getGame().gameScreen);
+            }
+        };
     }
 }

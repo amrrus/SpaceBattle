@@ -18,10 +18,6 @@ import com.mygdx.game.entities.EntityFactory;
 import com.mygdx.game.entities.PlayerEntity;
 import Connections.Connection;
 
-/**
- * This is the main screen for the game. All the fun happen here.
- */
-
 public class GameScreen extends BaseScreen {
 
     public Stage stage;
@@ -43,11 +39,6 @@ public class GameScreen extends BaseScreen {
     private Boolean finishPrepare;
 
 
-    /**
-     * Create the screen. Since this constructor cannot be invoked before libGDX is fully started,
-     * it is safe to do critical code here such as loading assets and setting up the stage.
-     * @param game
-     */
     public GameScreen(MainGame game, Connection conn) {
         super(game);
         this.conn=conn;
@@ -65,14 +56,7 @@ public class GameScreen extends BaseScreen {
         accept.setSize(250, 100);
         accept.getLabel().setFontScale(4, 4);
         accept.setPosition(-125, -50);
-        stage.addActor(accept);
-//        Utils ut = new Utils();
-//        Gdx.app.log("asteroide:",ut.genera2().toString());
-//        Gdx.app.log("asteroide:",ut.genera2().toString());
-//        Gdx.app.log("asteroide:",ut.genera2().toString());
-//        Gdx.app.log("asteroide:",ut.genera2().toString());
-//        Gdx.app.log("asteroide:",ut.genera2().toString());
-//        Gdx.app.log("asteroide:",ut.genera2().toString());
+
     }
 
     public void show() {
@@ -94,6 +78,9 @@ public class GameScreen extends BaseScreen {
                 //Gdx.app.exit();
             }
         });
+        stage.addActor(accept);
+        accept.setVisible(false);
+
         // Create the players.
         topPlayer = factory.createTopPlayer();
         bottomPlayer = factory.createBottomPlayer();
@@ -112,20 +99,12 @@ public class GameScreen extends BaseScreen {
         endGame=false;
         loser=false;
         finishPrepare = true;
-        accept.setVisible(false);
     }
-    /**
-     * This method will be executed when this screen is no more the active screen.
-     * I use this method to destroy all the things that have been used in the stage.
-     */
+
     @Override
     public void hide() {
-        //Disconnect to server
-        conn.disconnect();
+        conn.removeGameEvents();
 
-        // Clear the stage. This will remove ALL actors from the stage and it is faster than
-        // removing every single actor one by one. This is not shown in the video but it is
-        // an improvement.
         stage.clear();
 
         // Detach every entity from the world they have been living in.
@@ -138,10 +117,6 @@ public class GameScreen extends BaseScreen {
         Gdx.input.setInputProcessor(null);
     }
 
-    /**
-     * This method is executed whenever the game requires this screen to be rendered. This will
-     * display things on the screen. This method is also used to update the game.
-     */
 
     public void render(float delta) {
 
@@ -151,13 +126,14 @@ public class GameScreen extends BaseScreen {
 
         // Update the stage. This will update the actors.
         stage.act();
+
         if(endGame && finishPrepare){
             accept.setVisible(true);
             Gdx.input.setInputProcessor(stage);
             finishPrepare = false;
         }else {
             // Step the world. This will update the physics and update entity positions.
-            world.step(delta, 6, 2);
+            world.step(delta, 8, 3);
         }
 
         // Render the screen. Remember, this is the last step!

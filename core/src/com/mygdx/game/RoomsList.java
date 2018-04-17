@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -33,12 +34,15 @@ public class RoomsList extends BaseScreen implements InputProcessor{
     private TextButton createRoom;
     private TextButton back;
     private BitmapFont title;
+    private TextButton refreshBackground;
+    private ImageButton refresh;
     private int heightHeader;
     private Table Rooms;
     private EmptyRoom emptyHead;
     private Texture headerTexture;
+    private RoomsList roomListInstance = this;
 
-    public RoomsList(final MainGame game, Connection conn){
+    public RoomsList(final MainGame game, final Connection conn){
         super(game);
         this.conn=conn;
         heightHeader = 120;
@@ -58,6 +62,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         createRoom.setPosition(Constants.WIDTH_SCREEN-310, 60);
         createRoom.addCaptureListener(new ChangeListener() {
             public void changed(ChangeEvent event, Actor actor) {
+                conn.createRoom();
                 game.setScreen(game.waitingOpponentScreen);
             }
         });
@@ -72,24 +77,36 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         });
 
         emptyHead= new EmptyRoom(heightHeader);
-        ArrayList<String>l = new ArrayList<String>();
-        l.add("a");l.add("b");l.add("c");l.add("d");l.add("e");l.add("f");
-        updateRoomList(l);
 
         title = new BitmapFont();
         title.getData().setScale(4);
         title.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
 
-        stage.addActor(createRoom);
-        stage.addActor(back);
 
+
+        refreshBackground = new TextButton("", skin);
+        refreshBackground.setSize(150, 120);
+        refreshBackground.setPosition(Constants.WIDTH_SCREEN-310,Constants.HEIGHT_SCREEN-300);
+
+        refresh = new ImageButton(new TextureRegionDrawable(new TextureRegion(game.getManager().get("refresh.png", Texture.class))));
+        refresh.setSize(150, 120);
+
+        refresh.setPosition(Constants.WIDTH_SCREEN-310,Constants.HEIGHT_SCREEN-300);
+        refresh.addCaptureListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                conn.getRooms(roomListInstance);
+            }
+        });
     }
     public void show() {
         InputMultiplexer multiplexer = new InputMultiplexer();
         multiplexer.addProcessor( this );
         multiplexer.addProcessor( stage );
         Gdx.input.setInputProcessor( multiplexer );
+
+        conn.getRooms(roomListInstance);
+
     }
 
     public void hide() {
@@ -118,22 +135,28 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         scrollTable.add(emptyHead);
         scrollTable.padRight(25);
 
-        for (final String room:l) {
+        if(l.size() > 0) {
+            for (final String room : l) {
+                scrollTable.row();
+                scrollTable.add(new RoomGUI(room, 250));
+
+                TextButton playRoom = new TextButton("VS", skin);
+                playRoom.getLabel().setFontScale(4, 4);
+                playRoom.setSize(200, 200);
+                playRoom.addCaptureListener(new ChangeListener() {
+                    public void changed(ChangeEvent event, Actor actor) {
+                        conn.joinRoom(room);
+                    }
+                });
+                scrollTable.add(playRoom).minSize(200, 200);
+
+
+            }
+        }else{
             scrollTable.row();
-            scrollTable.add(new RoomGUI(room,250));
-
-            TextButton playRoom = new TextButton("VS", skin);
-            playRoom.getLabel().setFontScale(4, 4);
-            playRoom.setSize(200,200);
-            playRoom.addCaptureListener(new ChangeListener() {
-                public void changed(ChangeEvent event, Actor actor) {
-                    Gdx.app.log("Unimplemented","sent msg to connect to room:"+room);
-                }
-            });
-            scrollTable.add(playRoom).minSize(200,200);
-
-
+            scrollTable.add(new RoomGUI("No hay salas", 250)).minWidth(Constants.WIDTH_SCREEN/2 + 200);
         }
+
         final ScrollPane scroller = new ScrollPane(scrollTable,skin);
 
         Rooms = new Table();
@@ -141,10 +164,24 @@ public class RoomsList extends BaseScreen implements InputProcessor{
                 game.getManager().get("background.png", Texture.class))));
         Rooms.setFillParent(true);
         Rooms.add(scroller).fill().expandY();
+
         stage.clear();
         stage.addActor(Rooms);
         stage.addActor(createRoom);
 
+
+
+        stage.addActor(createRoom);
+        stage.addActor(back);
+        stage.addActor(refreshBackground);
+        stage.addActor(refresh);
+
+
+
+    }
+
+    public MainGame getGame() {
+        return this.game;
     }
 
     @Override
