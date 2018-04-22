@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.GUI.EmptyRoom;
 import com.mygdx.game.GUI.RoomGUI;
 import java.util.ArrayList;
-import Connections.Connection;
+import com.mygdx.game.Connections.Connection;
 
 public class RoomsList extends BaseScreen implements InputProcessor{
 
@@ -34,7 +34,6 @@ public class RoomsList extends BaseScreen implements InputProcessor{
     private TextButton createRoom;
     private TextButton back;
     private BitmapFont title;
-    private TextButton refreshBackground;
     private ImageButton refresh;
     private int heightHeader;
     private Table Rooms;
@@ -82,14 +81,8 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         title.getData().setScale(4);
         title.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-
-
-
-        refreshBackground = new TextButton("", skin);
-        refreshBackground.setSize(150, 120);
-        refreshBackground.setPosition(Constants.WIDTH_SCREEN-310,Constants.HEIGHT_SCREEN-300);
-
-        refresh = new ImageButton(new TextureRegionDrawable(new TextureRegion(game.getManager().get("refresh.png", Texture.class))));
+        refresh = new ImageButton(skin, "default");
+        refresh.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(game.getManager().get("refresh.png", Texture.class)));
         refresh.setSize(150, 120);
 
         refresh.setPosition(Constants.WIDTH_SCREEN-310,Constants.HEIGHT_SCREEN-300);
@@ -169,15 +162,9 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         stage.addActor(Rooms);
         stage.addActor(createRoom);
 
-
-
         stage.addActor(createRoom);
         stage.addActor(back);
-        stage.addActor(refreshBackground);
         stage.addActor(refresh);
-
-
-
     }
 
     public MainGame getGame() {

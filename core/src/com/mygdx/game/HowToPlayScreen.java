@@ -28,7 +28,7 @@ public class HowToPlayScreen extends BaseScreen {
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        back = new TextButton("Back", skin);
+        back = new TextButton("Atras", skin);
 
         text = new Label("CREAR IMAGEN", skin);
 

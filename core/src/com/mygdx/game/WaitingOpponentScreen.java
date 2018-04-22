@@ -12,8 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-
-import Connections.Connection;
+import com.mygdx.game.Connections.Connection;
 
 public class WaitingOpponentScreen extends BaseScreen{
     private Connection conn;

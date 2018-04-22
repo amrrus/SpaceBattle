@@ -1,4 +1,4 @@
-package Connections;
+package com.mygdx.game.Connections;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;

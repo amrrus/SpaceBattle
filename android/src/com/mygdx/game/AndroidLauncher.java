@@ -1,12 +1,9 @@
 package com.mygdx.game;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-
-import Connections.Connection;
 
 
 public class AndroidLauncher extends AndroidApplication {

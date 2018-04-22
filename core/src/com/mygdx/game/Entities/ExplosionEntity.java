@@ -1,4 +1,4 @@
-package com.mygdx.game.entities;
+package com.mygdx.game.Entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -11,7 +11,7 @@ import com.mygdx.game.Constants;
 
 public class ExplosionEntity extends Actor{
 
-    private Animation animation;
+    private Animation<TextureRegion> animation;
     private float time;
     private float size;
 
@@ -28,14 +28,14 @@ public class ExplosionEntity extends Actor{
             }
         }
 
-        this.animation = new Animation(Constants.FRAME_DURATION, regionsExplosion);
+        this.animation = new Animation<TextureRegion>(Constants.FRAME_DURATION, regionsExplosion);
         setSize(Constants.PIXELS_IN_METER * size, Constants.PIXELS_IN_METER * size);
         this.time = 0f;
     }
 
     public void draw(Batch batch, float parentAlpha){
         this.time += parentAlpha;
-        TextureRegion frameActual = (TextureRegion) this.animation.getKeyFrame(this.time, false);
+        TextureRegion frameActual = this.animation.getKeyFrame(this.time, false);
         batch.draw(frameActual, getX(), getY(), getWidth(), getHeight());
 
         if(this.animation.isAnimationFinished(time)){

@@ -14,9 +14,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.mygdx.game.entities.EntityFactory;
-import com.mygdx.game.entities.PlayerEntity;
-import Connections.Connection;
+import com.mygdx.game.Entities.EntityFactory;
+import com.mygdx.game.Entities.PlayerEntity;
+import com.mygdx.game.Connections.Connection;
 
 public class GameScreen extends BaseScreen {
 
@@ -32,7 +32,7 @@ public class GameScreen extends BaseScreen {
     private Connection conn;
     public EntityFactory factory;
     private ScoreBoard sb;
-    private Boolean endGame;
+    private Boolean endGameValue;
     private Boolean loser;
     private Skin skin;
     private TextButton accept;
@@ -51,17 +51,28 @@ public class GameScreen extends BaseScreen {
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-
         accept = new TextButton("Aceptar", skin);
         accept.setSize(250, 100);
         accept.getLabel().setFontScale(4, 4);
         accept.setPosition(-125, -50);
 
+        //Create factory
+        factory = new EntityFactory(game.getManager(),this);
+
+        //Load background image
+        background = factory.loadBackgroundImage();
+        //Load countdown images
+        textureOne = getManager().get("1.png");
+        textureTwo = getManager().get("2.png");
+        textureThree = getManager().get("3.png");
+
+        endGameValue=false;
+        loser=false;
+        finishPrepare = true;
     }
 
     public void show() {
-        //Create factory
-        factory = new EntityFactory(game.getManager(),this);
+
 
         //connection establishing
         conn.setGameScreen(this);
@@ -85,18 +96,11 @@ public class GameScreen extends BaseScreen {
         topPlayer = factory.createTopPlayer();
         bottomPlayer = factory.createBottomPlayer();
 
-        //Load background image
-        background = factory.loadBackgroundImage();
-        //Load countdown images
-        textureOne = getManager().get("1.png");
-        textureTwo = getManager().get("2.png");
-        textureThree = getManager().get("3.png");
-
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);
         stage.getCamera().update();
 
-        endGame=false;
+        endGameValue=false;
         loser=false;
         finishPrepare = true;
     }
@@ -124,15 +128,16 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClearColor(0.1f, 0.125f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Update the stage. This will update the actors.
-        stage.act();
 
-        if(endGame && finishPrepare){
+
+        if(endGameValue
+                && finishPrepare){
             accept.setVisible(true);
             Gdx.input.setInputProcessor(stage);
             finishPrepare = false;
         }else {
-            // Step the world. This will update the physics and update entity positions.
+            stage.act();
+
             world.step(delta, 8, 3);
         }
 
@@ -153,7 +158,7 @@ public class GameScreen extends BaseScreen {
                     break;
             }
         }
-        if (endGame){
+        if (endGameValue){
             //imagen de victoria o derrota en funcion de loser
         }
         sb.displayScoreBoard();
@@ -184,7 +189,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void endGame(Boolean loser){
-        this.endGame=true;
+        this.endGameValue=true;
         this.loser = loser;
 
         //this.game.setScreen(this.game.menuScreen);

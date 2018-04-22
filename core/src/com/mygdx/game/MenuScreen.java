@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-import Connections.Connection;
+import com.mygdx.game.Connections.Connection;
 
 /**
  * This is the screen that you see when you enter the game. It has a button for playing the game.
@@ -35,7 +35,7 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
 
     private TextButton play, howToPlay;
 
-    private  Connection conn;
+    private Connection conn;
 
     private TextField nickname;
 
@@ -52,8 +52,8 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle.font.getData().setScale(3);
         nickname.setStyle(textFieldStyle);
-        int aleatorio = MathUtils.random(10000, 99999);
-        nickname.setText("Player" + aleatorio);
+        int randomNumber = MathUtils.random(10000, 99999);
+        nickname.setText("Player" + randomNumber);
 
         play = new TextButton("Jugar", skin);
         howToPlay = new TextButton("Como jugar", skin);

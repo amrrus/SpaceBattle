@@ -1,4 +1,4 @@
-package com.mygdx.game.entities;
+package com.mygdx.game.Entities;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,18 +13,18 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.mygdx.game.Constants;
 
 
-public class AsteroidEntity extends Actor {
+public class ShotEntity extends Actor {
 
     private Texture texture;
     private World world;
     private Body body;
     private Fixture fixture;
-    private Float radius;
+    private Integer idClient;
 
-    public AsteroidEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Float radius){
+    protected ShotEntity(World world, Texture texture, Vector2 initialPosition, Vector2 impulse, Integer idClient){
         this.world = world;
         this.texture = texture;
-        this.radius = radius;
+        this.idClient = idClient;
 
         BodyDef bodydef = new BodyDef();
         bodydef.position.set(initialPosition);
@@ -33,31 +33,28 @@ public class AsteroidEntity extends Actor {
         body = world.createBody(bodydef);
 
         CircleShape circleShape = new CircleShape();
-        circleShape.setRadius(radius);
-
+        circleShape.setRadius(Constants.SHOT_RADIUS);
         FixtureDef fds = new FixtureDef();
         fds.shape = circleShape;
-        fds.density = Constants.ASTEROID_DENSITY;
+        fds.density = Constants.SHOT_DENSITY;
         fds.friction = 0f;
-        fds.filter.categoryBits=1;
-        fds.filter.maskBits=4;
+        fds.filter.categoryBits=2;
+        fds.filter.maskBits= 4;
         fds.filter.groupIndex = 0;
 
         fixture = body.createFixture(fds);
-        fixture.setUserData("asteroid");
+        fixture.setUserData("shot");
 
         body.setLinearVelocity(impulse);
         circleShape.dispose();
 
-        setSize(2 * this.radius * Constants.PIXELS_IN_METER,
-                2 * this.radius * Constants.PIXELS_IN_METER);
-        //TODO: método ramdon en los asteroides en una clase Utils
-        //TODO: Que no se pisen los asteroides cuando salga uno no puede salir otro en la misma posicion o en el rango donde esté el vector de impulso
+        setSize(2*Constants.SHOT_RADIUS*Constants.PIXELS_IN_METER,
+                2*Constants.SHOT_RADIUS*Constants.PIXELS_IN_METER);
     }
 
     public void draw(Batch batch, float parentAlpha) {
-        setPosition((body.getPosition().x - radius) * Constants.PIXELS_IN_METER,
-                (body.getPosition().y - radius) * Constants.PIXELS_IN_METER);
+        setPosition((body.getPosition().x - Constants.SHOT_RADIUS) * Constants.PIXELS_IN_METER,
+                (body.getPosition().y - Constants.SHOT_RADIUS) * Constants.PIXELS_IN_METER);
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
@@ -74,5 +71,10 @@ public class AsteroidEntity extends Actor {
     public World getWorld(){
         return this.world;
     }
+
+    public Integer getIdClient(){
+        return this.idClient;
+    }
+
 
 }

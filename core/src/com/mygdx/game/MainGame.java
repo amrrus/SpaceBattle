@@ -4,9 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 
-import javax.xml.soap.Text;
-
-import Connections.Connection;
+import com.mygdx.game.Connections.Connection;
 
 /**
  * This is our main game. This is the class that we pass to the Application in Android launcher
@@ -40,7 +38,6 @@ public class MainGame extends Game {
         manager.load("3.png",Texture.class);
         manager.load("vs.png",Texture.class);
         manager.load("refresh.png",Texture.class);
-
 
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);
