@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -37,6 +38,7 @@ public class GameScreen extends BaseScreen {
     private Skin skin;
     private TextButton accept;
     private Boolean finishPrepare;
+    private Music backgroundMusic;
 
 
     public GameScreen(MainGame game, Connection conn) {
@@ -51,10 +53,10 @@ public class GameScreen extends BaseScreen {
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        accept = new TextButton("Aceptar", skin);
+        accept = new TextButton("Volver", skin);
         accept.setSize(250, 100);
         accept.getLabel().setFontScale(4, 4);
-        accept.setPosition(-125, -50);
+        accept.setPosition(-accept.getWidth()/2, - accept.getHeight()/2 - Constants.HEIGHT_SCREEN*0.25f);
 
         //Create factory
         factory = new EntityFactory(game.getManager(),this);
@@ -65,6 +67,7 @@ public class GameScreen extends BaseScreen {
         textureOne = getManager().get("1.png");
         textureTwo = getManager().get("2.png");
         textureThree = getManager().get("3.png");
+        backgroundMusic = getManager().get("audio/background-music.ogg");
 
         endGameValue=false;
         loser=false;
@@ -103,10 +106,15 @@ public class GameScreen extends BaseScreen {
         endGameValue=false;
         loser=false;
         finishPrepare = true;
+
+        backgroundMusic.setVolume(0.5f);
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
     }
 
     @Override
     public void hide() {
+        backgroundMusic.stop();
         conn.removeGameEvents();
 
         stage.clear();
@@ -127,7 +135,6 @@ public class GameScreen extends BaseScreen {
         // Do not forget to clean the screen.
         Gdx.gl.glClearColor(0.1f, 0.125f, 0.2f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
 
 
         if(endGameValue
@@ -159,7 +166,8 @@ public class GameScreen extends BaseScreen {
             }
         }
         if (endGameValue){
-            //imagen de victoria o derrota en funcion de loser
+            Texture result = getManager().get(loser ? "loser.png" : "winner.png");
+            stage.getBatch().draw(result,-Constants.WIDTH_SCREEN*0.25f,-Constants.HEIGHT_SCREEN*0.25f + Constants.HEIGHT_SCREEN*0.125f, Constants.WIDTH_SCREEN*0.5f, Constants.HEIGHT_SCREEN*0.5f);
         }
         sb.displayScoreBoard();
         stage.getBatch().end();

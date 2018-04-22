@@ -10,9 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Connections.Connection;
+import com.mygdx.game.Utils.ButtonListener;
 
 public class WaitingOpponentScreen extends BaseScreen{
     private Connection conn;
@@ -32,12 +32,12 @@ public class WaitingOpponentScreen extends BaseScreen{
     public WaitingOpponentScreen(final MainGame game, final Connection conn){
         super(game);
         this.conn=conn;
-        this.stage=stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
+        this.stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
         opponent="Nombreprueba";
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
         back = new TextButton("Salir", skin);
-        back.addCaptureListener(new ChangeListener() {
+        back.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 conn.deleteRoom();

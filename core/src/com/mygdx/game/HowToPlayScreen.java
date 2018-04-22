@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.Utils.ButtonListener;
 
 
 public class HowToPlayScreen extends BaseScreen {
@@ -32,7 +32,7 @@ public class HowToPlayScreen extends BaseScreen {
 
         text = new Label("CREAR IMAGEN", skin);
 
-        back.addCaptureListener(new ChangeListener() {
+        back.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(game.menuScreen);

@@ -2,6 +2,8 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
 import com.mygdx.game.Connections.Connection;
@@ -37,7 +39,13 @@ public class MainGame extends Game {
         manager.load("2.png",Texture.class);
         manager.load("3.png",Texture.class);
         manager.load("vs.png",Texture.class);
+        manager.load("loser.png", Texture.class);
+        manager.load("winner.png", Texture.class);
         manager.load("refresh.png",Texture.class);
+        manager.load("audio/background-music.ogg", Music.class);
+        manager.load("audio/shot.ogg", Sound.class);
+        manager.load("audio/explosion.ogg", Sound.class);
+        manager.load("audio/click.ogg", Sound.class);
 
         // Enter the loading screen to load the assets.
         loadingScreen = new LoadingScreen(this);

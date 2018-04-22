@@ -13,10 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.mygdx.game.Connections.Connection;
+import com.mygdx.game.Utils.ButtonListener;
 
 /**
  * This is the screen that you see when you enter the game. It has a button for playing the game.
@@ -61,7 +61,7 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         logo = new Image(game.getManager().get("logo.png", Texture.class));
         background = new Image(game.getManager().get("background.png", Texture.class));
 
-        play.addCaptureListener(new ChangeListener() {
+        play.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 conn.setNickName(nickname.getText());
@@ -69,7 +69,7 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
             }
         });
 
-        howToPlay.addCaptureListener(new ChangeListener() {
+        howToPlay.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(game.howToPlayScreen);

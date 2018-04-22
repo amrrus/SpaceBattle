@@ -66,14 +66,14 @@ public class LoadingScreen extends BaseScreen implements InputProcessor {
         changeUrl.setStyle(textFieldStyle);
         changeUrl.setText(Constants.SERVER_URL);
         changeUrl.setAlignment(Align.center);
-        //changeUrl.setVisible(false);
+        changeUrl.setVisible(false);
         changeUrl.setSize(changeUrl.getWidth()*4, changeUrl.getHeight()*2);
         changeUrl.setPosition(Constants.WIDTH_SCREEN/2 - changeUrl.getWidth()/2, Constants.HEIGHT_SCREEN/2 - changeUrl.getHeight()/2+Constants.HEIGHT_SCREEN/3);
 
         changeUrlButton = new TextButton("Conectar", skin);
         changeUrlButton.setSize(200, changeUrl.getHeight());
         changeUrlButton.getLabel().setFontScale(2, 2);
-        //changeUrlButton.setVisible(false);
+        changeUrlButton.setVisible(false);
         changeUrlButton.setPosition(Constants.WIDTH_SCREEN/2 + changeUrl.getWidth()/2, Constants.HEIGHT_SCREEN/2 - changeUrl.getHeight()/2+Constants.HEIGHT_SCREEN/3);
         changeUrlButton.addCaptureListener(new ChangeListener() {
             @Override

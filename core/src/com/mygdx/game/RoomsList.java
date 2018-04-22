@@ -18,13 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.GUI.EmptyRoom;
 import com.mygdx.game.GUI.RoomGUI;
 import java.util.ArrayList;
 import com.mygdx.game.Connections.Connection;
+import com.mygdx.game.Utils.ButtonListener;
 
 public class RoomsList extends BaseScreen implements InputProcessor{
 
@@ -59,7 +59,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         createRoom.setSize(250, 120);
         createRoom.getLabel().setFontScale(4, 4);
         createRoom.setPosition(Constants.WIDTH_SCREEN-310, 60);
-        createRoom.addCaptureListener(new ChangeListener() {
+        createRoom.addCaptureListener(new ButtonListener(game.getManager()){
             public void changed(ChangeEvent event, Actor actor) {
                 conn.createRoom();
                 game.setScreen(game.waitingOpponentScreen);
@@ -69,7 +69,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         back.setSize(250, 120);
         back.getLabel().setFontScale(4, 4);
         back.setPosition(60, 60);
-        back.addCaptureListener(new ChangeListener() {
+        back.addCaptureListener(new ButtonListener(game.getManager()) {
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(game.menuScreen);
             }
@@ -86,7 +86,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         refresh.setSize(150, 120);
 
         refresh.setPosition(Constants.WIDTH_SCREEN-310,Constants.HEIGHT_SCREEN-300);
-        refresh.addCaptureListener(new ChangeListener() {
+        refresh.addCaptureListener(new ButtonListener(game.getManager()) {
             public void changed(ChangeEvent event, Actor actor) {
                 conn.getRooms(roomListInstance);
             }
@@ -136,7 +136,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
                 TextButton playRoom = new TextButton("VS", skin);
                 playRoom.getLabel().setFontScale(4, 4);
                 playRoom.setSize(200, 200);
-                playRoom.addCaptureListener(new ChangeListener() {
+                playRoom.addCaptureListener(new ButtonListener(game.getManager()) {
                     public void changed(ChangeEvent event, Actor actor) {
                         conn.joinRoom(room);
                     }

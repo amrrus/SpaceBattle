@@ -1,6 +1,7 @@
 package com.mygdx.game.Entities;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.GameScreen;
@@ -18,6 +19,8 @@ public class EntityFactory {
     private HashMap<Integer,ShotEntity> shots;
     private ConcurrencyManager cm;
 
+    private Sound shotSound;
+    private Sound explosionSound;
 
     public EntityFactory(AssetManager manager, GameScreen gs) {
         this.manager = manager;
@@ -25,6 +28,9 @@ public class EntityFactory {
         this.asteroids = new HashMap<Integer, AsteroidEntity>();
         this.shots =  new HashMap<Integer, ShotEntity>();
         this.cm = new ConcurrencyManager(this,this.gs.world);
+
+        shotSound = this.getManager().get("audio/shot.ogg");
+        explosionSound = this.getManager().get("audio/explosion.ogg");
     }
 
     public Texture loadBackgroundImage(){
@@ -65,6 +71,7 @@ public class EntityFactory {
         ShotEntity s = new ShotEntity(gs.world, shotTexture, position, impulse,idClient);
         gs.stage.addActor(s);
         shots.put(idShot,s);
+        shotSound.play();
         return s;
     }
 
@@ -75,14 +82,19 @@ public class EntityFactory {
             //optimization required
         }
     }
+    public AssetManager getManager() {
+        return this.manager;
+    }
+
     public ConcurrencyManager getConcurrencyManager(){
         return this.cm;
     }
 
     public ExplosionEntity createExplosion(Float x, Float y, float size){
         Texture explosionT = manager.get("explosion-transitions.png");
-        ExplosionEntity explosion= new ExplosionEntity(explosionT, x, y, size);
+        ExplosionEntity explosion = new ExplosionEntity(explosionT, x, y, size);
         gs.stage.addActor(explosion);
+        explosionSound.play();
         return explosion;
     }
 
