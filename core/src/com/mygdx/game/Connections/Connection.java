@@ -40,7 +40,6 @@ public class Connection {
     private String room;
 
     public Connection(){
-        //this.gs=gs;
         try {
             mSocket = IO.socket(Constants.SERVER_URL);
             Gdx.app.log("connection", mSocket.toString());

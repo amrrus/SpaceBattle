@@ -36,7 +36,6 @@ public class GameScreen extends BaseScreen {
     private Boolean endGameValue;
     private Boolean loser;
     private Skin skin;
-    private TextButton accept;
     private Boolean finishPrepare;
     private Music backgroundMusic;
 
@@ -52,11 +51,6 @@ public class GameScreen extends BaseScreen {
         sb = new ScoreBoard(this);
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-
-        accept = new TextButton("Volver", skin);
-        accept.setSize(250, 100);
-        accept.getLabel().setFontScale(4, 4);
-        accept.setPosition(-accept.getWidth()/2, - accept.getHeight()/2 - Constants.HEIGHT_SCREEN*0.25f);
 
         //Create factory
         factory = new EntityFactory(game.getManager(),this);
@@ -76,24 +70,12 @@ public class GameScreen extends BaseScreen {
 
     public void show() {
 
-
         //connection establishing
         conn.setGameScreen(this);
         countdown = 3;
 
         //set controls to play
         new Controllers(this,conn);
-        accept.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                // Take me to the game screen!
-                Gdx.app.log("debug","touched button");
-                game.setScreen(game.menuScreen);
-                //Gdx.app.exit();
-            }
-        });
-        stage.addActor(accept);
-        accept.setVisible(false);
 
         // Create the players.
         topPlayer = factory.createTopPlayer();
@@ -139,7 +121,6 @@ public class GameScreen extends BaseScreen {
 
         if(endGameValue
                 && finishPrepare){
-            accept.setVisible(true);
             Gdx.input.setInputProcessor(stage);
             finishPrepare = false;
         }else {
@@ -165,14 +146,15 @@ public class GameScreen extends BaseScreen {
                     break;
             }
         }
-        if (endGameValue){
-            Texture result = getManager().get(loser ? "loser.png" : "winner.png");
-            stage.getBatch().draw(result,-Constants.WIDTH_SCREEN*0.25f,-Constants.HEIGHT_SCREEN*0.25f + Constants.HEIGHT_SCREEN*0.125f, Constants.WIDTH_SCREEN*0.5f, Constants.HEIGHT_SCREEN*0.5f);
-        }
+
         sb.displayScoreBoard();
         stage.getBatch().end();
         stage.draw();
 
+        if (endGameValue){
+            this.game.gameOverScreen.isLoser(loser);
+            this.game.setScreen(this.game.gameOverScreen);
+        }
 
         //Create and delete bodies after render world
 
@@ -199,7 +181,5 @@ public class GameScreen extends BaseScreen {
     public void endGame(Boolean loser){
         this.endGameValue=true;
         this.loser = loser;
-
-        //this.game.setScreen(this.game.menuScreen);
     }
 }
