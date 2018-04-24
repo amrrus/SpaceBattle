@@ -357,7 +357,28 @@ public class Connection {
                 JsonValue data = new JsonReader().parse(args[0].toString());
                 botPlayerName = data.getString("bottom_player_name");
                 topPlayerName = data.getString("top_player_name");
-                Gdx.app.log("startGame","start_server sent");
+                String config = "";
+                config = data.getString("con");
+                Gdx.app.log("config",config+"...");
+                String[] parameters = config.split(",");
+                for (String p:parameters){
+                    String[] keyValue= p.split(":");
+                    if (keyValue.length==2) {
+                        String key = keyValue[0];
+                        String value = keyValue[1];
+                        if (key.equals("SHOT_DENSITY")) {
+                            Gdx.app.log("config", "SHOT_DENSITY:" + value);
+                            Constants.SHOT_DENSITY = new Float(value);
+                        }
+
+                        if (key.equals("SHOT_RADIUS")) {
+                            Gdx.app.log("config", "SHOT_RADIUS:" + value);
+                            Constants.SHOT_RADIUS = new Float(value);
+                        }
+
+                    }
+                }
+                Gdx.app.log("startGame","start_server received");
                 roomListInstance.getGame().setScreen(roomListInstance.getGame().waitingOpponentScreen);
             }
         };
