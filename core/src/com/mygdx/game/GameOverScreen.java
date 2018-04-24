@@ -12,19 +12,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.mygdx.game.Connections.Connection;
 import com.mygdx.game.Utils.ButtonListener;
 
 public class GameOverScreen extends BaseScreen {
 
+    private Connection conn;
     private Stage stage;
     private Skin skin;
     private Image gameOver;
     private TextButton menu;
     private boolean loser;
 
-    public GameOverScreen(final MainGame game) {
+    public GameOverScreen(final MainGame game, final Connection conn) {
         super(game);
-
+        this.conn=conn;
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
@@ -36,6 +38,7 @@ public class GameOverScreen extends BaseScreen {
         menu.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                conn.setTopPlayerName("");
                 game.setScreen(game.menuScreen);
             }
         });

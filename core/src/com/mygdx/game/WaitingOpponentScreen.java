@@ -27,21 +27,13 @@ public class WaitingOpponentScreen extends BaseScreen{
     private Integer frameMargin;
     private Integer sizeXShip;
     private Integer sizeYShip;
-    private String opponent;
 
-    public String getOpponent() {
-        return opponent;
-    }
-
-    public void setOpponent(String opponent) {
-        this.opponent = opponent;
-    }
 
     public WaitingOpponentScreen(final MainGame game, final Connection conn){
         super(game);
         this.conn=conn;
         this.stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
-        opponent="Esperando....";
+
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
         back = new TextButton("Salir", skin);
@@ -105,8 +97,8 @@ public class WaitingOpponentScreen extends BaseScreen{
         stage.act();
         stage.draw();
         stage.getBatch().begin();
-        title.draw(stage.getBatch(),conn.getNickName(),bottomShip.getX()+bottomShip.getImageWidth()/6,bottomShip.getTop()+100);
-        title.draw(stage.getBatch(),opponent,topShip.getX()+topShip.getImageWidth()/6,topShip.getTop()+100);
+        title.draw(stage.getBatch(),conn.getBotPlayerName(),bottomShip.getX()+bottomShip.getImageWidth()/6,bottomShip.getTop()+100);
+        title.draw(stage.getBatch(),conn.getTopPlayerName(),topShip.getX()+topShip.getImageWidth()/6,topShip.getTop()+100);
         stage.getBatch().end();
 
     }

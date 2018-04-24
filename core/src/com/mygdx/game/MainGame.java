@@ -57,7 +57,7 @@ public class MainGame extends Game {
         menuScreen = new MenuScreen(this,this.conn);
         gameScreen = new GameScreen(this,this.conn);
         roomsList = new RoomsList(this,this.conn);
-        gameOverScreen = new GameOverScreen(this);
+        gameOverScreen = new GameOverScreen(this,this.conn);
         howToPlayScreen = new HowToPlayScreen(this);
         waitingOpponentScreen = new WaitingOpponentScreen(this,this.conn);
         setScreen(menuScreen);

@@ -33,6 +33,7 @@ public class Connection {
     private Emitter.Listener countdown;
     private Emitter.Listener startGame;
     private Emitter.Listener refreshRooms;
+    private Emitter.Listener showGameScreen;
 
     private GameScreen gs;
     private RoomsList roomListInstance;
@@ -49,9 +50,18 @@ public class Connection {
         return topPlayerName;
     }
 
+    public void setTopPlayerName(String topPlayerName) {
+        if (topPlayerName.equals("")){
+            this.topPlayerName = this.defaultTopPlayer;
+        }else {
+            this.topPlayerName = topPlayerName;
+        }
+    }
+
+    private String defaultTopPlayer = "Esperando....";
     public Connection(){
-        botPlayerName = "debajo";
-        topPlayerName = "arriba";
+        botPlayerName = "";
+        topPlayerName = defaultTopPlayer;
         try {
             mSocket = IO.socket(Constants.SERVER_URL);
             Gdx.app.log("connection", mSocket.toString());
@@ -61,6 +71,7 @@ public class Connection {
 
         mSocket.on("start_game",startGame);
         mSocket.on("get_rooms", refreshRooms);
+        mSocket.on("show_game_screen", showGameScreen);
 
     }
     public void setGameScreen(GameScreen gs){
@@ -138,7 +149,10 @@ public class Connection {
         };
     }
 
-    public void createRoom() { mSocket.emit("create_room", roomGenerateMessage()); }
+    public void createRoom() {
+        botPlayerName=room;
+        mSocket.emit("create_room", roomGenerateMessage());
+    }
 
     public void joinRoom(String room) {
         mSocket.emit("join_room", roomJoinMessage(room));
@@ -319,13 +333,22 @@ public class Connection {
         }
     };
     }
-    {   countdown = new Emitter.Listener() {
+
+    {   showGameScreen = new Emitter.Listener() {
         public void call(final Object... args){
-            Integer count = (Integer)args[0];
-            Gdx.app.log("debug","Countdown:"+count);
-            gs.countdown = count;
+            Gdx.app.log("debug","game screen showed");
+            roomListInstance.getGame().setScreen(roomListInstance.getGame().gameScreen);
         }
     };
+    }
+
+    {   countdown = new Emitter.Listener() {
+            public void call(final Object... args){
+                Integer count = (Integer)args[0];
+                Gdx.app.log("debug","Countdown:"+count);
+                gs.countdown = count;
+            }
+        };
     }
 
     {
@@ -335,7 +358,7 @@ public class Connection {
                 botPlayerName = data.getString("bottom_player_name");
                 topPlayerName = data.getString("top_player_name");
                 Gdx.app.log("startGame","start_server sent");
-                roomListInstance.getGame().setScreen(roomListInstance.getGame().gameScreen);
+                roomListInstance.getGame().setScreen(roomListInstance.getGame().waitingOpponentScreen);
             }
         };
     }

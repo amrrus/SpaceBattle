@@ -71,6 +71,7 @@ public class GameScreen extends BaseScreen {
         endGameValue=false;
         loser=false;
         finishPrepare = true;
+
     }
 
     public void show() {
@@ -79,7 +80,7 @@ public class GameScreen extends BaseScreen {
         bottomPlayer = factory.createBottomPlayer();
 
         //connection establishing
-        conn.setGameScreen(this);
+        this.conn.setGameScreen(this);
         countdown = 3;
 
         //set controls to play
