@@ -34,6 +34,7 @@ public class Connection {
     private Emitter.Listener startGame;
     private Emitter.Listener refreshRooms;
     private Emitter.Listener showGameScreen;
+    private Emitter.Listener nick;
 
     private GameScreen gs;
     private RoomsList roomListInstance;
@@ -69,6 +70,7 @@ public class Connection {
             throw new RuntimeException(e);
         }
 
+        mSocket.on("check_nick", nick);
         mSocket.on("start_game",startGame);
         mSocket.on("get_rooms", refreshRooms);
         mSocket.on("show_game_screen", showGameScreen);
@@ -382,5 +384,18 @@ public class Connection {
                 roomListInstance.getGame().setScreen(roomListInstance.getGame().waitingOpponentScreen);
             }
         };
+    }
+
+    {   nick = new Emitter.Listener() {
+        public void call(final Object... args){
+            JsonValue data = new JsonReader().parse(args[0].toString());
+            data.getBoolean("nick");
+        }
+    };
+    }
+
+
+    public void checkNickname(String nick){
+        mSocket.emit("check_nick", nick);
     }
 }

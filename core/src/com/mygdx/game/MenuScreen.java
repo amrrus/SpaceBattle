@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.mygdx.game.Connections.Connection;
@@ -61,9 +62,16 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         logo = new Image(game.getManager().get("logo.png", Texture.class));
         background = new Image(game.getManager().get("background.png", Texture.class));
 
+       /* nickname.addCaptureListener(new ChangeListener() {
+            public void changed(ChangeEvent event, Actor actor) {
+                conn.checkNickname(nickname.getText());
+            }
+        });//hacerlo en el play porque es al darle a jugar*/
+
         play.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                conn.checkNickname(nickname.getText());
                 conn.setNickName(nickname.getText());
                 game.setScreen(game.roomsList);
             }
