@@ -29,11 +29,19 @@ public class WaitingOpponentScreen extends BaseScreen{
     private Integer sizeYShip;
     private String opponent;
 
+    public String getOpponent() {
+        return opponent;
+    }
+
+    public void setOpponent(String opponent) {
+        this.opponent = opponent;
+    }
+
     public WaitingOpponentScreen(final MainGame game, final Connection conn){
         super(game);
         this.conn=conn;
         this.stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
-        opponent="Nombreprueba";
+        opponent="Esperando....";
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
         back = new TextButton("Salir", skin);

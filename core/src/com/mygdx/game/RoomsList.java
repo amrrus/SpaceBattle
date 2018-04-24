@@ -173,14 +173,18 @@ public class RoomsList extends BaseScreen implements InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
+        if(keycode== Input.Keys.BACK){
+            Gdx.app.log("debug","back down");
+            return true;
+        }
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         if(keycode== Input.Keys.BACK){
-            Gdx.app.log("debug","back");
-            Gdx.app.exit();
+            Gdx.app.log("debug","back up");
+            return true;
         }
         return false;
     }

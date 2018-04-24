@@ -38,8 +38,20 @@ public class Connection {
     private RoomsList roomListInstance;
 
     private String room;
+    private String botPlayerName;
+    private String topPlayerName;
+
+    public String getBotPlayerName() {
+        return botPlayerName;
+    }
+
+    public String getTopPlayerName() {
+        return topPlayerName;
+    }
 
     public Connection(){
+        botPlayerName = "debajo";
+        topPlayerName = "arriba";
         try {
             mSocket = IO.socket(Constants.SERVER_URL);
             Gdx.app.log("connection", mSocket.toString());
@@ -126,15 +138,24 @@ public class Connection {
         };
     }
 
-    public void createRoom() {
-        mSocket.emit("create_room", "");
-    }
+    public void createRoom() { mSocket.emit("create_room", roomGenerateMessage()); }
 
     public void joinRoom(String room) {
-        mSocket.emit("join_room", generateRoomMessage(room));
+        mSocket.emit("join_room", roomJoinMessage(room));
     }
 
-    private String generateRoomMessage(String room){
+    private String roomGenerateMessage(){
+        Json msg = new Json();
+        StringWriter jsonText = new StringWriter();
+        JsonWriter writer = new JsonWriter(jsonText);
+        msg.setOutputType(JsonWriter.OutputType.json);
+        msg.setWriter(writer);
+        msg.writeObjectStart();
+        msg.writeValue("nickName", getNickName());
+        msg.writeObjectEnd();
+        return msg.getWriter().getWriter().toString();
+    }
+    private String roomJoinMessage(String room){
         Json msg = new Json();
         StringWriter jsonText = new StringWriter();
         JsonWriter writer = new JsonWriter(jsonText);
@@ -142,6 +163,7 @@ public class Connection {
         msg.setWriter(writer);
         msg.writeObjectStart();
         msg.writeValue("room", room);
+        msg.writeValue("nickName", getNickName());
         msg.writeObjectEnd();
         return msg.getWriter().getWriter().toString();
     }
@@ -309,6 +331,9 @@ public class Connection {
     {
         startGame = new Emitter.Listener() {
             public void call(final Object... args){
+                JsonValue data = new JsonReader().parse(args[0].toString());
+                botPlayerName = data.getString("bottom_player_name");
+                topPlayerName = data.getString("top_player_name");
                 Gdx.app.log("startGame","start_server sent");
                 roomListInstance.getGame().setScreen(roomListInstance.getGame().gameScreen);
             }

@@ -48,7 +48,7 @@ public class GameScreen extends BaseScreen {
 
         world = new World(new Vector2(0, 0), true);
 
-        sb = new ScoreBoard(this);
+        sb = new ScoreBoard(this,conn);
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
@@ -63,12 +63,20 @@ public class GameScreen extends BaseScreen {
         textureThree = getManager().get("3.png");
         backgroundMusic = getManager().get("audio/background-music.ogg");
 
+
+        // Create the players.
+        //topPlayer = factory.createTopPlayer();
+        //bottomPlayer = factory.createBottomPlayer();
+
         endGameValue=false;
         loser=false;
         finishPrepare = true;
     }
 
     public void show() {
+        // Create the players.
+        topPlayer = factory.createTopPlayer();
+        bottomPlayer = factory.createBottomPlayer();
 
         //connection establishing
         conn.setGameScreen(this);
@@ -76,10 +84,6 @@ public class GameScreen extends BaseScreen {
 
         //set controls to play
         new Controllers(this,conn);
-
-        // Create the players.
-        topPlayer = factory.createTopPlayer();
-        bottomPlayer = factory.createBottomPlayer();
 
         // Reset the camera to the center.
         stage.getCamera().position.set(0f,0f,0f);

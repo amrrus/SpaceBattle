@@ -4,11 +4,13 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.Connections.Connection;
 
 import java.util.ArrayList;
 
 public class ScoreBoard {
     private GameScreen gs;
+    private Connection conn;
     private Texture textureLiveBottom;
     private Texture textureLiveTop;
     private BitmapFont font;
@@ -17,7 +19,8 @@ public class ScoreBoard {
     private ArrayList<TextureRegion> shotsBottom;
     private Integer widthShot;
 
-    public ScoreBoard(GameScreen gs){
+    public ScoreBoard(GameScreen gs, Connection conn){
+        this.conn = conn;
         this.gs = gs;
         this.textureLiveBottom = this.gs.game.getManager().get("blueShipUp.png");
         this.textureLiveTop = this.gs.game.getManager().get("blueShipDown.png");
@@ -39,6 +42,7 @@ public class ScoreBoard {
 
     public void displayScoreBoard(){
         //only print score board if this method is call within begin-end structure of a batch
+        displayNames();
         displayLives();
         displayShots();
     }
@@ -69,6 +73,13 @@ public class ScoreBoard {
             }
         }
     }
+    private void displayNames(){
+        if (this.gs.stage.getBatch().isDrawing()){
+            font.draw(this.gs.stage.getBatch(),conn.getTopPlayerName(),-900,140);
+            font.draw(this.gs.stage.getBatch(),conn.getBotPlayerName(),-900,-240);
+        }
+    }
+
 
     private void printTopShot(Integer i, Integer index,Boolean enable){
         if (enable){
