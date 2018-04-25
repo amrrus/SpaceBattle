@@ -56,7 +56,7 @@ public class GameScreen extends BaseScreen {
         factory = new EntityFactory(game.getManager(),this);
 
         //Load background image
-        background = factory.loadBackgroundImage();
+        background = getManager().get("dividedPlanet.png");
         //Load countdown images
         textureOne = getManager().get("1.png");
         textureTwo = getManager().get("2.png");
