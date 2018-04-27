@@ -33,9 +33,6 @@ public class EntityFactory {
         explosionSound = this.getManager().get("audio/explosion.ogg");
     }
 
-    public Texture loadBackgroundImage(){
-        return this.gs.getManager().get("dividedPlanet.png");
-    }
     public PlayerEntity createTopPlayer() {
         Texture playerTexture = manager.get("blueShipDown.png");
         PlayerEntity top = new PlayerEntity(playerTexture, new Vector2(-0.5f, 5f));
