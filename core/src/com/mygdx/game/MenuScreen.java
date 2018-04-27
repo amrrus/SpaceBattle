@@ -4,20 +4,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 import com.mygdx.game.Connections.Connection;
 import com.mygdx.game.Utils.ButtonListener;
+
+import sun.applet.Main;
 
 /**
  * This is the screen that you see when you enter the game. It has a button for playing the game.
@@ -39,11 +42,13 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
     private Connection conn;
 
     private TextField nickname;
+    private Label error_longitud;
 
     public MenuScreen(final MainGame game, final Connection conn) {
         super(game);
         this.conn = conn;
-
+        conn.setMainGame(game);
+        conn.setMenuScreen(this);
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
 
@@ -56,24 +61,31 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         int randomNumber = MathUtils.random(10000, 99999);
         nickname.setText("Player" + randomNumber);
 
+        Label.LabelStyle labelStyle = skin.get(Label.LabelStyle.class);
+        error_longitud = new Label("", skin);
+        labelStyle.font.getData().setScale(3);
+        error_longitud.setStyle(labelStyle);
+        error_longitud.setColor(Color.RED);
+
         play = new TextButton("Jugar", skin);
         howToPlay = new TextButton("Como jugar", skin);
 
         logo = new Image(game.getManager().get("logo.png", Texture.class));
         background = new Image(game.getManager().get("background.png", Texture.class));
 
-       /* nickname.addCaptureListener(new ChangeListener() {
-            public void changed(ChangeEvent event, Actor actor) {
-                conn.checkNickname(nickname.getText());
-            }
-        });//hacerlo en el play porque es al darle a jugar*/
-
         play.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                conn.checkNickname(nickname.getText());
-                conn.setNickName(nickname.getText());
-                game.setScreen(game.roomsList);
+                if(!(nickname.getText().isEmpty() || nickname.getText().length()>15)) {
+                    conn.checkNickname(nickname.getText());
+                }else if(nickname.getText().isEmpty()){
+                    error_longitud.setText("El nombre de usuario no puede estar vacio");
+                }else if(nickname.getText().length()>15){
+                    error_longitud.setText("El nombre de usuario no puede tener mas de 15 caracteres");
+                }else{
+                    errorNick();
+                }
+
             }
         });
 
@@ -87,6 +99,9 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
 
         background.setPosition(0,0);
         background.setSize(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN);
+
+        error_longitud.setPosition(Constants.WIDTH_SCREEN/2 - error_longitud.getWidth()-900, Constants.HEIGHT_SCREEN/2 - error_longitud.getHeight()+380);
+        error_longitud.setSize(error_longitud.getWidth()*4, error_longitud.getHeight()*2);
 
         nickname.setPosition(Constants.WIDTH_SCREEN/2 - nickname.getWidth()-690, Constants.HEIGHT_SCREEN/2 - nickname.getHeight()+200);
         nickname.setSize(nickname.getWidth()*4, nickname.getHeight()*2);
@@ -104,11 +119,17 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         howToPlay.setPosition(120, 120);
 
         stage.addActor(background);
+        stage.addActor(error_longitud);
         stage.addActor(nickname);
         stage.addActor(logo);
         stage.addActor(play);
         stage.addActor(howToPlay);
     }
+
+    public void errorNick() {
+        error_longitud.setText("El nombre de usuario ya existe");
+    }
+
 
     @Override
     public void show() {

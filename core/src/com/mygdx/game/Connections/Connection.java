@@ -7,6 +7,8 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 import com.mygdx.game.Constants;
 import com.mygdx.game.GameScreen;
+import com.mygdx.game.MainGame;
+import com.mygdx.game.MenuScreen;
 import com.mygdx.game.RoomsList;
 
 import java.io.StringWriter;
@@ -16,6 +18,7 @@ import java.util.ArrayList;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
 
 
 public class Connection {
@@ -37,7 +40,9 @@ public class Connection {
     private Emitter.Listener nick;
 
     private GameScreen gs;
+    private MainGame game;
     private RoomsList roomListInstance;
+    private MenuScreen menuScreen;
 
     private String room;
     private String botPlayerName;
@@ -70,7 +75,7 @@ public class Connection {
             throw new RuntimeException(e);
         }
 
-        mSocket.on("check_nick", nick);
+        mSocket.on("check_nick_result", nick);
         mSocket.on("start_game",startGame);
         mSocket.on("get_rooms", refreshRooms);
         mSocket.on("show_game_screen", showGameScreen);
@@ -349,6 +354,7 @@ public class Connection {
                 Integer count = (Integer)args[0];
                 Gdx.app.log("debug","Countdown:"+count);
                 gs.countdown = count;
+
             }
         };
     }
@@ -389,13 +395,26 @@ public class Connection {
     {   nick = new Emitter.Listener() {
         public void call(final Object... args){
             JsonValue data = new JsonReader().parse(args[0].toString());
-            data.getBoolean("nick");
+            Boolean res =  data.getBoolean(0);
+            String nickname = data.getString(1);
+            if (res) {
+                setNickName(nickname);
+                game.setScreen(game.roomsList);
+            }else{
+                menuScreen.errorNick();
+            }
         }
     };
     }
 
-
+    public void setMainGame(MainGame game){
+        this.game=game;
+    }
+    public void setMenuScreen(MenuScreen menu){
+        this.menuScreen = menu;
+    }
     public void checkNickname(String nick){
         mSocket.emit("check_nick", nick);
     }
+
 }
