@@ -19,7 +19,13 @@ public class MainGame extends Game {
     /** This is the asset manager we use to centralize the assets. */
     private AssetManager manager;
 
-    public BaseScreen loadingScreen, menuScreen, gameScreen, gameOverScreen, howToPlayScreen,roomsList,waitingOpponentScreen;
+    public LoadingScreen loadingScreen;
+    public MenuScreen menuScreen;
+    public GameScreen gameScreen;
+    public GameOverScreen gameOverScreen;
+    public HowToPlayScreen howToPlayScreen;
+    public RoomsList roomsList;
+    public WaitingOpponentScreen waitingOpponentScreen;
 
     @Override
     public void create() {

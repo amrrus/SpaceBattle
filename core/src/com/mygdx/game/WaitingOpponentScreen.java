@@ -5,11 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Connections.Connection;
 import com.mygdx.game.Utils.ButtonListener;
@@ -24,7 +26,7 @@ public class WaitingOpponentScreen extends BaseScreen{
     private Image topShip;
     private Image vs;
     private BitmapFont title;
-    private Integer frameMargin;
+    private float frameMargin;
     private Integer sizeXShip;
     private Integer sizeYShip;
 
@@ -57,17 +59,17 @@ public class WaitingOpponentScreen extends BaseScreen{
         vs.setPosition(0,0);
         vs.setSize(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN);
 
-        frameMargin = 100;
-        sizeXShip = Constants.WIDTH_SCREEN/4;
-        sizeYShip = (int )(Constants.HEIGHT_SCREEN/1.5);
+        frameMargin = Constants.WIDTH_SCREEN*0.17f;
+        sizeXShip = Constants.WIDTH_SCREEN/5;
+        sizeYShip = (int )(Constants.HEIGHT_SCREEN/2);
 
         bottomShip= new Image(game.getManager().get("blueShipUp.png", Texture.class));
-        bottomShip.setPosition(frameMargin,frameMargin*2);
         bottomShip.setSize(sizeXShip, sizeYShip);
+        bottomShip.setPosition(frameMargin - bottomShip.getWidth()/2,Constants.HEIGHT_SCREEN*0.5f - bottomShip.getHeight()*0.5f);
 
         topShip= new Image(game.getManager().get("blueShipDown.png", Texture.class));
-        topShip.setPosition(Constants.WIDTH_SCREEN-sizeXShip-frameMargin,frameMargin*2);
         topShip.setSize(sizeXShip, sizeYShip);
+        topShip.setPosition(Constants.WIDTH_SCREEN - frameMargin - topShip.getWidth()/2,Constants.HEIGHT_SCREEN*0.5f - topShip.getHeight()*0.5f);
 
         title = new BitmapFont();
         title.getData().setScale(4);
@@ -94,12 +96,25 @@ public class WaitingOpponentScreen extends BaseScreen{
     public void render(float delta) {
         Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         stage.act();
         stage.draw();
         stage.getBatch().begin();
-        title.draw(stage.getBatch(),conn.getBotPlayerName(),bottomShip.getX()+bottomShip.getImageWidth()/6,bottomShip.getTop()+100);
-        title.draw(stage.getBatch(),conn.getTopPlayerName(),topShip.getX()+topShip.getImageWidth()/6,topShip.getTop()+100);
+        // 168f is the max width value allowed for the string
+        title.getData().setScale(getStringWidth(conn.getBotPlayerName()) > 168f ? 3 : 4);
+        title.draw(stage.getBatch(),conn.getBotPlayerName(), bottomShip.getX(Align.left) - Constants.WIDTH_SCREEN*0.05f, bottomShip.getY(Align.top) + Constants.HEIGHT_SCREEN*0.1f, bottomShip.getWidth() + Constants.WIDTH_SCREEN*0.1f, Align.center, true );
+        title.getData().setScale(getStringWidth(conn.getTopPlayerName()) > 168f ? 3 : 4);
+        title.draw(stage.getBatch(),conn.getTopPlayerName(), topShip.getX(Align.left) - Constants.WIDTH_SCREEN*0.05f, topShip.getY(Align.top) + Constants.HEIGHT_SCREEN*0.1f, topShip.getWidth()+ Constants.WIDTH_SCREEN*0.1f,Align.center, true);
         stage.getBatch().end();
 
     }
+
+    private float getStringWidth(String text){
+        GlyphLayout gl = new GlyphLayout();
+        gl.setText(this.skin.getFont("default-font"), text);
+
+        return gl.width;
+    }
+
+    public void setVisibleBackButton(boolean showButton) {this.back.setVisible(showButton);}
 }

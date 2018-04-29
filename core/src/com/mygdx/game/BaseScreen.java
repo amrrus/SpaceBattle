@@ -53,7 +53,4 @@ public abstract class BaseScreen implements Screen {
     public void dispose() {
         // This method is invoked when the game closes.
     }
-
-    public void isLoser(Boolean loser) {
-    }
 }
