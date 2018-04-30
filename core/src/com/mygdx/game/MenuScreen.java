@@ -142,6 +142,7 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
+        error_longitud.setText("");
     }
 
     @Override
