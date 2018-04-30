@@ -2,6 +2,10 @@ package com.mygdx.game;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -86,7 +90,21 @@ public class WaitingOpponentScreen extends BaseScreen{
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor( stage );
+        InputProcessor backProcessor = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if ((keycode == Input.Keys.ESCAPE) || (keycode == Input.Keys.BACK) ){
+                    conn.deleteRoom();
+                    game.setScreen(game.roomsList);
+                }
+                return false;
+            }
+        };
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor( backProcessor );
+        multiplexer.addProcessor( stage );
+        Gdx.input.setInputProcessor( multiplexer );
+        Gdx.input.setCatchBackKey(true);
     }
 
     public void dispose() {

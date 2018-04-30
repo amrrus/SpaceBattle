@@ -3,6 +3,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
@@ -12,6 +13,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -93,11 +96,20 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         });
     }
     public void show() {
+        InputProcessor backProcessor = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if ((keycode == Input.Keys.ESCAPE) || (keycode == Input.Keys.BACK) ){
+                    game.setScreen(game.menuScreen);
+                }
+                return false;
+            }
+        };
         InputMultiplexer multiplexer = new InputMultiplexer();
-        multiplexer.addProcessor( this );
+        multiplexer.addProcessor( backProcessor );
         multiplexer.addProcessor( stage );
         Gdx.input.setInputProcessor( multiplexer );
-
+        Gdx.input.setCatchBackKey(true);
         conn.getRooms(roomListInstance);
 
     }
@@ -173,18 +185,14 @@ public class RoomsList extends BaseScreen implements InputProcessor{
 
     @Override
     public boolean keyDown(int keycode) {
-        if(keycode== Input.Keys.BACK){
-            Gdx.app.log("debug","back down");
-            return true;
-        }
         return false;
     }
 
     @Override
     public boolean keyUp(int keycode) {
         if(keycode== Input.Keys.BACK){
-            Gdx.app.log("debug","back up");
-            return true;
+            game.setScreen(game.menuScreen);
+
         }
         return false;
     }

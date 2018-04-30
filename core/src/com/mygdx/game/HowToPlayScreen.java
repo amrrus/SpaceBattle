@@ -1,6 +1,10 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -52,7 +56,20 @@ public class HowToPlayScreen extends BaseScreen {
 
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        InputProcessor backProcessor = new InputAdapter() {
+            @Override
+            public boolean keyDown(int keycode) {
+                if ((keycode == Input.Keys.ESCAPE) || (keycode == Input.Keys.BACK) ){
+                    game.setScreen(game.menuScreen);
+                }
+                return false;
+            }
+        };
+        InputMultiplexer multiplexer = new InputMultiplexer();
+        multiplexer.addProcessor( backProcessor );
+        multiplexer.addProcessor( stage );
+        Gdx.input.setInputProcessor( multiplexer );
+        Gdx.input.setCatchBackKey(true);
     }
 
     @Override
