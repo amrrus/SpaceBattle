@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Connections.Connection;
 import com.mygdx.game.Utils.ButtonListener;
+import com.mygdx.game.Utils.Utils;
 
 public class WaitingOpponentScreen extends BaseScreen{
     private Connection conn;
@@ -100,21 +101,18 @@ public class WaitingOpponentScreen extends BaseScreen{
         stage.act();
         stage.draw();
         stage.getBatch().begin();
-        // 168f is the max width value allowed for the string
-        title.getData().setScale(getStringWidth(conn.getBotPlayerName()) > 168f ? 3 : 4);
+
+        title.getData().setScale(Utils.getStringWidth(conn.getBotPlayerName(), title) > bottomShip.getWidth() + Constants.WIDTH_SCREEN*0.1f ? 3 : 4);
         title.draw(stage.getBatch(),conn.getBotPlayerName(), bottomShip.getX(Align.left) - Constants.WIDTH_SCREEN*0.05f, bottomShip.getY(Align.top) + Constants.HEIGHT_SCREEN*0.1f, bottomShip.getWidth() + Constants.WIDTH_SCREEN*0.1f, Align.center, true );
-        title.getData().setScale(getStringWidth(conn.getTopPlayerName()) > 168f ? 3 : 4);
+
+        title.getData().setScale(Utils.getStringWidth(conn.getTopPlayerName(), title) > topShip.getWidth()+ Constants.WIDTH_SCREEN*0.1f ? 3 : 4);
         title.draw(stage.getBatch(),conn.getTopPlayerName(), topShip.getX(Align.left) - Constants.WIDTH_SCREEN*0.05f, topShip.getY(Align.top) + Constants.HEIGHT_SCREEN*0.1f, topShip.getWidth()+ Constants.WIDTH_SCREEN*0.1f,Align.center, true);
+        
         stage.getBatch().end();
 
     }
 
-    private float getStringWidth(String text){
-        GlyphLayout gl = new GlyphLayout();
-        gl.setText(this.skin.getFont("default-font"), text);
 
-        return gl.width;
-    }
 
     public void setVisibleBackButton(boolean showButton) {this.back.setVisible(showButton);}
 }

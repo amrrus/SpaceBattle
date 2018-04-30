@@ -94,7 +94,7 @@ public class GameScreen extends BaseScreen {
         loser=false;
         finishPrepare = true;
 
-        backgroundMusic.setVolume(0.5f);
+        backgroundMusic.setVolume(0.4f);
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
     }
