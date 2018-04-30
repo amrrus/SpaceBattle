@@ -42,7 +42,7 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
     private Connection conn;
 
     private TextField nickname;
-    private Label error_longitud;
+    public Label errorMessage;
 
     public MenuScreen(final MainGame game, final Connection conn) {
         super(game);
@@ -62,10 +62,10 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         nickname.setText("Player" + randomNumber);
 
         Label.LabelStyle labelStyle = skin.get(Label.LabelStyle.class);
-        error_longitud = new Label("", skin);
+        errorMessage = new Label("", skin);
         labelStyle.font.getData().setScale(3);
-        error_longitud.setStyle(labelStyle);
-        error_longitud.setColor(Color.RED);
+        errorMessage.setStyle(labelStyle);
+        errorMessage.setColor(Color.RED);
 
         play = new TextButton("Jugar", skin);
         howToPlay = new TextButton("Como jugar", skin);
@@ -76,15 +76,9 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         play.addCaptureListener(new ButtonListener(game.getManager()) {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if(!(nickname.getText().isEmpty() || nickname.getText().length()>15)) {
-                    conn.checkNickname(nickname.getText());
-                }else if(nickname.getText().isEmpty()){
-                    error_longitud.setText("El nombre de usuario no puede estar vacio");
-                }else if(nickname.getText().length()>15){
-                    error_longitud.setText("El nombre de usuario no puede tener mas de 15 caracteres");
-                }else{
-                    errorNick();
-                }
+
+                checkNickName();
+
 
             }
         });
@@ -100,8 +94,8 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         background.setPosition(0,0);
         background.setSize(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN);
 
-        error_longitud.setPosition(Constants.WIDTH_SCREEN/2 - error_longitud.getWidth()-900, Constants.HEIGHT_SCREEN/2 - error_longitud.getHeight()+380);
-        error_longitud.setSize(error_longitud.getWidth()*4, error_longitud.getHeight()*2);
+        errorMessage.setPosition(Constants.WIDTH_SCREEN/2 - errorMessage.getWidth()-900, Constants.HEIGHT_SCREEN/2 - errorMessage.getHeight()+380);
+        errorMessage.setSize(errorMessage.getWidth()*4, errorMessage.getHeight()*2);
 
         nickname.setPosition(Constants.WIDTH_SCREEN/2 - nickname.getWidth()-690, Constants.HEIGHT_SCREEN/2 - nickname.getHeight()+200);
         nickname.setSize(nickname.getWidth()*4, nickname.getHeight()*2);
@@ -119,15 +113,22 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
         howToPlay.setPosition(120, 120);
 
         stage.addActor(background);
-        stage.addActor(error_longitud);
+        stage.addActor(errorMessage);
         stage.addActor(nickname);
         stage.addActor(logo);
         stage.addActor(play);
         stage.addActor(howToPlay);
     }
 
-    public void errorNick() {
-        error_longitud.setText("El nombre de usuario ya existe");
+    public void checkNickName() {
+        if(nickname.getText().isEmpty()){
+            errorMessage.setText("El nombre de usuario no puede estar vacio");
+        }else if(nickname.getText().length()>15){
+            errorMessage.setText("El nombre de usuario no puede tener mas de 15 caracteres");
+        }else{
+            conn.checkNickname(nickname.getText());
+        }
+
     }
 
 
@@ -142,7 +143,7 @@ public class MenuScreen extends BaseScreen implements InputProcessor {
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);
-        error_longitud.setText("");
+        errorMessage.setText("");
     }
 
     @Override

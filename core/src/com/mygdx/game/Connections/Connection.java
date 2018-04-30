@@ -404,7 +404,7 @@ public class Connection {
                 setNickName(nickname);
                 game.setScreen(game.roomsList);
             }else{
-                menuScreen.errorNick();
+                menuScreen.errorMessage.setText("El nombre de usuario ya existe");
             }
         }
     };
