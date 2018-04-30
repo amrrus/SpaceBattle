@@ -3,8 +3,10 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.mygdx.game.Connections.Connection;
+import com.mygdx.game.Utils.Utils;
 
 import java.util.ArrayList;
 
@@ -75,25 +77,20 @@ public class ScoreBoard {
     }
     private void displayNames(){
         if (this.gs.stage.getBatch().isDrawing()){
-            font.draw(this.gs.stage.getBatch(),conn.getTopPlayerName(),-900,140);
-            font.draw(this.gs.stage.getBatch(),conn.getBotPlayerName(),-900,-240);
+            GlyphLayout gl = new GlyphLayout(font, conn.getTopPlayerName());
+            font.draw(this.gs.stage.getBatch(),conn.getTopPlayerName(),900 - gl.width,530);
+            font.draw(this.gs.stage.getBatch(),conn.getBotPlayerName(),-900,-530 + Utils.getStringHeight(conn.getBotPlayerName(), font));
         }
     }
 
 
     private void printTopShot(Integer i, Integer index,Boolean enable){
-        if (enable){
-            this.gs.stage.getBatch().draw(this.shotsTop.get(index), -900 + widthShot*i, 340, widthShot, widthShot);
-        }else {
-            this.gs.stage.getBatch().draw(this.shotsEmpty.get(index), -900 + widthShot * i, 340, widthShot, widthShot);
-        }
+        TextureRegion printable = enable ? this.shotsTop.get(index) : this.shotsEmpty.get(index);
+        this.gs.stage.getBatch().draw(printable, -900 + widthShot * i, 340, widthShot, widthShot);
     }
     private void printBottomShot(Integer i, Integer index,Boolean enable){
-        if (enable){
-            this.gs.stage.getBatch().draw(this.shotsBottom.get(index), -900 + widthShot*i, -530, widthShot, widthShot);
-        }else {
-            this.gs.stage.getBatch().draw(this.shotsEmpty.get(index), -900 + widthShot * i, -530, widthShot, widthShot);
-        }
+        TextureRegion printable = enable ? this.shotsBottom.get(2-index) : this.shotsEmpty.get(2-index);
+        this.gs.stage.getBatch().draw(printable, 900 - widthShot - widthShot * i, -530, widthShot, widthShot);
     }
 
     private void displayLives(){
@@ -105,9 +102,9 @@ public class ScoreBoard {
                         0,0,this.textureLiveTop.getWidth(),this.textureLiveTop.getHeight(),false,true);
             }
             //lives player bottom
-            font.draw(this.gs.stage.getBatch(),Constants.MSG_DISPLAY_LIVES,-900, -340);
+            font.draw(this.gs.stage.getBatch(),Constants.MSG_DISPLAY_LIVES,900 - Utils.getStringWidth(Constants.MSG_DISPLAY_LIVES, font), -340);
             for (int i=0;i<this.gs.bottomPlayer.getLives();i++) {
-                this.gs.stage.getBatch().draw(this.textureLiveBottom, -880 + 60*i, -460, 50, 50);
+                this.gs.stage.getBatch().draw(this.textureLiveBottom, 880 - 50 - 60*i, -460, 50, 50);
             }
         }
     }
