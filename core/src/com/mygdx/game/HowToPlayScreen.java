@@ -30,7 +30,7 @@ public class HowToPlayScreen extends BaseScreen {
 
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skin/skin-composer-ui.json"));
 
         back = new TextButton("Atras", skin);
 

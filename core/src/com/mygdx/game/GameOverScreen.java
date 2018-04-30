@@ -20,6 +20,7 @@ public class GameOverScreen extends BaseScreen {
     private Connection conn;
     private Stage stage;
     private Skin skin;
+    private Skin skin2;
     private Image gameOver;
     private TextButton menu;
     private boolean loser;
@@ -30,8 +31,9 @@ public class GameOverScreen extends BaseScreen {
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        skin2 = new Skin(Gdx.files.internal("skin/skin-composer-ui.json"));
 
-        menu = new TextButton("Volver al menu", skin);
+        menu = new TextButton("Volver al menu", skin2);
         menu.setSize(600, 150);
         menu.getLabel().setFontScale(4, 4);
         menu.setPosition(Constants.WIDTH_SCREEN/2 - menu.getWidth()/2,Constants.HEIGHT_SCREEN/2 - menu.getHeight()/2 - Constants.HEIGHT_SCREEN*0.125f);

@@ -53,7 +53,7 @@ public class MenuScreen extends BaseScreen {
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
 
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skin/skin-composer-ui.json"));
 
         nickname=new TextField("", skin);
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);

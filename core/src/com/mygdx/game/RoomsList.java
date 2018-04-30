@@ -51,7 +51,8 @@ public class RoomsList extends BaseScreen implements InputProcessor{
 
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skin/skin-composer-ui.json"));
+
 
         Pixmap pix = new Pixmap(Constants.WIDTH_SCREEN,heightHeader, Pixmap.Format.RGBA8888);
         pix.setColor(Color.GRAY);

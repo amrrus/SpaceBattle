@@ -50,7 +50,7 @@ public class GameScreen extends BaseScreen {
 
         sb = new ScoreBoard(this,conn);
 
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+        skin = new Skin(Gdx.files.internal("skin/skin-composer-ui.json"));
 
         //Create factory
         factory = new EntityFactory(game.getManager(),this);
