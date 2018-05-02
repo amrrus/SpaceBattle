@@ -344,7 +344,7 @@ public class Connection {
     {   showGameScreen = new Emitter.Listener() {
         public void call(final Object... args){
             Gdx.app.log("debug","game screen showed");
-            game.waitingOpponentScreen.setVisibleBackButton(true);
+            game.waitingOpponentScreen.setWaiting(true);
             game.setScreen(roomListInstance.getGame().gameScreen);
         }
     };
@@ -389,7 +389,7 @@ public class Connection {
                 }
                 Gdx.app.log("startGame","start_server received");
 
-                game.waitingOpponentScreen.setVisibleBackButton(false);
+                game.waitingOpponentScreen.setWaiting(false);
                 roomListInstance.getGame().setScreen(roomListInstance.getGame().waitingOpponentScreen);
             }
         };
