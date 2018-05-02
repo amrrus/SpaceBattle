@@ -17,6 +17,6 @@ public class Constants {
 
     public static final Integer MAX_NUMBER_SHOTS_STORED = 5;
 
-    public static String SERVER_URL = "http://10.100.41.124:3000";
+    public static String SERVER_URL = "http://0.0.0.0:3000";
 }
 

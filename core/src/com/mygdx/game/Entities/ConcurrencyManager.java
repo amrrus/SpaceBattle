@@ -37,11 +37,6 @@ public class ConcurrencyManager {
         this.creatingShots = false;
         this.removingShots = false;
 
-
-        /*this.addingAsteroidToCreate = false;
-        this.addingAsteroidToRemove = false;
-        this.addingShotToCreate = false;
-        this.addingShotToRemove = false;*/
     }
 
     public synchronized void checkAsteroidsToRemove(){

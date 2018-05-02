@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -34,6 +36,7 @@ public class MenuScreen extends BaseScreen {
     private Stage stage;
 
     private Skin skin;
+    private Skin skin2;
 
     private Image logo;
     private Image background;
@@ -54,7 +57,7 @@ public class MenuScreen extends BaseScreen {
 
 
         skin = new Skin(Gdx.files.internal("skin/skin-composer-ui.json"));
-
+        skin2 = new Skin(Gdx.files.internal("skin/uiskin.json"));
         nickname=new TextField("", skin);
         TextField.TextFieldStyle textFieldStyle = skin.get(TextField.TextFieldStyle.class);
         textFieldStyle.font.getData().setScale(3);
@@ -62,11 +65,11 @@ public class MenuScreen extends BaseScreen {
         int randomNumber = MathUtils.random(10000, 99999);
         nickname.setText("Player" + randomNumber);
 
-        Label.LabelStyle labelStyle = skin.get(Label.LabelStyle.class);
-        errorMessage = new Label("", skin);
+        Label.LabelStyle labelStyle = skin2.get(Label.LabelStyle.class);
+        errorMessage = new Label("", skin2);
         labelStyle.font.getData().setScale(3);
         errorMessage.setStyle(labelStyle);
-        errorMessage.setColor(Color.RED);
+        errorMessage.setColor(new Color(0xff0000ff));
 
         play = new TextButton("Jugar", skin);
         howToPlay = new TextButton("Como jugar", skin);
@@ -95,7 +98,7 @@ public class MenuScreen extends BaseScreen {
         background.setPosition(0,0);
         background.setSize(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN);
 
-        errorMessage.setPosition(Constants.WIDTH_SCREEN/2 - errorMessage.getWidth()-900, Constants.HEIGHT_SCREEN/2 - errorMessage.getHeight()+380);
+        errorMessage.setPosition(120, Constants.HEIGHT_SCREEN/2 - errorMessage.getHeight()+270);
         errorMessage.setSize(errorMessage.getWidth()*4, errorMessage.getHeight()*2);
 
         nickname.setPosition(Constants.WIDTH_SCREEN/2 - nickname.getWidth()-690, Constants.HEIGHT_SCREEN/2 - nickname.getHeight()+200);
@@ -123,9 +126,9 @@ public class MenuScreen extends BaseScreen {
 
     public void checkNickName() {
         if(nickname.getText().isEmpty()){
-            errorMessage.setText("El nombre de usuario no puede estar vacio");
+            errorMessage.setText("Introduzca al menos un caracter.");
         }else if(nickname.getText().length()>15){
-            errorMessage.setText("El nombre de usuario no puede tener mas de 15 caracteres");
+            errorMessage.setText("Nombre mayor de 15 caracteres.");
         }else{
             conn.checkNickname(nickname.getText());
         }

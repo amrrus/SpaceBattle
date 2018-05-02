@@ -29,11 +29,11 @@ import java.util.ArrayList;
 import com.mygdx.game.Connections.Connection;
 import com.mygdx.game.Utils.ButtonListener;
 
-public class RoomsList extends BaseScreen implements InputProcessor{
+public class RoomsList extends BaseScreen {
 
     private Connection conn;
     private Stage stage;
-    private Skin skin;
+    private Skin skin,skin2;
     private TextButton createRoom;
     private TextButton back;
     private BitmapFont title;
@@ -52,10 +52,10 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         stage = new Stage(new FitViewport(Constants.WIDTH_SCREEN, Constants.HEIGHT_SCREEN));
 
         skin = new Skin(Gdx.files.internal("skin/skin-composer-ui.json"));
-
+        skin2 = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
         Pixmap pix = new Pixmap(Constants.WIDTH_SCREEN,heightHeader, Pixmap.Format.RGBA8888);
-        pix.setColor(Color.GRAY);
+        pix.setColor(new Color(0x468c7eff));
         pix.fill();
         headerTexture= new Texture(pix,true);
 
@@ -163,7 +163,7 @@ public class RoomsList extends BaseScreen implements InputProcessor{
             scrollTable.add(new RoomGUI("No hay salas", 250)).minWidth(Constants.WIDTH_SCREEN/2 + 200);
         }
 
-        final ScrollPane scroller = new ScrollPane(scrollTable,skin);
+        final ScrollPane scroller = new ScrollPane(scrollTable,skin2);
 
         Rooms = new Table();
         Rooms.setBackground(new TextureRegionDrawable(new TextureRegion(
@@ -184,47 +184,4 @@ public class RoomsList extends BaseScreen implements InputProcessor{
         return this.game;
     }
 
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        if(keycode== Input.Keys.BACK){
-            game.setScreen(game.menuScreen);
-
-        }
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
 }

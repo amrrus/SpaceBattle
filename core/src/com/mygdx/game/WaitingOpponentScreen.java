@@ -95,8 +95,10 @@ public class WaitingOpponentScreen extends BaseScreen{
             @Override
             public boolean keyDown(int keycode) {
                 if ((keycode == Input.Keys.ESCAPE) || (keycode == Input.Keys.BACK) ){
-                    conn.deleteRoom();
-                    game.setScreen(game.roomsList);
+                    if (back.isVisible()){
+                        conn.deleteRoom();
+                        game.setScreen(game.roomsList);
+                    }
                 }
                 return false;
             }
