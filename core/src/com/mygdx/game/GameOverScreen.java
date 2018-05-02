@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -24,6 +25,7 @@ public class GameOverScreen extends BaseScreen {
     private Image gameOver;
     private TextButton menu;
     private boolean loser;
+    private Image background;
 
     public GameOverScreen(final MainGame game, final Connection conn) {
         super(game);
@@ -58,6 +60,9 @@ public class GameOverScreen extends BaseScreen {
         dialog.setSize(Constants.WIDTH_SCREEN*0.8f, Constants.HEIGHT_SCREEN*0.8f);
         dialog.setPosition(Constants.WIDTH_SCREEN/2 - dialog.getWidth()/2, Constants.HEIGHT_SCREEN/2 - dialog.getHeight()/2);
 
+        background = new Image(game.getManager().get("background.png", Texture.class));
+
+        stage.addActor(background);
         stage.addActor(dialog);
 
         loser = true;
@@ -87,6 +92,8 @@ public class GameOverScreen extends BaseScreen {
 
     @Override
     public void render(float delta) {
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act();
         stage.draw();
     }
