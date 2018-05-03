@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.mygdx.game.Connections.Connection;
 import com.mygdx.game.Utils.ButtonListener;
 
-import sun.applet.Main;
 
 /**
  * This is the screen that you see when you enter the game. It has a button for playing the game.

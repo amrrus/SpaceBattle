@@ -48,6 +48,13 @@ public class MainGame extends Game {
         manager.load("loser.png", Texture.class);
         manager.load("winner.png", Texture.class);
         manager.load("refresh.png",Texture.class);
+        manager.load("howto-1.png",Texture.class);
+        manager.load("howto-2.png",Texture.class);
+        manager.load("howto-3.png",Texture.class);
+        manager.load("howto-4.png",Texture.class);
+        manager.load("howto-5.png",Texture.class);
+        manager.load("back.png",Texture.class);
+        manager.load("next.png",Texture.class);
         manager.load("audio/background-music.ogg", Music.class);
         manager.load("audio/shot.ogg", Sound.class);
         manager.load("audio/explosion.ogg", Sound.class);
